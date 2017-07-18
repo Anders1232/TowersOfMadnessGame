@@ -18,7 +18,7 @@ LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
 FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=5 -Wno-unused-parameter -Werror=init-self
 DFLAGS = -ggdb -O0
 
-INC_PATH = -Iinclude -I../Engine/include
+INC_PATH = -Iinclude -I../RattletrapEngine/include
 SRC_PATH = src
 BIN_PATH = bin
 DEP_PATH = dep
