@@ -1,72 +1,364 @@
-bin/AIGoDown.o: src/AIGoDown.cpp include/AIGoDown.h \
- ../Engine/include/Component.h ../Engine/include/ComponentType.h \
- ../Engine/include/GameObject.h ../Engine/include/SDL_include.h \
- ../Engine/include/Component.h ../Engine/include/Rect.h \
- ../Engine/include/Vec2.h ../Engine/include/TileMap.h \
- ../Engine/include/Tileset.h ../Engine/include/Sprite.h \
- ../Engine/include/Color.h ../Engine/include/InputManager.h \
- ../Engine/include/AStarHeuristic.h ../Engine/include/Resources.h \
- ../Engine/include/TileMapObserver.h ../Engine/include/NearestGOFinder.h \
- include/GameResources.h include/WaveData.h ../Engine/include/Error.h \
- include/Enemy.h ../Engine/include/GameObject.h \
- ../Engine/include/Sprite.h ../Engine/include/Rect.h \
- ../Engine/include/Timer.h include/HitPoints.h ../Engine/include/Sound.h \
- include/WaveManager.h ../Engine/include/ManhattanDistance.h
+bin/StageState.o: src/StageState.cpp include/StageState.h \
+ ../RattletrapEngine/include/ActionManager.h \
+ ../RattletrapEngine/include/InputManager.h \
+ ../RattletrapEngine/include/SDL_include.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_main.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_stdinc.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_config.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_platform.h \
+ C:/Tools/msys64/mingw64/include/SDL2/begin_code.h \
+ C:/Tools/msys64/mingw64/include/SDL2/close_code.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_assert.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_atomic.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_audio.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_error.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_endian.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_mutex.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_thread.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_rwops.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_clipboard.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_cpuinfo.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_events.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_video.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_pixels.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_rect.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_surface.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_blendmode.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_keyboard.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_keycode.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_scancode.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_mouse.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_joystick.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_gamecontroller.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_quit.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_gesture.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_touch.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_filesystem.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_haptic.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_hints.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_loadso.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_log.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_messagebox.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_power.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_render.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_system.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_timer.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_version.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_image.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL.h \
+ ../RattletrapEngine/include/Vec2.h include/AIGoDown.h \
+ ../RattletrapEngine/include/Component.h \
+ ../RattletrapEngine/include/ComponentType.h \
+ ../RattletrapEngine/include/GameObject.h \
+ ../RattletrapEngine/include/Component.h \
+ ../RattletrapEngine/include/Rect.h ../RattletrapEngine/include/TileMap.h \
+ ../RattletrapEngine/include/Tileset.h \
+ ../RattletrapEngine/include/Sprite.h ../RattletrapEngine/include/Color.h \
+ ../RattletrapEngine/include/AStarHeuristic.h \
+ ../RattletrapEngine/include/Resources.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_mixer.h \
+ C:/Tools/msys64/mingw64/include/SDL2/SDL_ttf.h \
+ ../RattletrapEngine/include/TileMapObserver.h \
+ ../RattletrapEngine/include/NearestGOFinder.h include/GameResources.h \
+ include/WaveData.h ../RattletrapEngine/include/Error.h include/Enemy.h \
+ ../RattletrapEngine/include/GameObject.h \
+ ../RattletrapEngine/include/Sprite.h ../RattletrapEngine/include/Rect.h \
+ ../RattletrapEngine/include/Timer.h include/HitPoints.h \
+ ../RattletrapEngine/include/Sound.h include/WaveManager.h \
+ ../RattletrapEngine/include/ManhattanDistance.h include/AIPrintPath.h \
+ ../RattletrapEngine/include/Camera.h \
+ ../RattletrapEngine/include/ActionManager.h \
+ ../RattletrapEngine/include/DragAndDrop.h \
+ ../RattletrapEngine/include/TileMap.h \
+ ../RattletrapEngine/include/Sound.h \
+ ../RattletrapEngine/include/InputManager.h \
+ ../RattletrapEngine/include/Music.h ../RattletrapEngine/include/Error.h \
+ include/Obstacle.h ../RattletrapEngine/include/Vec2.h \
+ ../RattletrapEngine/include/State.h \
+ ../RattletrapEngine/include/Tileset.h include/Tower.h include/Bullet.h \
+ ../RattletrapEngine/include/Game.h ../RattletrapEngine/include/State.h \
+ ../RattletrapEngine/include/Animation.h \
+ ../RattletrapEngine/include/Timer.h \
+ ../RattletrapEngine/include/UIcanvas.h \
+ ../RattletrapEngine/include/UIelement.h \
+ ../RattletrapEngine/include/UIgridGroup.h \
+ ../RattletrapEngine/include/UIcanvas.h \
+ ../RattletrapEngine/include/UIimageButton.h \
+ ../RattletrapEngine/include/UIimage.h \
+ ../RattletrapEngine/include/UIbutton.h \
+ ../RattletrapEngine/include/UItext.h \
+ ../RattletrapEngine/include/UIverticalGroup.h \
+ ../RattletrapEngine/include/NearestGOFinder.h include/EndState.h \
+ include/EndStateData.h ../RattletrapEngine/include/StateData.h \
+ include/Defines.h ../RattletrapEngine/include/Text.h \
+ ../RattletrapEngine/include/Game.h ../RattletrapEngine/include/UIimage.h \
+ ../RattletrapEngine/include/UItextButton.h \
+ ../RattletrapEngine/include/UItext.h include/AIArt.h \
+ include/AIEngineer.h include/AIMedic.h include/AIQuimic.h \
+ include/Shooter.h ../RattletrapEngine/include/Collision.h \
+ include/EndStateData.h include/Enemy.h include/GameResources.h \
+ include/Obstacle.h include/PlayerData.h \
+ ../RattletrapEngine/include/UIelement.h \
+ ../RattletrapEngine/include/UIhorizontalGroup.h \
+ ../RattletrapEngine/include/SDL_include.h
+
+include/StageState.h:
+
+../RattletrapEngine/include/ActionManager.h:
+
+../RattletrapEngine/include/InputManager.h:
+
+../RattletrapEngine/include/SDL_include.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_main.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_stdinc.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_config.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_platform.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/begin_code.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/close_code.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_assert.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_atomic.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_audio.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_error.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_endian.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_mutex.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_thread.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_rwops.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_clipboard.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_cpuinfo.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_events.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_video.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_pixels.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_rect.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_surface.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_blendmode.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_keyboard.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_keycode.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_scancode.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_mouse.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_joystick.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_gamecontroller.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_quit.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_gesture.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_touch.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_filesystem.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_haptic.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_hints.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_loadso.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_log.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_messagebox.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_power.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_render.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_system.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_timer.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_version.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL_image.h:
+
+C:/Tools/msys64/mingw64/include/SDL2/SDL.h:
+
+../RattletrapEngine/include/Vec2.h:
 
 include/AIGoDown.h:
 
-../Engine/include/Component.h:
+../RattletrapEngine/include/Component.h:
 
-../Engine/include/ComponentType.h:
+../RattletrapEngine/include/ComponentType.h:
 
-../Engine/include/GameObject.h:
+../RattletrapEngine/include/GameObject.h:
 
-../Engine/include/SDL_include.h:
+../RattletrapEngine/include/Component.h:
 
-../Engine/include/Component.h:
+../RattletrapEngine/include/Rect.h:
 
-../Engine/include/Rect.h:
+../RattletrapEngine/include/TileMap.h:
 
-../Engine/include/Vec2.h:
+../RattletrapEngine/include/Tileset.h:
 
-../Engine/include/TileMap.h:
+../RattletrapEngine/include/Sprite.h:
 
-../Engine/include/Tileset.h:
+../RattletrapEngine/include/Color.h:
 
-../Engine/include/Sprite.h:
+../RattletrapEngine/include/AStarHeuristic.h:
 
-../Engine/include/Color.h:
+../RattletrapEngine/include/Resources.h:
 
-../Engine/include/InputManager.h:
+C:/Tools/msys64/mingw64/include/SDL2/SDL_mixer.h:
 
-../Engine/include/AStarHeuristic.h:
+C:/Tools/msys64/mingw64/include/SDL2/SDL_ttf.h:
 
-../Engine/include/Resources.h:
+../RattletrapEngine/include/TileMapObserver.h:
 
-../Engine/include/TileMapObserver.h:
-
-../Engine/include/NearestGOFinder.h:
+../RattletrapEngine/include/NearestGOFinder.h:
 
 include/GameResources.h:
 
 include/WaveData.h:
 
-../Engine/include/Error.h:
+../RattletrapEngine/include/Error.h:
 
 include/Enemy.h:
 
-../Engine/include/GameObject.h:
+../RattletrapEngine/include/GameObject.h:
 
-../Engine/include/Sprite.h:
+../RattletrapEngine/include/Sprite.h:
 
-../Engine/include/Rect.h:
+../RattletrapEngine/include/Rect.h:
 
-../Engine/include/Timer.h:
+../RattletrapEngine/include/Timer.h:
 
 include/HitPoints.h:
 
-../Engine/include/Sound.h:
+../RattletrapEngine/include/Sound.h:
 
 include/WaveManager.h:
 
-../Engine/include/ManhattanDistance.h:
+../RattletrapEngine/include/ManhattanDistance.h:
+
+include/AIPrintPath.h:
+
+../RattletrapEngine/include/Camera.h:
+
+../RattletrapEngine/include/ActionManager.h:
+
+../RattletrapEngine/include/DragAndDrop.h:
+
+../RattletrapEngine/include/TileMap.h:
+
+../RattletrapEngine/include/Sound.h:
+
+../RattletrapEngine/include/InputManager.h:
+
+../RattletrapEngine/include/Music.h:
+
+../RattletrapEngine/include/Error.h:
+
+include/Obstacle.h:
+
+../RattletrapEngine/include/Vec2.h:
+
+../RattletrapEngine/include/State.h:
+
+../RattletrapEngine/include/Tileset.h:
+
+include/Tower.h:
+
+include/Bullet.h:
+
+../RattletrapEngine/include/Game.h:
+
+../RattletrapEngine/include/State.h:
+
+../RattletrapEngine/include/Animation.h:
+
+../RattletrapEngine/include/Timer.h:
+
+../RattletrapEngine/include/UIcanvas.h:
+
+../RattletrapEngine/include/UIelement.h:
+
+../RattletrapEngine/include/UIgridGroup.h:
+
+../RattletrapEngine/include/UIcanvas.h:
+
+../RattletrapEngine/include/UIimageButton.h:
+
+../RattletrapEngine/include/UIimage.h:
+
+../RattletrapEngine/include/UIbutton.h:
+
+../RattletrapEngine/include/UItext.h:
+
+../RattletrapEngine/include/UIverticalGroup.h:
+
+../RattletrapEngine/include/NearestGOFinder.h:
+
+include/EndState.h:
+
+include/EndStateData.h:
+
+../RattletrapEngine/include/StateData.h:
+
+include/Defines.h:
+
+../RattletrapEngine/include/Text.h:
+
+../RattletrapEngine/include/Game.h:
+
+../RattletrapEngine/include/UIimage.h:
+
+../RattletrapEngine/include/UItextButton.h:
+
+../RattletrapEngine/include/UItext.h:
+
+include/AIArt.h:
+
+include/AIEngineer.h:
+
+include/AIMedic.h:
+
+include/AIQuimic.h:
+
+include/Shooter.h:
+
+../RattletrapEngine/include/Collision.h:
+
+include/EndStateData.h:
+
+include/Enemy.h:
+
+include/GameResources.h:
+
+include/Obstacle.h:
+
+include/PlayerData.h:
+
+../RattletrapEngine/include/UIelement.h:
+
+../RattletrapEngine/include/UIhorizontalGroup.h:
+
+../RattletrapEngine/include/SDL_include.h:

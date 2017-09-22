@@ -633,10 +633,30 @@ void StageState::SetUIMoney(int coins) {
 
 void StageState::InitializeObstacles(void){
 	/*
-	70 a 72 3 tipos de arvores
-	73 poste
-	76 banco
+	71 a 73 3 tipos de arvores
+	74 poste
+	77 banco
+
+	100 índices (i) para árvores, em que
+	{
+		
+		0  <= i <  5  arbusto2_horiz.png
+		5  <= i <  8  arbusto2_horiz_dir.png
+		8  <= i < 10  arbusto2_horiz_esq.png
+		arvore1.png
+		arvore2.png
+		arvore4.png
+		--arvore1_1.png
+		--arvore1_2.png
+		--bambu1.png
+		--bambu2.png
+		---arvore4_1.png
+		---arvore4_2.png
+		----arvore3.png
+		----arbusto2_vert.png
+	}
 	*/
+
 	int index;
 	int mapWidth= tileMap.GetWidth();
 	Vec2 tileSize= tileMap.GetTileSize();
@@ -648,6 +668,7 @@ void StageState::InitializeObstacles(void){
 	treeTiles[2] = tileMap.GetTileGroups(TREE_3_TILESET_INDEX);
 	vector<vector<int>>* poleTiles = tileMap.GetTileGroups(POLE_TILESET_INDEX);
 	vector<vector<int>>* benchTiles = tileMap.GetTileGroups(BENCH_TILESET_INDEX);
+	string objWinner;
 	for(uint count = 0; count < treeTiles.size(); count++){
 		vector<vector<int>> &treeGroup= *(treeTiles[count]);
 		for(uint i = 0; i < treeGroup.size(); i++){
@@ -658,7 +679,19 @@ void StageState::InitializeObstacles(void){
 				Vec2 offset(0,0);
 				if(treeTilesVector.size() <= (j+1) ){
 					//checar as alternativas gerará um seg fault
-					tree = new Obstacle("./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+
+					switch(rand()%3){
+						case 0:
+							objWinner = "./img/obstacle/arvore1.png";
+							break;
+						case 1:
+							objWinner = "./img/obstacle/arvore1_1.png";
+							break;
+						case 2:
+							objWinner = "./img/obstacle/arvore1_2.png";
+							break;
+					}
+					tree = new Obstacle(objWinner, Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 				}
 				else{
 					auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
@@ -666,20 +699,54 @@ void StageState::InitializeObstacles(void){
 						//tem um tile em baixo
 						if(treeTilesVector[j+1] == (index+1) ){
 							//tem uma linha e uma coluna a partir do tile sendo processado
-							bool isSqare=false;
+							bool isSquare=false;
 							if( (baixo+1) != treeTilesVector.end()){
 								if(*(baixo+1) == (*baixo)+1){
 									//é um quadrado
-									isSqare = true;
-									tree = new Obstacle("./img/obstacle/arvore4_1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+									isSquare = true;
+									switch(rand()%6){
+										case 0:
+											objWinner = "./img/obstacle/arvore1_1.png";
+											break;
+										case 1:
+											objWinner = "./img/obstacle/arvore1_2.png";
+											break;
+										case 2:
+											objWinner = "./img/obstacle/arvore4_1.png";
+											break;
+										case 3:
+											objWinner = "./img/obstacle/arvore4_2.png";
+											break;
+										case 4:
+											objWinner = "./img/obstacle/bambu1.png";
+											break;
+										case 5:
+											objWinner = "./img/obstacle/bambu2.png";
+											break;
+									}
+									tree = new Obstacle(objWinner, Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 									treeTilesVector.erase(baixo+1);
 									treeTilesVector.erase(baixo);
 									treeTilesVector.erase(treeTilesVector.begin()+(j+1) );
 								}
 							}
-							if(!isSqare){
+							if(!isSquare){
 								//é uma coluna
-								tree = new Obstacle("./img/obstacle/arvore4_2.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+								switch(rand()%4){
+									case 0:
+										objWinner = "./img/obstacle/arvore3.png";
+										break;
+									case 1:
+										objWinner = "./img/obstacle/arbusto2_vert.png";
+										break;
+									case 2:
+										objWinner = "./img/obstacle/arvore4_1.png";
+										break;
+									case 3:
+										objWinner = "./img/obstacle/arvore4_2.png";
+										break;
+								}
+								tree = new Obstacle(objWinner, Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 								treeTilesVector.erase(baixo);
 							}
 						}
@@ -690,12 +757,46 @@ void StageState::InitializeObstacles(void){
 					if(nullptr == tree){
 						if(treeTilesVector[j+1] == index+1){
 							//é uma linha
-							tree = new Obstacle("./img/obstacle/arvore1_2.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+							switch(rand()%5){
+								case 0:
+									objWinner = "./img/obstacle/arvore2.png";
+									break;
+								case 1:
+									objWinner = "./img/obstacle/arvore1_1.png";
+									break;
+								case 2:
+									objWinner = "./img/obstacle/arbusto2_horiz_esq.png";
+									break;
+								case 3:
+									objWinner = "./img/obstacle/arbusto2_horiz_dir.png";
+									break;
+								case 4:
+									objWinner = "./img/obstacle/arbusto2_horiz.png";
+									break;
+							}
+							tree = new Obstacle(objWinner, Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 							treeTilesVector.erase(treeTilesVector.begin()+(j+1) );
 						}
 						else{
 							//é apenas um tile
-							tree = new Obstacle("./img/obstacle/arvore1_1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+							switch(rand()%5){
+								case 0:
+									objWinner = "./img/obstacle/arvore1_1.png";
+									break;
+								case 1:
+									objWinner = "./img/obstacle/arvore1.png";
+									break;
+								case 2:
+									objWinner = "./img/obstacle/arvore2.png";
+									break;
+								case 3:
+									objWinner = "./img/obstacle/arvore4.png";
+									break;
+								case 4:
+									objWinner = "./img/obstacle/arvore1_2.png";
+									break;
+							}
+							tree = new Obstacle(objWinner, Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 						}
 					}
 				}
@@ -716,7 +817,7 @@ void StageState::InitializeObstacles(void){
 	for(uint i = 0; i < poleTiles->size(); i++){
 		for(uint j = 0; j < poleTiles->at(i).size(); j++){
 			index = poleTiles->at(i)[j];
-			Obstacle* pole = new Obstacle("./img/obstacle/poste_aceso.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+			Obstacle* pole = new Obstacle(rand()%2 > 0 ? "./img/obstacle/poste_aceso.png" : "./img/obstacle/poste_apagado.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 			tileMap.InsertGO(pole, false);
 			AddObstacle(pole);
 			pole->box = pole->box - Vec2((float)10.5*pole->box.w/16., (float)5.5*pole->box.h/8.);
@@ -726,7 +827,7 @@ void StageState::InitializeObstacles(void){
 	for(uint i = 0; i < benchTiles->size(); i++){
 		for(uint j = 0; j < benchTiles->at(i).size(); j++){
 			index = benchTiles->at(i)[j];
-			Obstacle* bench = new Obstacle("./img/obstacle/banco_h.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+			Obstacle* bench = new Obstacle(rand()%2 > 0 ? "./img/obstacle/banco_h.png" : "./img/obstacle/banco_v.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 			tileMap.InsertGO(bench, false);
 			AddObstacle(bench);
 		}
