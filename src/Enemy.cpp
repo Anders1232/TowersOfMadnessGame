@@ -10,7 +10,7 @@
 #include "HitPoints.h"
 #include "Timer.h"
 
-Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap & tileMap, WaveManager &wManager)
+Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<TileSet>&  tileMap, WaveManager &wManager)
 	: sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager){
 	box = position;
 	this->enemyIndex = enemyIndex; 

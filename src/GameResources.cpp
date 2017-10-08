@@ -196,8 +196,9 @@ void GameResources::Clear(void){
 
 //void GameResources::SaveWaveData(voidstd::pair<std::vector<WaveData>, std::vector<EnemyData> > *data);
 
-void GameResources::SetTileMap(TileMap *map){
-	tileMap= map;
+template<class T>
+void GameResources::SetTileMap(TileMap<T>* map){
+    tileMap = map;
 }
 
 void GameResources::NotifyTileMapChanged(int tilePosition){

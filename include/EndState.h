@@ -7,11 +7,6 @@
 #include "Rect.h"
 #include "Sprite.h"
 #include "Text.h"
-#include "UIcanvas.h"
-#include "UIimage.h"
-#include "UItext.h"
-#include "UItextButton.h"
-#include "UIverticalGroup.h"
 #include "Vec2.h"
 
 #define END_STATE_FONT_SIZE (40)

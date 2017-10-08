@@ -36,7 +36,8 @@ class GameResources{
 		static void Clear(void);
 //		static void SaveWeightData(std::array<std::map<int, int>, EnemyType::ENEMY_TYPE_SIZE > &data);
 //		static void SaveWaveData(std::pair<std::vector<WaveData>, std::vector<EnemyData> > &data);
-		static void SetTileMap(TileMap*);
+        static void
+                void GameResources::SetTileMap(TileMap<T>* map)
 		static void NotifyTileMapChanged(int tilePosition);
 		static std::shared_ptr<std::vector<int> > GetPath(EnemyType type, AStarHeuristic *heuristic, int origin, int dest, std::string weightDataFile);
 		static float GetPathHitRate(void);
