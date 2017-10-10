@@ -44,8 +44,6 @@
 
 StageState::StageState(void)
 		: State()
-		, tileSet(120, 120,"map/tileset_vf.png")
-		, tileMap("map/tileMap.txt", &tileSet)
 		, inputManager(INPUT_MANAGER)
 		, music("audio/trilha_sonora/loop_3_atualizado.ogg")
 		, isLightning(false)
@@ -56,46 +54,98 @@ StageState::StageState(void)
 		, thunderSound("audio/Ambiente/Trovao.wav")
 		, towerMenuSounds("audio/Acoes/Dinheiro1.wav")
 		, frameRateCounter(0)
-		, HUDcanvas()
-		, menuBg("img/UI/HUD/menu.png", UIelement::BehaviorType::FIT)
-		, openMenuBtn()
-		, menuMove("audio/Interface/Click1.wav")
-		, towerInfoGroup()
-		, towerName("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERNAME_DEFAULT_TEXT)
-		, towerCost("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERCOST_DEFAULT_TEXT)
-		, towerDamage("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMAGE_DEFAULT_TEXT)
-		, towerDamageType("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMGETYPE_DEFAULT_TEXT)
-		, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
-		, towerBtn1()
-		, towerBtn2()
-		, towerBtn3()
-		, towerBtn4()
-		, health()
-		, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
-		, healthbarBg("img/UI/HUD/hudvida.png")
-		, healthbarBar("img/UI/HUD/hudvida.png")
-		, wave()
-		, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
-		, wavebarBg("img/UI/HUD/hudvida.png")
-		, wavebarBar("img/UI/HUD/hudvida.png")
-		, money()
-		, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
-		, moneyText("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, MONEY_TXT_COLOR, "+Inf") {
+        , menuMove("audio/Interface/Click1.wav")
+
+        //HUDCanvas
+        RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
+        HUDCanvas->AddComponent(rect);
+        //menuBG
+        RectTransform* rect = new RectTransform(menuBg,nullptr);
+        rect->SetBehaviorType(BehaviorType::FIT);
+        Sprite* sp = new Sprite("img/UI/HUD/menu.png",menuBG)
+        menuBG->AddComponent(rect);
+        menuBG->AddComponent(sp);
+        //openMenuBtn
+        RectTransform* rect = new RectTransform(openMenuBtn,nullptr);
+        openMenuBtn->AddComponent(rect);
+        //towerInfoGroup
+        RectTransform* rect = new RectTransform(towerInfoGroup,nullptr);
+        towerInfoGroup->AddComponent(rect);
+        //, towerName("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERNAME_DEFAULT_TEXT)
+        //, towerCost("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERCOST_DEFAULT_TEXT)
+        //, towerDamage("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMAGE_DEFAULT_TEXT)
+        //, towerDamageType("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMGETYPE_DEFAULT_TEXT)
+        //, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
+        //towerBtn1
+        RectTransform* rect = new RectTransform(towerBtn1,nullptr);
+        towerBtn1->AddComponent(rect);
+        //towerBtn2
+        RectTransform* rect = new RectTransform(towerBtn2,nullptr);
+        towerBtn2->AddComponent(rect);
+        //towerBtn3
+        RectTransform* rect = new RectTransform(towerBtn3,nullptr);
+        towerBtn3->AddComponent(rect);
+        //towerBtn4
+        RectTransform* rect = new RectTransform(towerBtn4,nullptr);
+        towerBtn4->AddComponent(rect);
+        //health
+        RectTransform* rect = new RectTransform(health,nullptr);
+        health->AddComponent(rect);
+        //, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
+        //healthbarBg
+        RectTransform* rect = new RectTransform(healthbarBg,nullptr);
+        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBg);
+        healthbarBg->AddComponent(rect);
+        healthbarBg->AddComponent(sp);
+        //healthbarBar
+        RectTransform* rect = new RectTransform(healthbarBar,nullptr);
+        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBar);
+        healthbarBar->AddComponent(rect);
+        healthbarBar->AddComponent(sp);
+        //wave
+        RectTransform* rect = new RectTransform(wave,nullptr);
+        wave->AddComponent(rect);
+        //, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
+        //wavebarBg
+        RectTransform* rect = new RectTransform(wavebarBg,nullptr);
+        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBg);
+        wavebarBg->AddComponent(rect);
+        wavebarBg->AddComponent(sp);
+        //wavebarBar
+        RectTransform* rect = new RectTransform(wavebarBar,nullptr);
+        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBar);
+        wavebarBar->AddComponent(rect);
+        wavebarBar->AddComponent(sp);
+        //money
+        RectTransform* rect = new RectTransform(money,nullptr);
+        money->AddComponent(rect);
+        //, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
+        //, moneyText("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, MONEY_TXT_COLOR, "+Inf") {
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
-	GameResources::SetTileMap(&tileMap);
+    //GameResources::SetTileMap(&tileMap);
 	REPORT_I_WAS_HERE;
 	music.Play(0);
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
+    GameObject* tileSetGO= new GameObject();
+    TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*tileSetGO)
+    tileSetGO->AddComponent(tileMap);
+    AddObject(tileSetGO);
+
+    GameObject* tileMapGO= new GameObject();
+    TileMap* tileMap = new TileMap<TileSet>(*tileMapGO,"map/tileMap.txt",tileSet)
+    tileMap->ObserveMapChanges(this);
+    tileMapGO->AddComponent(tileMap);
+    AddObject(tileMapGO);
+
 	GameObject* waveManagerGO= new GameObject();
-	waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
+    WaveManager* waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
 	waveManagerGO->AddComponent(waveManager);
 	AddObject(waveManagerGO);
 	
-	tileMap.ObserveMapChanges(this);
 	lightningInterval = rand() % (LIGHTINING_MAX_INTERVAL - LIGHTINING_MIN_INTERVAL) + LIGHTINING_MIN_INTERVAL;
 	REPORT_DEBUG(" Proximo relampago sera em " << lightningInterval << " segundos.");
 	InitializeObstacles();
@@ -426,45 +476,7 @@ void StageState::Update(float dt){
 	}
 }
 
-void StageState::UpdateUI(float dt) {
-	Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
-
-	openMenuBtn.angle = 180*menuIsShowing;
-
-	HUDcanvas.Update(dt, winSize);
-
-	menuBg.Update(dt, HUDcanvas);
-
-	openMenuBtn.Update(dt, menuBg);
-
-	towerInfoGroup.Update(dt, menuBg);
-	towerName.Update(dt, towerInfoGroup);
-	towerCost.Update(dt, towerInfoGroup);
-	towerDamage.Update(dt, towerInfoGroup);
-	towerDamageType.Update(dt, towerInfoGroup);
-
-	towersBtnGroup.Update(dt, menuBg);
-	towerBtn1.Update(dt, towersBtnGroup);
-	towerBtn2.Update(dt, towersBtnGroup);
-	towerBtn3.Update(dt, towersBtnGroup);
-	towerBtn4.Update(dt, towersBtnGroup);
-
-
-	health.Update(dt, HUDcanvas);
-	healthIcon.Update(dt, health);
-	healthbarBg.Update(dt, health);
-	healthbarBar.Update(dt, health);
-
-	wave.Update(dt, HUDcanvas);
-	waveIcon.Update(dt, wave);
-	wavebarBg.Update(dt, wave);
-	wavebarBar.Update(dt, wave);
-
-	money.Update(dt, HUDcanvas);
-	moneyIcon.Update(dt, money);
-	moneyText.Update(dt, money);
-}
-
+//void StageState::UpdateUI(float dt) virou openMenuBtn.angle = 180*menuIsShowing;
 void StageState::Render(void) const {
 	REPORT_I_WAS_HERE;
 	bool highlighted = true;
@@ -487,7 +499,7 @@ void StageState::Render(void) const {
 	RenderUI();
 }
 
-void StageState::RenderUI(void) const {
+/*void StageState::RenderUI(void) const {
 	// Se tivesse como ser estatico para a funcao mas uma para cada instancia, melhor ainda...
 	// Mas como StageState nao teram instancias multiplas simultaneas, serve...
 	static bool menuIsShowing = this->menuIsShowing;
@@ -522,9 +534,9 @@ void StageState::RenderUI(void) const {
 	moneyText.Render();
 
 	menuIsShowing = this->menuIsShowing;
-}
+}*/
 
-void StageState::Pause(void) {
+void StageState::Pause(void){
 	nightSound.Stop();
 	thunderSound.Stop();
 }

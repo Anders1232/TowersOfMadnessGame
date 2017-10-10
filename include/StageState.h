@@ -57,8 +57,6 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 							  string damageType = TOWERDAMGETYPE_DEFAULT_TEXT
 		);
 		void CreateTower(Tower::TowerType towerType);
-		TileSet tileSet;
-		TileMap tileMap;/**< Mapa de tiles do jogo. */
 		InputManager &inputManager;
 
 		Music music;
@@ -69,7 +67,6 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		Color lightningColor;
 		float lightningInterval;
 
-		WaveManager *waveManager;/**< Referencia para a WaveManager, gerenciador de waves. Essa Referência existe aqui por motivos de perfornance, para não ter que procurá-lo todo Update.*/
 		vector<int> waves;//vetor de waves a ser lido no arquivo
 		
 		void InitializeObstacles(void);
@@ -86,37 +83,37 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		bool menuIsShowing;
 
-		UIcanvas HUDcanvas;
+        GameObject* HUDcanvas;
 
-		UIimage menuBg;
-		UIimageButton openMenuBtn;
+        GameObject* menuBg;
+        GameObject* openMenuBtn;
 		Sound menuMove;
 
-		UIverticalGroup towerInfoGroup;
-		UItext towerName;
-		UItext towerCost;
-		UItext towerDamage;
-		UItext towerDamageType;
+        GameObject* towerInfoGroup;
+        GameObject* towerName;
+        GameObject* towerCost;
+        GameObject* towerDamage;
+        GameObject* towerDamageType;
 
-		UIgridGroup towersBtnGroup;
-		UIimageButton towerBtn1;
-		UIimageButton towerBtn2;
-		UIimageButton towerBtn3;
-		UIimageButton towerBtn4;
+        GameObject* towersBtnGroup;
+        GameObject* towerBtn1;
+        GameObject* towerBtn2;
+        GameObject* towerBtn3;
+        GameObject* towerBtn4;
 
-		UIcanvas health;
-		UIimage healthIcon;
-		UIimage healthbarBg;
-		UIimage healthbarBar;
+        GameObject* health;
+        GameObject* healthIcon;
+        GameObject* healthbarBg;
+        GameObject* healthbarBar;
 
-		UIcanvas wave;
-		UIimage waveIcon;
-		UIimage wavebarBg;
-		UIimage wavebarBar;
+        GameObject* wave;
+        GameObject* waveIcon;
+        GameObject* wavebarBg;
+        GameObject* wavebarBar;
 
-		UIcanvas money;
-		UIimage moneyIcon;
-		UItext moneyText;
+        GameObject* money;
+        GameObject* moneyIcon;
+        GameObject* moneyText;
 };
 
 #include "EndState.h"

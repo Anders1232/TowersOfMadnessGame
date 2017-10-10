@@ -24,7 +24,7 @@ class AIArt : public Component, public TileMapObserver
 			\param associado objeto associado a essa IA.
 			Instancia o componente.
 		*/
-		AIArt(float speed,int dest,TileMap &tileMap,GameObject &associated, WaveManager &wManager);
+        AIArt(float speed,int dest,TileMap<TileSet>& tileMap,GameObject &associated, WaveManager &wManager);
 		~AIArt(void);
 		/**
 			\brief Atualiza estado.
@@ -54,7 +54,7 @@ class AIArt : public Component, public TileMapObserver
 		ManhattanDistance *heuristic;/**<Heuristica a ser utilizada pelo A* no calculo do caminho*/
 		std::map<int, double> tileWeightMap;
 		Vec2 tempDestination;
-		TileMap& tileMap;
+        TileMap<TileSet>& tileMap;
 		GameObject &associated;
 		WaveManager &waveManager;
 		Timer getPathTimer;

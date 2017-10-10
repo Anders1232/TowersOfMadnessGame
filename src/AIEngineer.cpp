@@ -3,7 +3,7 @@
 
 //enum AIState{WALKING,WALKING_SLOWLY,BUILDING_BARRIER,STUNNED,STATE_NUM};
 //enum AIEvent{NONE,PATH_BLOCKED,PATH_FREE,SMOKE,NOT_SMOKE,STUN,NOT_STUN,EVENT_NUM}; 
-AIEngineer::AIEngineer(float speed,int dest,TileMap& tilemap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
+AIEngineer::AIEngineer(float speed,int dest,TileMap<TileSet>& tilemap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();
