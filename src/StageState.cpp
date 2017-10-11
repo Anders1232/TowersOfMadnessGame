@@ -13,6 +13,7 @@
 #include "Obstacle.h"
 #include "Vec2.h"
 #include "PlayerData.h"
+#include "RectTransform.h"
 
 #define INCLUDE_SDL
 #define INCLUDE_SDL_IMAGE
@@ -56,71 +57,6 @@ StageState::StageState(void)
 		, frameRateCounter(0)
         , menuMove("audio/Interface/Click1.wav")
 
-        //HUDCanvas
-        RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
-        HUDCanvas->AddComponent(rect);
-        //menuBG
-        RectTransform* rect = new RectTransform(menuBg,nullptr);
-        rect->SetBehaviorType(BehaviorType::FIT);
-        Sprite* sp = new Sprite("img/UI/HUD/menu.png",menuBG)
-        menuBG->AddComponent(rect);
-        menuBG->AddComponent(sp);
-        //openMenuBtn
-        RectTransform* rect = new RectTransform(openMenuBtn,nullptr);
-        openMenuBtn->AddComponent(rect);
-        //towerInfoGroup
-        RectTransform* rect = new RectTransform(towerInfoGroup,nullptr);
-        towerInfoGroup->AddComponent(rect);
-        //, towerName("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERNAME_DEFAULT_TEXT)
-        //, towerCost("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERCOST_DEFAULT_TEXT)
-        //, towerDamage("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMAGE_DEFAULT_TEXT)
-        //, towerDamageType("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMGETYPE_DEFAULT_TEXT)
-        //, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
-        //towerBtn1
-        RectTransform* rect = new RectTransform(towerBtn1,nullptr);
-        towerBtn1->AddComponent(rect);
-        //towerBtn2
-        RectTransform* rect = new RectTransform(towerBtn2,nullptr);
-        towerBtn2->AddComponent(rect);
-        //towerBtn3
-        RectTransform* rect = new RectTransform(towerBtn3,nullptr);
-        towerBtn3->AddComponent(rect);
-        //towerBtn4
-        RectTransform* rect = new RectTransform(towerBtn4,nullptr);
-        towerBtn4->AddComponent(rect);
-        //health
-        RectTransform* rect = new RectTransform(health,nullptr);
-        health->AddComponent(rect);
-        //, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
-        //healthbarBg
-        RectTransform* rect = new RectTransform(healthbarBg,nullptr);
-        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBg);
-        healthbarBg->AddComponent(rect);
-        healthbarBg->AddComponent(sp);
-        //healthbarBar
-        RectTransform* rect = new RectTransform(healthbarBar,nullptr);
-        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBar);
-        healthbarBar->AddComponent(rect);
-        healthbarBar->AddComponent(sp);
-        //wave
-        RectTransform* rect = new RectTransform(wave,nullptr);
-        wave->AddComponent(rect);
-        //, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
-        //wavebarBg
-        RectTransform* rect = new RectTransform(wavebarBg,nullptr);
-        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBg);
-        wavebarBg->AddComponent(rect);
-        wavebarBg->AddComponent(sp);
-        //wavebarBar
-        RectTransform* rect = new RectTransform(wavebarBar,nullptr);
-        Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBar);
-        wavebarBar->AddComponent(rect);
-        wavebarBar->AddComponent(sp);
-        //money
-        RectTransform* rect = new RectTransform(money,nullptr);
-        money->AddComponent(rect);
-        //, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
-        //, moneyText("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, MONEY_TXT_COLOR, "+Inf") {
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
@@ -166,9 +102,115 @@ StageState::StageState(void)
 void StageState::SetupUI() {
 	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
 
-	// Side Menu
-	menuIsShowing = false;
+    // Side Menu
+    menuIsShowing = false;
 
+    //HUDCanvas
+    RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
+    HUDCanvas->AddComponent(rect);
+    //menuBG
+    RectTransform* rect = new RectTransform(menuBg,nullptr);
+    rect->SetBehaviorType(BehaviorType::FIT);
+    Sprite* sp = new Sprite("img/UI/HUD/menu.png",menuBG)
+    menuBG->AddComponent(rect);
+    menuBG->AddComponent(sp);
+    //openMenuBtn
+    RectTransform* rect = new RectTransform(openMenuBtn,nullptr);
+    openMenuBtn->AddComponent(rect);
+    //towerInfoGroup
+    RectTransform* rect = new RectTransform(towerInfoGroup,nullptr);
+    towerInfoGroup->AddComponent(rect);
+    //towerName
+    RectTransform* rect = new RectTransform(towerName,nullptr);
+    Text* t = new Text(TowerName);
+    t->SetText(TOWERNAME_DEFAULT_TEXT);
+    t->SetColor(TOWER_INFO_TXT_COLOR);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    towerName->AddComponent(rect);
+    towerName->AddComponent(rect);
+    //towerCost
+    RectTransform* rect = new RectTransform(towerName,nullptr);
+    Text* t = new Text(TowerCost);
+    t->SetText(TOWERCOST_DEFAULT_TEXT);
+    t->SetColor(TOWER_INFO_TXT_COLOR);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    towerCost->AddComponent(rect);
+    towerCost->AddComponent(t);
+    //towerDamage
+    RectTransform* rect = new RectTransform(towerName,nullptr);
+    Text* t = new Text(towerDamage);
+    t->SetText(TOWERDAMAGE_DEFAULT_TEXT);
+    t->SetColor(TOWER_INFO_TXT_COLOR);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    towerDamage->AddComponent(rect);
+    towerDamage->AddComponent(t);
+    //, towerDamageType
+    RectTransform* rect = new RectTransform(towerName,nullptr);
+    Text* t = new Text(towerDamageType);
+    t->SetText(TOWERDAMGETYPE_DEFAULT_TEXT);
+    t->SetColor(TOWER_INFO_TXT_COLOR);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    towerDamageType->AddComponent(rect);
+    towerDamageType->AddComponent(t);
+    //, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
+    //towerBtn1
+    RectTransform* rect = new RectTransform(towerBtn1,nullptr);
+    towerBtn1->AddComponent(rect);
+    //towerBtn2
+    RectTransform* rect = new RectTransform(towerBtn2,nullptr);
+    towerBtn2->AddComponent(rect);
+    //towerBtn3
+    RectTransform* rect = new RectTransform(towerBtn3,nullptr);
+    towerBtn3->AddComponent(rect);
+    //towerBtn4
+    RectTransform* rect = new RectTransform(towerBtn4,nullptr);
+    towerBtn4->AddComponent(rect);
+    //health
+    RectTransform* rect = new RectTransform(health,nullptr);
+    health->AddComponent(rect);
+    //, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
+    //healthbarBg
+    RectTransform* rect = new RectTransform(healthbarBg,nullptr);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBg);
+    healthbarBg->AddComponent(rect);
+    healthbarBg->AddComponent(sp);
+    //healthbarBar
+    RectTransform* rect = new RectTransform(healthbarBar,nullptr);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBar);
+    healthbarBar->AddComponent(rect);
+    healthbarBar->AddComponent(sp);
+    //wave
+    RectTransform* rect = new RectTransform(wave,nullptr);
+    wave->AddComponent(rect);
+    //, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
+    //wavebarBg
+    RectTransform* rect = new RectTransform(wavebarBg,nullptr);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBg);
+    wavebarBg->AddComponent(rect);
+    wavebarBg->AddComponent(sp);
+    //wavebarBar
+    RectTransform* rect = new RectTransform(wavebarBar,nullptr);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBar);
+    wavebarBar->AddComponent(rect);
+    wavebarBar->AddComponent(sp);
+    //money
+    RectTransform* rect = new RectTransform(money,nullptr);
+    money->AddComponent(rect);
+    //, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
+    //moneyText
+    Text* t = new Text(moneyText);
+    t->SetText("+Inf");
+    t->SetColor(MONEY_TXT_COLOR);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    moneyText->AddComponent(rect);
+    moneyText->AddComponent(t);
+
+    /*
 	menuBg.SetAnchors( {1., 0.5},
 					   {1., 0.5});
 	menuBg.SetOffsets( {-10., (float)(-menuBg.GetSprite().GetHeight()/2.)},
@@ -335,7 +377,7 @@ void StageState::SetupUI() {
 						  {1., 1.});
 	moneyText.SetOffsets( {12.5, 0.},
 						  {0., 0.});
-	moneyText.SetCenter( {0., .5} );
+    moneyText.SetCenter( {0., .5} );*/
 }
 
 StageState::~StageState(void) {
@@ -495,8 +537,6 @@ void StageState::Render(void) const {
 		SDL_SetRenderDrawBlendMode(Game::GetInstance().GetRenderer(), SDL_BLENDMODE_BLEND);
 		SDL_RenderFillRect(Game::GetInstance().GetRenderer(), NULL);
 	}
-
-	RenderUI();
 }
 
 /*void StageState::RenderUI(void) const {

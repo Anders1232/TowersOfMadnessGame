@@ -30,12 +30,12 @@ class EndState: public State {
 		Music music;
 		Music intro;
 
-		UIcanvas HUDcanvas;
-		UIimage bg;
-		UItext venceuText;
-		UIverticalGroup optionsGroup;
-		UItextButton playBtn;
-		UItextButton exitBtn;
+        GameObject* HUDcanvas;
+        GameObject* bg;
+        GameObject* venceuText;
+        GameObject* optionsGroup;
+        GameObject* playBtn;
+        GameObject* exitBtn;
 };
 
 #endif // ENDSTATE_H
