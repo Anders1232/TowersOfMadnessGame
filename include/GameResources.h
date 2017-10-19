@@ -11,6 +11,7 @@
 #include <cstdint>
 #include "WaveData.h"
 #include "Enemy.h"
+#include "AStarHeuristic.h"
 
 /**
 	\brief Classe estática que gerencia recursos específicos do jogo
