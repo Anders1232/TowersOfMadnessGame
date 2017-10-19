@@ -22,6 +22,7 @@
 #include "Obstacle.h"
 #include "Sound.h"
 #include "NearestGOFinder.h"
+#include "Grouper.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "
@@ -86,7 +87,8 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
         GameObject* HUDcanvas;
 
         GameObject* menuBg;
-        GameObject* openMenuBtn;
+        GameObject* openMenuBtnGO;
+        Button openMenuBtn;
 		Sound menuMove;
 
         GameObject* towerInfoGroup;
@@ -95,25 +97,31 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
         GameObject* towerDamage;
         GameObject* towerDamageType;
 
-        GameObject* towersBtnGroup;
-        GameObject* towerBtn1;
-        GameObject* towerBtn2;
-        GameObject* towerBtn3;
-        GameObject* towerBtn4;
+        Grouper towersBtnGroup;
+        GameObject* towersBtnGroupGO;
+        GameObject* towerBtn1GO;
+        GameObject* towerBtn2GO;
+        GameObject* towerBtn3GO;
+        GameObject* towerBtn4GO;
 
-        GameObject* health;
-        GameObject* healthIcon;
-        GameObject* healthbarBg;
-        GameObject* healthbarBar;
+        Button towerBtn1;
+        Button towerBtn2;
+        Button towerBtn3;
+        Button towerBtn4;
 
-        GameObject* wave;
-        GameObject* waveIcon;
-        GameObject* wavebarBg;
-        GameObject* wavebarBar;
+        GameObject* healthGO;
+        GameObject* healthIconGO;
+        GameObject* healthbarBgGO;
+        GameObject* healthbarBarGO;
 
-        GameObject* money;
-        GameObject* moneyIcon;
-        GameObject* moneyText;
+        GameObject* waveGO;
+        GameObject* waveIconGO;
+        GameObject* wavebarBgGO;
+        GameObject* wavebarBarGO;
+
+        GameObject* moneyGO;
+        GameObject* moneyIconGO;
+        GameObject* moneyTextGO;
 };
 
 #include "EndState.h"

@@ -43,6 +43,11 @@
 #define TOWER_INFO_TXT_COLOR	{199,159,224,255} // Purple-ish white
 #define MONEY_TXT_COLOR			{186,179, 62,255}
 
+struct btnCallbackArgsGoSt{
+    GameObject* GO;
+    StageState* ST;
+};
+
 StageState::StageState(void)
 		: State()
 		, inputManager(INPUT_MANAGER)
@@ -99,30 +104,60 @@ StageState::StageState(void)
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
 }
 
-void StageState::SetupUI() {
-	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
+void StageState::SetupUI(){
+    GameObject* winSizeGO = new GameObject();
+    winSizeGO->box = Game::GetInstance().GetWindowDimensions();
 
     // Side Menu
     menuIsShowing = false;
 
     //HUDCanvas
-    RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
+    RectTransform* rect = new RectTransform(HUDcanvas,winSizeGO);
     HUDCanvas->AddComponent(rect);
     //menuBG
-    RectTransform* rect = new RectTransform(menuBg,nullptr);
-    rect->SetBehaviorType(BehaviorType::FIT);
-    Sprite* sp = new Sprite("img/UI/HUD/menu.png",menuBG)
-    menuBG->AddComponent(rect);
-    menuBG->AddComponent(sp);
+    RectTransform* rect = new RectTransform(menuBg,HUDcanvas);
+    rect->SetBehaviorType(RectTransform::BehaviorType::FIT);
+    rect->SetAnchors(Vec2(1., 0.5),Vec2(1., 0.5));
+    //menuBg.SetOffsets(-10., (float)(-menuBg.GetSprite().GetHeight()/2.),(float)menuBg.GetSprite().GetWidth()-(float)10., (float)(menuBg.GetSprite().GetHeight()/2.));
+    Sprite* sp = new Sprite("img/UI/HUD/menu.png",menuBg);
+    menuBg->AddComponent(rect);
+    menuBg->AddComponent(sp);
     //openMenuBtn
-    RectTransform* rect = new RectTransform(openMenuBtn,nullptr);
-    openMenuBtn->AddComponent(rect);
+    RectTransform* rect = new RectTransform(openMenuBtn,menuBg);
+    openMenuBtnGO->AddComponent(rect);
+    openMenuBtn = Button(openMenuBtnGO);
+    openMenuBtn.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/openmenu.png"));
+    openMenuBtn.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/openmenu.png"));
+    openMenuBtn.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/openmenu-clicked.png"));
+    openMenuBtn.SetAnchors(Vec2(0., 0.),Vec2(0., 0.));
+    //openMenuBtn.SetOffsets((float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.,0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10. );
+    openMenuBtn.SetClickCallback(this, [] (void* ptr) {
+                                                StageState* it = static_cast<StageState*>(ptr);
+                                                it->RemoveComponent(ComponentType::SPRITE);
+                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",openMenuBtn);
+                                                it->AddComponent(sp);
+                                                it->ToggleMenu();
+                                            } );
+    openMenuBtn.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    StageState* it = static_cast<StageState*>(ptr);
+                                                                    it->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
+                                                                    it->AddComponent(sp);
+                                                                } );
+    openMenuBtn.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    StageState* it = static_cast<StageState*>(ptr);
+                                                                    it->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
+                                                                    it->AddComponent(sp);
+                                                                } );
     //towerInfoGroup
-    RectTransform* rect = new RectTransform(towerInfoGroup,nullptr);
+    RectTransform* rect = new RectTransform(towerInfoGroup,menuBg);
+    rect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425);
+    rect->SetOffsets(5., 5.,-5., -5.);
     towerInfoGroup->AddComponent(rect);
     //towerName
-    RectTransform* rect = new RectTransform(towerName,nullptr);
-    Text* t = new Text(TowerName);
+    RectTransform* rect = new RectTransform(towerName,towerInfoGroup);
+    Text* t = new Text(towerName);
     t->SetText(TOWERNAME_DEFAULT_TEXT);
     t->SetColor(TOWER_INFO_TXT_COLOR);
     t->SetFont("font/SHPinscher-Regular.otf");
@@ -130,8 +165,8 @@ void StageState::SetupUI() {
     towerName->AddComponent(rect);
     towerName->AddComponent(rect);
     //towerCost
-    RectTransform* rect = new RectTransform(towerName,nullptr);
-    Text* t = new Text(TowerCost);
+    RectTransform* rect = new RectTransform(towerName,towerInfoGroup);
+    Text* t = new Text(towerCost);
     t->SetText(TOWERCOST_DEFAULT_TEXT);
     t->SetColor(TOWER_INFO_TXT_COLOR);
     t->SetFont("font/SHPinscher-Regular.otf");
@@ -139,7 +174,7 @@ void StageState::SetupUI() {
     towerCost->AddComponent(rect);
     towerCost->AddComponent(t);
     //towerDamage
-    RectTransform* rect = new RectTransform(towerName,nullptr);
+    RectTransform* rect = new RectTransform(towerName,towerInfoGroup);
     Text* t = new Text(towerDamage);
     t->SetText(TOWERDAMAGE_DEFAULT_TEXT);
     t->SetColor(TOWER_INFO_TXT_COLOR);
@@ -147,8 +182,8 @@ void StageState::SetupUI() {
     t->SetFontSize(95);
     towerDamage->AddComponent(rect);
     towerDamage->AddComponent(t);
-    //, towerDamageType
-    RectTransform* rect = new RectTransform(towerName,nullptr);
+    //towerDamageType
+    RectTransform* rect = new RectTransform(towerName,towerInfoGroup);
     Text* t = new Text(towerDamageType);
     t->SetText(TOWERDAMGETYPE_DEFAULT_TEXT);
     t->SetColor(TOWER_INFO_TXT_COLOR);
@@ -156,171 +191,186 @@ void StageState::SetupUI() {
     t->SetFontSize(95);
     towerDamageType->AddComponent(rect);
     towerDamageType->AddComponent(t);
-    //, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
+    towersBtnGroup = Grouper(towersBtnGroupGO);
+    towersBtnGroup.SetAnchors( {0., 0.485},
+                               {1., 1.} );
+    towersBtnGroup.SetOffsets( {32., 0.},
+                               {-27., -30.} );
+    towersBtnGroup.padding = Vec2(10., 10.);
+    towersBtnGroup.MakeGridGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL);
+
+    towerInfoGroup.groupedElements.push_back(towerName);
+    towerInfoGroup.groupedElements.push_back(towerCost);
+    towerInfoGroup.groupedElements.push_back(towerDamage);
+    towerInfoGroup.groupedElements.push_back(towerDamageType);
+
     //towerBtn1
-    RectTransform* rect = new RectTransform(towerBtn1,nullptr);
-    towerBtn1->AddComponent(rect);
+    RectTransform* rect = new RectTransform(towerBtn1GO,towersBtnGroupGO);
+    rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn1GO->AddComponent(rect);
+    towerBtn1 = Button(towerBtn1GO);
+    towerBtn1.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr);
+                                                                    stct->ST->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",towerBtn1);
+                                                                    stct->GO->AddComponent(sp);
+																} );
+    towerBtn1.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    GO = static_cast<GameObject*>(ptr)
+                                                                    GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",towerBtn1);
+                                                                    GO->AddComponent(sp);
+																} );
+	towerBtn1.SetClickCallback(this, [] (void* ptr) {
+                                            stct = static_cast<btnCallbackArgAux*>(ptr);
+                                            stct->ST->CreateTower(Tower::TowerType::SMOKE);
+                                            stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                            Sprite* sp = new Sprite("img/UI/HUD/botaotorre-clicked.png",towerBtn1);
+                                            stct->GO->AddComponent(sp);
+										} );
     //towerBtn2
-    RectTransform* rect = new RectTransform(towerBtn2,nullptr);
-    towerBtn2->AddComponent(rect);
+    RectTransform* rect = new RectTransform(towerBtn2,towersBtnGroupGO);
+    rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn2GO->AddComponent(rect);
+    towerBtn2 = Button(towerBtn2GO);
+
+	
+    towerBtn2.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr)
+                                                                    stct->ST->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",towerBtn2));
+                                                                    stct->GO->AddComponent(sp);
+																} );
+    towerBtn2.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    GO = static_cast<GameObject*>(ptr)
+                                                                    GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",towerBtn2);
+                                                                    GO->AddComponent(sp);
+																} );
+    towerBtn2.SetClickCallback(this, [] (void* ptr){
+                                            stct = static_cast<btnCallbackArgAux*>(ptr)
+                                            stct->ST->CreateTower(Tower::TowerType::ANTIBOMB);
+                                            stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                            Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba-clicked.png",towerBtn2);
+                                            stct->GO->AddComponent(sp);
+										} );
     //towerBtn3
-    RectTransform* rect = new RectTransform(towerBtn3,nullptr);
-    towerBtn3->AddComponent(rect);
+    RectTransform* rect = new RectTransform(towerBtn3,towersBtnGroupGO);
+    rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn3GO->AddComponent(rect);
+    towerBtn3 = Button(towerBtn3GO);
+	
+	towerBtn3.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr)
+                                                                    stct->ST->SetTowerInfoData("Bobina", "$30", "1 tiro/2s", "Dano");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaochoque.png",towerBtn3);
+                                                                    stct->GO->AddComponent(sp);
+																} );
+	towerBtn3.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    GO = static_cast<GameObject*>(ptr)
+                                                                    GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaochoque.png",towerBtn3);
+                                                                    GO->AddComponent(sp);
+																} );
+	towerBtn3.SetClickCallback(this, [] (void* ptr) {
+                                            stct = static_cast<btnCallbackArgAux*>(ptr)
+                                            stct->ST->CreateTower(Tower::TowerType::ANTIBOMB);
+                                            stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                            Sprite* sp = new Sprite("img/UI/HUD/botaochoque-clicked.png",towerBtn3);
+                                            stct->GO->AddComponent(sp);
+										} );
     //towerBtn4
     RectTransform* rect = new RectTransform(towerBtn4,nullptr);
-    towerBtn4->AddComponent(rect);
+    towerBtn4GO->AddComponent(rect);
+    towerBtn4 = Button(towerBtn4GO);
+    rect->SetCenterPin(vec2(0.5, 0.));
+    
+	towerBtn4.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr)
+                                                                    stct->ST->SetTowerInfoData("Monolito", "$30", "Stun", "Area");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaostun.png",towerBtn4);
+                                                                    stct->GO->AddComponent(sp);
+																} );
+	towerBtn4.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    GO = static_cast<GameObject*>(ptr);
+                                                                    GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaostun.png",towerBtn4);
+                                                                    GO->AddComponent(sp);
+																} );
+	towerBtn4.SetClickCallback(this, [] (void* ptr) {
+                                            stct = static_cast<btnCallbackArgAux*>(ptr)
+                                            stct->ST->CreateTower(Tower::TowerType::STUN);
+                                            stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                            Sprite* sp = new Sprite("img/UI/HUD/botaostun-clicked.png",towerBtn4);
+                                            stct->GO->AddComponent(sp);
+										} );
+
+    towersBtnGroup.groupedElements.push_back(towerBtn1);
+    towersBtnGroup.groupedElements.push_back(towerBtn2);
+    towersBtnGroup.groupedElements.push_back(towerBtn3);
+    towersBtnGroup.groupedElements.push_back(towerBtn4);
+
     //health
-    RectTransform* rect = new RectTransform(health,nullptr);
+    RectTransform* rect = new RectTransform(health,HUDcanvas);
     health->AddComponent(rect);
-    //, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
+    //healthIcon
+    RectTransform* rect = new RectTransform(healthIconGO,health);
+    rect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* sp = new Sprite("img/UI/HUD/CoraçãoHUD_spritesheet.png",healthIconGO,false, 1./4, 8);
+    healthIconGO->AddComponent(rect);
+    healthIconGO->AddComponent(sp);
     //healthbarBg
-    RectTransform* rect = new RectTransform(healthbarBg,nullptr);
-    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBg);
-    healthbarBg->AddComponent(rect);
-    healthbarBg->AddComponent(sp);
+    RectTransform* rect = new RectTransform(healthbarBgGO,health);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBgGO);
+    healthbarBgGO->AddComponent(rect);
+    healthbarBgGO->AddComponent(sp);
     //healthbarBar
-    RectTransform* rect = new RectTransform(healthbarBar,nullptr);
-    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBar);
-    healthbarBar->AddComponent(rect);
-    healthbarBar->AddComponent(sp);
+    RectTransform* rect = new RectTransform(healthbarBarGO,health);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",healthbarBarGO);
+    healthbarBarGO->AddComponent(rect);
+    healthbarBarGO->AddComponent(sp);
     //wave
-    RectTransform* rect = new RectTransform(wave,nullptr);
-    wave->AddComponent(rect);
-    //, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
+    RectTransform* rect = new RectTransform(waveGO,HUDcanvas);
+    waveGO->AddComponent(rect);
+    //waveIcon
+    RectTransform* rect = new RectTransform(waveIconGO,waveGO);
+    rect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* sp = new Sprite("img/UI/HUD/inimigoHUD_spritesheet.png",waveIconGO,false, 1./4, 5);
+    waveIconGO->AddComponent(rect);
+    waveIconGO->AddComponent(sp);
     //wavebarBg
-    RectTransform* rect = new RectTransform(wavebarBg,nullptr);
-    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBg);
-    wavebarBg->AddComponent(rect);
-    wavebarBg->AddComponent(sp);
+    RectTransform* rect = new RectTransform(wavebarBgGO,waveGO);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBgGO);
+    wavebarBgGO->AddComponent(rect);
+    wavebarBgGO->AddComponent(sp);
     //wavebarBar
-    RectTransform* rect = new RectTransform(wavebarBar,nullptr);
-    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBar);
-    wavebarBar->AddComponent(rect);
-    wavebarBar->AddComponent(sp);
+    RectTransform* rect = new RectTransform(wavebarBarGO,waveGO);
+    Sprite* sp = new Sprite("img/UI/HUD/hudvida.png",wavebarBarGO);
+    wavebarBarGO->AddComponent(rect);
+    wavebarBarGO->AddComponent(sp);
     //money
-    RectTransform* rect = new RectTransform(money,nullptr);
-    money->AddComponent(rect);
-    //, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
+    RectTransform* rect = new RectTransform(moneyGO,HUDcanvas);
+    moneyGO->AddComponent(rect);
+    //moneyIcon
+    RectTransform* rect = new RectTransform(moneyIconGO,moneyGO);
+    rect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* sp = new Sprite("img/UI/HUD/spritesheetmoeda_HUD.png",moneyIconGO,false, 1./4, 4);
+    moneyIconGO->AddComponent(rect);
+    moneyIconGO->AddComponent(sp);
     //moneyText
-    Text* t = new Text(moneyText);
+    Text* t = new Text(moneyTextGO);
     t->SetText("+Inf");
     t->SetColor(MONEY_TXT_COLOR);
     t->SetFont("font/SHPinscher-Regular.otf");
     t->SetFontSize(95);
-    moneyText->AddComponent(rect);
-    moneyText->AddComponent(t);
-
-    /*
-	menuBg.SetAnchors( {1., 0.5},
-					   {1., 0.5});
-	menuBg.SetOffsets( {-10., (float)(-menuBg.GetSprite().GetHeight()/2.)},
-					   {(float)menuBg.GetSprite().GetWidth()-(float)10., (float)(menuBg.GetSprite().GetHeight()/2.)});
-
-	openMenuBtn.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/openmenu.png"));
-	openMenuBtn.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/openmenu.png"));
-	openMenuBtn.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/openmenu-clicked.png"));
-	openMenuBtn.SetAnchors( {0., 0.},
-							{0., 0.} );
-	openMenuBtn.SetOffsets( {(float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.},
-							{0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10.} );
-	openMenuBtn.SetClickCallback(this, [] (void* ptr) {
-												StageState* it = static_cast<StageState*>(ptr);
-												it->ToggleMenu();
-											} );
+    moneyTextGO->AddComponent(rect);
+    moneyTextGO->AddComponent(t);
 	
-	towerInfoGroup.SetAnchors( {0.165, 0.05},
-						  {0.86, 0.425});
-	towerInfoGroup.SetOffsets( {5., 5.},
-						  {-5., -5.});
-
-	towerInfoGroup.groupedElements.push_back(&towerName);
-	towerInfoGroup.groupedElements.push_back(&towerCost);
-	towerInfoGroup.groupedElements.push_back(&towerDamage);
-	towerInfoGroup.groupedElements.push_back(&towerDamageType);
-	
-	towersBtnGroup.SetAnchors( {0., 0.485},
-							   {1., 1.} );
-	towersBtnGroup.SetOffsets( {32., 0.},
-							   {-27., -30.} );
-	towersBtnGroup.padding = Vec2(10., 10.);
-
-	towerBtn1.SetCenter({0.5, 0.});
-	towerBtn1.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaotorre.png"));
-	towerBtn1.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaotorre.png"));
-	towerBtn1.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaotorre-clicked.png"));
-
-	towerBtn1.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
-																} );
-	towerBtn1.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																} );
-	towerBtn1.SetClickCallback(this, [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::SMOKE);
-										} );
-
-	towerBtn2.SetCenter({0.5, 0.});
-	towerBtn2.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaoantibomba.png"));
-	towerBtn2.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaoantibomba.png"));
-	towerBtn2.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaoantibomba-clicked.png"));
-
-	towerBtn2.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
-																} );
-	towerBtn2.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																} );
-	towerBtn2.SetClickCallback(this, [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::ANTIBOMB);
-										} );
-
-	towerBtn3.SetCenter({0.5, 0.});
-	towerBtn3.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaochoque.png"));
-	towerBtn3.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaochoque.png"));
-	towerBtn3.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaochoque-clicked.png"));
-
-	towerBtn3.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Bobina", "$30", "1 tiro/2s", "Dano");
-																} );
-	towerBtn3.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																} );
-	towerBtn3.SetClickCallback(this, [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::SHOCK);
-										} );
-
-	towerBtn4.SetCenter({0.5, 0.});
-	towerBtn4.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaostun.png"));
-	towerBtn4.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaostun.png"));
-	towerBtn4.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaostun-clicked.png"));
-
-	towerBtn4.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Monolito", "$30", "Stun", "Area");
-																} );
-	towerBtn4.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																} );
-	towerBtn4.SetClickCallback(this, [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::STUN);
-										} );
-
-	towersBtnGroup.groupedElements.push_back(&towerBtn1);
-	towersBtnGroup.groupedElements.push_back(&towerBtn2);
-	towersBtnGroup.groupedElements.push_back(&towerBtn3);
-	towersBtnGroup.groupedElements.push_back(&towerBtn4);
-
+/*
 	// Game Info
 	health.SetAnchors( {(float)(30.+healthIcon.GetSprite().GetWidth())/(2*winSize.x), (float)10./winSize.y},
 					   {(float)300./winSize.x, (float)35./winSize.y} );
