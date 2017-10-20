@@ -76,7 +76,7 @@ StageState::StageState(void)
     tileSetGO->AddComponent(tileMap);
     AddObject(tileSetGO);
 
-    GameObject* tileMapGO= new GameObject();
+    TileMapGO= new GameObject();
     TileMap* tileMap = new TileMap<TileSet>(*tileMapGO,"map/tileMap.txt",tileSet)
     tileMap->ObserveMapChanges(this);
     tileMapGO->AddComponent(tileMap);
