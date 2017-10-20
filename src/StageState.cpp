@@ -123,7 +123,7 @@ void StageState::SetupUI(){
     menuBg->AddComponent(rect);
     menuBg->AddComponent(sp);
     //openMenuBtn
-    RectTransform* rect = new RectTransform(openMenuBtn,menuBg);
+    RectTransform* rect = new RectTransform(openMenuBtnGO,menuBg);
     openMenuBtnGO->AddComponent(rect);
     openMenuBtn = Button(openMenuBtnGO);
     openMenuBtn.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/openmenu.png"));
@@ -191,12 +191,12 @@ void StageState::SetupUI(){
     t->SetFontSize(95);
     towerDamageType->AddComponent(rect);
     towerDamageType->AddComponent(t);
+    RectTransform* rect = new RectTransform(towersBtnGroupGO,nullptr);
+    rect->SetAnchors(Vec2(0., 0.485),Vec2(1., 1.));
+    towersBtnGroup.SetOffsets(32., 0.,-27., -30.);
+    //towersBtnGroup.padding = Vec2(10., 10.);
     towersBtnGroup = Grouper(towersBtnGroupGO);
-    towersBtnGroup.SetAnchors( {0., 0.485},
-                               {1., 1.} );
-    towersBtnGroup.SetOffsets( {32., 0.},
-                               {-27., -30.} );
-    towersBtnGroup.padding = Vec2(10., 10.);
+    towersBtnGroupGO->AddComponent(towersBtnGroup);
     towersBtnGroup.MakeGridGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL);
 
     towerInfoGroup.groupedElements.push_back(towerName);
