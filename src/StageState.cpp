@@ -652,7 +652,7 @@ void StageState::RenderObstacleArray(void) const {
 	}
 }
 
-void StageState::ToggleMenu(void) {
+/*void StageState::ToggleMenu(void) {
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
@@ -665,7 +665,7 @@ void StageState::ToggleMenu(void) {
 		menuBg.SetOffsets( {menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y},
 						   {menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h});
 	}
-}
+}*/
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
 	towerName.SetText(name);
