@@ -18,11 +18,15 @@
 #include "Tileset.h"
 #include "Timer.h"
 #include "Tower.h"
+#include "UIcanvas.h"
+#include "UIgridGroup.h"
+#include "UIimageButton.h"
+#include "UItext.h"
+#include "UIverticalGroup.h"
 #include "WaveManager.h"
 #include "Obstacle.h"
 #include "Sound.h"
 #include "NearestGOFinder.h"
-#include "Grouper.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "
@@ -58,6 +62,8 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 							  string damageType = TOWERDAMGETYPE_DEFAULT_TEXT
 		);
 		void CreateTower(Tower::TowerType towerType);
+		TileSet tileSet;
+		TileMap tileMap;/**< Mapa de tiles do jogo. */
 		InputManager &inputManager;
 
 		Music music;
@@ -68,15 +74,13 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		Color lightningColor;
 		float lightningInterval;
 
+		WaveManager *waveManager;/**< Referencia para a WaveManager, gerenciador de waves. Essa Referência existe aqui por motivos de perfornance, para não ter que procurá-lo todo Update.*/
 		vector<int> waves;//vetor de waves a ser lido no arquivo
 		
 		void InitializeObstacles(void);
 		std::vector<std::unique_ptr<Obstacle>> obstacleArray;
 		void AddObstacle(Obstacle *obstacle);
-        void RenderObstacleArray(void) const;
-
-        TileMap<TileSet> tileMap;
-
+		void RenderObstacleArray(void) const;
 		Sound nightSound;
 		Sound thunderSound;
 		Sound towerMenuSounds; /**< Som referente a compra, venda e construçao de torre. */
@@ -87,48 +91,41 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		bool menuIsShowing;
 
-        GameObject* HUDcanvas;
+		UIcanvas HUDcanvas;
 
-        GameObject* menuBg;
-        GameObject* openMenuBtnGO;
-        Button openMenuBtn;
+		UIimage menuBg;
+		UIimageButton openMenuBtn;
 		Sound menuMove;
 
-        GameObject* tileMapGO;
+		UIverticalGroup towerInfoGroup;
+		UItext towerName;
+		UItext towerCost;
+		UItext towerDamage;
+		UItext towerDamageType;
 
-        GameObject* towerInfoGroup;
-        GameObject* towerName;
-        GameObject* towerCost;
-        GameObject* towerDamage;
-        GameObject* towerDamageType;
+		UIgridGroup towersBtnGroup;
+		UIimageButton towerBtn1;
+		UIimageButton towerBtn2;
+		UIimageButton towerBtn3;
+		UIimageButton towerBtn4;
 
-        Grouper towersBtnGroup;
-        GameObject* towersBtnGroupGO;
-        GameObject* towerBtn1GO;
-        GameObject* towerBtn2GO;
-        GameObject* towerBtn3GO;
-        GameObject* towerBtn4GO;
+		UIcanvas health;
+		UIimage healthIcon;
+		UIimage healthbarBg;
+		UIimage healthbarBar;
 
-        Button towerBtn1;
-        Button towerBtn2;
-        Button towerBtn3;
-        Button towerBtn4;
+		UIcanvas wave;
+		UIimage waveIcon;
+		UIimage wavebarBg;
+		UIimage wavebarBar;
 
-        GameObject* healthGO;
-        GameObject* healthIconGO;
-        GameObject* healthbarBgGO;
-        GameObject* healthbarBarGO;
-
-        GameObject* waveGO;
-        GameObject* waveIconGO;
-        GameObject* wavebarBgGO;
-        GameObject* wavebarBarGO;
-
-        GameObject* moneyGO;
-        GameObject* moneyIconGO;
-        GameObject* moneyTextGO;
+		UIcanvas money;
+		UIimage moneyIcon;
+		UItext moneyText;
 };
 
 #include "EndState.h"
 
 #endif // STAGE_STATE_H
+
+
