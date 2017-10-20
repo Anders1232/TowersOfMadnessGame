@@ -73,9 +73,9 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		void InitializeObstacles(void);
 		std::vector<std::unique_ptr<Obstacle>> obstacleArray;
 		void AddObstacle(Obstacle *obstacle);
-		void RenderObstacleArray(void) const;
+        void RenderObstacleArray(void) const;
 
-
+        TileMap<TileSet> tileMap;
 
 		Sound nightSound;
 		Sound thunderSound;
@@ -88,12 +88,13 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		bool menuIsShowing;
 
         GameObject* HUDcanvas;
-        GameObject* TileMapGO;
 
         GameObject* menuBg;
         GameObject* openMenuBtnGO;
         Button openMenuBtn;
 		Sound menuMove;
+
+        GameObject* tileMapGO;
 
         GameObject* towerInfoGroup;
         GameObject* towerName;
