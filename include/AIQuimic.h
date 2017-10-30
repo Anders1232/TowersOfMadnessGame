@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "Shooter.h"
 #include "Enemy.h"
+#include "BaseTile.h"
 
 #define QUIMIC_MAX_BULLET_COOLDOWN 10.0
 
