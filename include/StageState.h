@@ -15,7 +15,6 @@
 #include "Sprite.h"
 #include "State.h"
 #include "TileMap.h"
-#include "Tileset.h"
 #include "Timer.h"
 #include "Tower.h"
 #include "WaveManager.h"

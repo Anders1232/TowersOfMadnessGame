@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "AIMedic.h"
 
-AIMedic::AIMedic(float speed,int dest,TileMap<TileSet>& tilemap,GameObject &associated,WaveManager &wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
+AIMedic::AIMedic(float speed,int dest,TileMap<BaseTile>& tilemap,GameObject &associated,WaveManager &wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();

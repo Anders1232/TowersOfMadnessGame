@@ -1,6 +1,6 @@
 #include "AIGoTo.h"
 
-AIGoTo::AIGoTo(float speed,int dest,TileMap<TileSet>& tilemap,GameObject &associated)
+AIGoTo::AIGoTo(float speed,int dest,TileMap<BaseTile>& tilemap,GameObject &associated)
 			: Component(associated)
 			, speed(speed)
 			, destTile(dest)
