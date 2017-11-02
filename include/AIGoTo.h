@@ -19,7 +19,7 @@ class AIGoTo : public Component
 			\param dest tile de destino.
 			Instancia o componente.
 		*/
-		AIGoTo(float speed,int dest,TileMap& tilemap,GameObject &associated);
+        AIGoTo(float speed,int dest,TileMap<TileSet>& tilemap,GameObject &associated);
 		~AIGoTo(void);
 		/**
 			\brief Atualiza estado.
@@ -46,7 +46,7 @@ class AIGoTo : public Component
 		std::map<int, double> tileWeightMap;
 		GameObject &associated;
 		Vec2 tempDestination;
-		TileMap& tileMap;
+        TileMap<TileSet>& tileMap;
 
 };
 

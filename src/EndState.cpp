@@ -22,13 +22,7 @@ void StartFinalLoop() {
 
 EndState::EndState(EndStateData stateData)
 		: music("audio/tela_de_vitoria_derrota/loop_tela_vitoria_derrota.ogg")
-		, intro( (stateData.playerVictory) ? "audio/tela_de_vitoria_derrota/vitoria.ogg" : "audio/tela_de_vitoria_derrota/derrota.ogg")
-		, HUDcanvas()
-		, bg( (stateData.playerVictory) ? "img/UI/end-game/win.jpg" : "img/UI/end-game/lose.jpg")
-		, venceuText("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, COLOR_WIN, stateData.playerVictory ? std::string("Vit") + (char)0xF3 /*ó*/ + "ria" : "Derrota")
-		, optionsGroup()
-		, playBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Menu Principal")
-		, exitBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Sair") {
+		, intro( (stateData.playerVictory) ? "audio/tela_de_vitoria_derrota/vitoria.ogg" : "audio/tela_de_vitoria_derrota/derrota.ogg"){
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
@@ -39,7 +33,39 @@ EndState::EndState(EndStateData stateData)
 }
 
 void EndState::SetupUI(EndStateData stateData) {
-	bg.GetSprite().colorMultiplier = {255, 255, 255, 200};
+
+    //HUDcanvas
+    RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
+    HUDCanvas->AddComponent(rect);
+    //bg
+    RectTransform* rect = new RectTransform(menuBg,nullptr);
+    rect->SetBehaviorType(BehaviorType::FIT);
+    Sprite* sp = new Sprite(stateData.playerVictory ? "img/UI/end-game/win.jpg" : "img/UI/end-game/lose.jpg")
+    bg->AddComponent(rect);
+    bg->AddComponent(sp);
+    //venceuText
+    RectTransform* rect = new RectTransform(venceuText,nullptr);
+    Text* t = new Text(moneyText);
+    t->SetText(stateData.playerVictory ? std::string("Vit") + (char)0xF3 /*ó*/ + "ria" : "Derrota");
+    t->SetColor(COLOR_WIN);
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    venceuText->AddComponent(rect);
+    venceuText->AddComponent(t);
+    //optionsGroup ***Terminar***
+    RectTransform* rect = new RectTransform(optionsGroup,nullptr);
+    optionsGroup->AddComponent(rect);
+    //playBtn
+    RectTransform* rect = new RectTransform(playBtn,nullptr);
+    Text* t = new Text(playBtn);
+    t->SetText("Menu Principal");
+    t->SetColor({255,255,255,255});
+    t->SetFont("font/SHPinscher-Regular.otf");
+    t->SetFontSize(95);
+    towerBtn2->AddComponent(rect);
+    , exitBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Sair")
+
+    //bg.GetSprite().colorMultiplier = {255, 255, 255, 200};
 
 	venceuText.SetAnchors( {0.2, 0.},
 						   {0.8, 0.4});

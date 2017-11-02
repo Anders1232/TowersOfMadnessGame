@@ -7,11 +7,6 @@
 #include "Rect.h"
 #include "Sprite.h"
 #include "Text.h"
-#include "UIcanvas.h"
-#include "UIimage.h"
-#include "UItext.h"
-#include "UItextButton.h"
-#include "UIverticalGroup.h"
 #include "Vec2.h"
 
 #define END_STATE_FONT_SIZE (40)
@@ -35,12 +30,12 @@ class EndState: public State {
 		Music music;
 		Music intro;
 
-		UIcanvas HUDcanvas;
-		UIimage bg;
-		UItext venceuText;
-		UIverticalGroup optionsGroup;
-		UItextButton playBtn;
-		UItextButton exitBtn;
+        GameObject* HUDcanvas;
+        GameObject* bg;
+        GameObject* venceuText;
+        GameObject* optionsGroup;
+        GameObject* playBtn;
+        GameObject* exitBtn;
 };
 
 #endif // ENDSTATE_H

@@ -127,3 +127,5 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 #include "EndState.h"
 
 #endif // STAGE_STATE_H
+
+

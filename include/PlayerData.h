@@ -4,13 +4,6 @@
 
 #include "GameObject.h"
 #include "WaveManager.h"
-#include "UIelement.h"
-#include "UItext.h"
-#include "UItextButton.h"
-#include "UIcanvas.h"
-#include "UIverticalGroup.h"
-#include "UIhorizontalGroup.h"
-#include "UIimage.h"
 
 #define PLAYER_DATA_INSTANCE PlayerData::GetInstance()
 
