@@ -22,6 +22,7 @@
 #include "Sound.h"
 #include "NearestGOFinder.h"
 #include "Grouper.h"
+#include "BaseTile.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "
@@ -83,20 +84,21 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		bool menuIsShowing;
 
-        GameObject* HUDcanvas;
+        GameObject* HUDcanvasGO;
 
-        GameObject* menuBg;
+        GameObject* menuBgGO;
         GameObject* openMenuBtnGO;
         Button openMenuBtn;
 		Sound menuMove;
 
-        GameObject* towerInfoGroup;
-        GameObject* towerName;
-        GameObject* towerCost;
-        GameObject* towerDamage;
-        GameObject* towerDamageType;
+        GameObject* towerInfoGroupGO;
+        GameObject* towerNameGO;
+        GameObject* towerCostGO;
+        GameObject* towerDamageGO;
+        GameObject* towerDamageTypeGO;
 
         Grouper towersBtnGroup;
+        Grouper towersInfoGroup;
         GameObject* towersBtnGroupGO;
         GameObject* towerBtn1GO;
         GameObject* towerBtn2GO;
