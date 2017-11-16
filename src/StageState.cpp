@@ -91,7 +91,7 @@ StageState::StageState(void)
 	nightSound.Play(0);
 	
 	SetupUI();
-/*Verificar daqui pra baixo
+
 	SetUILife(PLAYER_DATA_INSTANCE.GetLifes()/TOTAL_LIFES);
 	if(waveManager->GetWaveTotalEnemies() > 0) {
 		SetUIWaveProgress(waveManager->GetEnemiesLeft()/waveManager->GetWaveTotalEnemies());
@@ -99,7 +99,7 @@ StageState::StageState(void)
 		SetUIWaveProgress(0.);
 	}
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
-    */
+
 }
 
 void StageState::SetupUI(){
@@ -556,8 +556,6 @@ void StageState::Update(float dt){
 	}
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
 
-	UpdateUI(dt);
-
 	REPORT_DEBUG("\tFrame rate: " << Game::GetInstance().GetCurrentFramerate() << "/" << Game::GetInstance().GetMaxFramerate());
 	//depois isolar essa lógica num componente.
 	frameRateTimer.Update(dt);
@@ -718,20 +716,20 @@ void StageState::CreateTower(Tower::TowerType towerType) {
 
 void StageState::SetUILife(float lifePercent) {
 	lifePercent = (lifePercent < 0) ? 0 : ((lifePercent > 1) ? 1 : lifePercent);
-	Rect oldAnchor = healthbarBar.GetAnchors();
-	healthbarBar.SetAnchors( {oldAnchor.x, oldAnchor.y},
+    Rect oldAnchor = healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).GetAnchors();
+    healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).SetAnchors( {oldAnchor.x, oldAnchor.y},
 							 {lifePercent, oldAnchor.h} );
 }
 
 void StageState::SetUIWaveProgress(float waveProgressPercent) {
 	waveProgressPercent = (waveProgressPercent < 0) ? 0 : ((waveProgressPercent > 1) ? 1 : waveProgressPercent);
-	Rect oldAnchor = wavebarBar.GetAnchors();
-	wavebarBar.SetAnchors( {oldAnchor.x, oldAnchor.y},
+    Rect oldAnchor = wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).GetAnchors();
+    wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).SetAnchors( {oldAnchor.x, oldAnchor.y},
 							 {waveProgressPercent, oldAnchor.h} );
 }
 
 void StageState::SetUIMoney(int coins) {
-	moneyText.SetText(std::to_string(coins));
+    moneyTextGO->GetComponent(ComponentType::TEXT).SetText(std::to_string(coins));
 }
 
 void StageState::InitializeObstacles(void){
