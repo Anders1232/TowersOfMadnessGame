@@ -71,9 +71,7 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		vector<int> waves;//vetor de waves a ser lido no arquivo
 		
 		void InitializeObstacles(void);
-		std::vector<std::unique_ptr<Obstacle>> obstacleArray;
 		void AddObstacle(Obstacle *obstacle);
-		void RenderObstacleArray(void) const;
 		Sound nightSound;
 		Sound thunderSound;
 		Sound towerMenuSounds; /**< Som referente a compra, venda e construçao de torre. */

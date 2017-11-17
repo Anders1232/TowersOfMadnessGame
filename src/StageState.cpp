@@ -577,8 +577,8 @@ void StageState::Render(void) const {
 			break;
 		}
 	}
-	tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
-	RenderObstacleArray();
+    //Como registro para chamadas a serem feitas em outras funções de tilemap
+    //tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
 	REPORT_I_WAS_HERE;
 	State::RenderArray();
 	if(isLightning){
@@ -587,7 +587,7 @@ void StageState::Render(void) const {
 		SDL_RenderFillRect(Game::GetInstance().GetRenderer(), NULL);
 	}
 }
-
+//Comentado para futuro esclaricimento sobre compatibilidade retroativa
 /*void StageState::RenderUI(void) const {
 	// Se tivesse como ser estatico para a funcao mas uma para cada instancia, melhor ainda...
 	// Mas como StageState nao teram instancias multiplas simultaneas, serve...
@@ -662,41 +662,30 @@ void StageState::NotifyTileMapChanged(int tilePosition){
 	GameResources::NotifyTileMapChanged(tilePosition);
 }
 
-void StageState::AddObstacle(Obstacle *obstacle) {
-	obstacleArray.push_back(std::unique_ptr<Obstacle>(obstacle));
+void StageState::AddObstacle(Obstacle *obstacle){
+    AddObject(obstacle);
 }
 
-void StageState::RenderObstacleArray(void) const {
-	REPORT_I_WAS_HERE;
-#ifdef RENDER_FOWARD
-	for(unsigned int cont = 0; cont < obstacleArray.size(); cont++) {
-#else
-	for(int64_t cont = ((int64_t)obstacleArray.size()) -1; 0 <= cont ; cont--) {
-#endif
-		obstacleArray[cont]->Render();
-	}
-}
-
-void StageState::ToggleMenu(void) {
+void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
-	Rect menuBgOffsets = menuBg.GetOffsets();
-	Vec2 menuBgDim = {(float)menuBg.GetSprite().GetWidth(), (float)menuBg.GetSprite().GetHeight()};
-	if(menuIsShowing) {
-		menuBg.SetOffsets( {menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y},
+    Rect menuBgOffsets = menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).GetOffsets();
+    Vec2 menuBgDim = {(float)menuBgGO->GetComponent(ComponentType::SPRITE).GetWidth(), (float)menuBgGO->GetComponent(ComponentType::SPRITE).GetHeight()};
+    if(menuIsShowing){
+        menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).SetOffsets( {menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y},
 						   {menuBgOffsets.w-menuBgDim.x, menuBgOffsets.h});
 	} else {
-		menuBg.SetOffsets( {menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y},
+        menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).SetOffsets( {menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y},
 						   {menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h});
 	}
 }
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
-	towerName.SetText(name);
-	towerCost.SetText(cost);
-	towerDamage.SetText(damage);
-	towerDamageType.SetText(damageType);
+    towerNameGO->GetComponent(ComponentType::TEXT).SetText(name);
+    towerCostGO->GetComponent(ComponentType::TEXT).SetText(cost);
+    towerDamageGO->GetComponent(ComponentType::TEXT).SetText(damage);
+    towerDamageTypeGO->GetComponent(ComponentType::TEXT).SetText(damageType);
 }
 
 void StageState::CreateTower(Tower::TowerType towerType) {
