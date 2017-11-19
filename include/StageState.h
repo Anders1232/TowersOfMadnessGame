@@ -58,6 +58,7 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 							  string damageType = TOWERDAMGETYPE_DEFAULT_TEXT
 		);
 		void CreateTower(Tower::TowerType towerType);
+        vector<vector<int>>* GetTileGroups(int tileType) const;
 		InputManager &inputManager;
 
 		Music music;
@@ -71,7 +72,6 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		vector<int> waves;//vetor de waves a ser lido no arquivo
 		
 		void InitializeObstacles(void);
-		void AddObstacle(Obstacle *obstacle);
 		Sound nightSound;
 		Sound thunderSound;
 		Sound towerMenuSounds; /**< Som referente a compra, venda e construçao de torre. */
@@ -83,6 +83,7 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		bool menuIsShowing;
 
         GameObject* HUDcanvasGO;
+        GameObject* waveManagerGO;
 
         GameObject* menuBgGO;
         GameObject* openMenuBtnGO;

@@ -72,7 +72,7 @@ StageState::StageState(void)
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
-    GameObject* waveManagerGO = new GameObject();
+    waveManagerGO = new GameObject();
     TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO)
     waveManagerGO->AddComponent(tileMap);
 
@@ -454,10 +454,12 @@ void StageState::Update(float dt){
 	for(unsigned int cont = 0; cont < objectArray.size(); cont++) {
 		objectArray.at(cont)->Update(dt);
 		if(objectArray.at(cont)->IsDead()) {
-			int64_t objOnTileMap= tileMap.Have(objectArray[cont].get());
+            /*Como isso dev e ser feito agora?
+              int64_t objOnTileMap= tileMap.Have(objectArray[cont].get());
 			if(0 <= objOnTileMap){
 				tileMap.RemoveGO(objOnTileMap);
 			}
+            */
 			objectArray.erase(objectArray.begin()+cont);
 			cont--;
 		}
@@ -662,10 +664,6 @@ void StageState::NotifyTileMapChanged(int tilePosition){
 	GameResources::NotifyTileMapChanged(tilePosition);
 }
 
-void StageState::AddObstacle(Obstacle *obstacle){
-    AddObject(obstacle);
-}
-
 void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
@@ -721,6 +719,66 @@ void StageState::SetUIMoney(int coins) {
     moneyTextGO->GetComponent(ComponentType::TEXT).SetText(std::to_string(coins));
 }
 
+vector<vector<int>>* StageState::GetTileGroups(int tileType) const{
+    TileMap tileMap = (TileMap)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    vector<vector<int>> *tilePoints = new vector<vector<int>>();
+    vector<int> foundTilePoints;
+    REPORT_I_WAS_HERE;
+
+    for(uint i = 0; i < tileMap.GetWidth() * tileMap.GetHeight(); i++) {
+        if(tileType == tileMap.AtLayer(i,COLLISION_LAYER)){
+            foundTilePoints.push_back(i);
+        }
+    }
+    REPORT_I_WAS_HERE;
+    // Agora que tenho todos os spawn points vou agrupá-los de acordo com suas adjacências.
+    if(foundTilePoints.empty()) {
+        Error("Não foi encontrado spawn points!");
+    }
+
+    tilePoints->emplace_back();
+    (*tilePoints)[0].push_back(foundTilePoints[0]);
+    foundTilePoints.erase(foundTilePoints.begin());
+    while(!foundTilePoints.empty()) {
+        bool neighborFound = false;
+        for(unsigned int i = 0; i < tilePoints->size(); i++) {
+            vector<int> &vec = (*tilePoints)[i];
+            if(
+                    (std::find(vec.begin(), vec.end(), foundTilePoints[0]+1) != vec.end() )//posição à direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-1) != vec.end() )//posição à esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()) != vec.end() )// posição em cima
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()) != vec.end() )//posição em baixo
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()-1) != vec.end() )//diagonal supeior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()+1) != vec.end() )//diagonal supeior direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()-1) != vec.end() )//diagonal inferior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()+1) != vec.end() )//diagonal inferior direita
+            ){
+                vec.push_back(foundTilePoints[0]);
+                foundTilePoints.erase(foundTilePoints.begin());
+                neighborFound = true;
+                break;
+            }
+        }
+        if(!neighborFound) {
+            tilePoints->emplace_back();
+            (*tilePoints)[tilePoints->size()-1].push_back(foundTilePoints[0]);
+            foundTilePoints.erase(foundTilePoints.begin());
+        }
+        REPORT_I_WAS_HERE;
+    }
+#if DEBUG
+    std::cout << WHERE << "\tNumero de tile groups achados: " << (*tilePoints).size() << END_LINE;
+    for(uint i = 0; i < (*tilePoints).size(); i++) {
+        std::cout << WHERE << "\tTile groups " << i <<" tem tamanho " << (*tilePoints)[i].size() << END_LINE;
+        std::cout << WHERE << "\tTileWidth= " << GetWidth() << END_LINE;
+        for(uint i2 = 0; i2 < (*tilePoints)[i].size(); i2++) {
+            std::cout << WHERE << "\tSpawn point: " << (*tilePoints)[i][i2] << END_LINE;
+        }
+    }
+#endif
+    return tilePoints;
+}
+
 void StageState::InitializeObstacles(void){
 	/*
 	70 a 72 3 tipos de arvores
@@ -728,16 +786,17 @@ void StageState::InitializeObstacles(void){
 	76 banco
 	*/
 	int index;
-	int mapWidth= tileMap.GetWidth();
-	Vec2 tileSize= tileMap.GetTileSize();
+    TileMap& tileMap = (TileMap&)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    int mapWidth= tileMap.GetWidth();
+    Vec2 tileSize= tileMap.GetTileSize();
 	int tileWidth= tileSize.x;
 	int tileHeight= tileSize.y;
 	std::array<vector<vector<int>>*, 3> treeTiles;
-	treeTiles[0] = tileMap.GetTileGroups(TREE_1_TILESET_INDEX);
-	treeTiles[1] = tileMap.GetTileGroups(TREE_2_TILESET_INDEX);
-	treeTiles[2] = tileMap.GetTileGroups(TREE_3_TILESET_INDEX);
-	vector<vector<int>>* poleTiles = tileMap.GetTileGroups(POLE_TILESET_INDEX);
-	vector<vector<int>>* benchTiles = tileMap.GetTileGroups(BENCH_TILESET_INDEX);
+    treeTiles[0] = GetTileGroups(TREE_1_TILESET_INDEX);
+    treeTiles[1] = GetTileGroups(TREE_2_TILESET_INDEX);
+    treeTiles[2] = GetTileGroups(TREE_3_TILESET_INDEX);
+    vector<vector<int>>* poleTiles = GetTileGroups(POLE_TILESET_INDEX);
+    vector<vector<int>>* benchTiles = GetTileGroups(BENCH_TILESET_INDEX);
 	for(uint count = 0; count < treeTiles.size(); count++){
 		vector<vector<int>> &treeGroup= *(treeTiles[count]);
 		for(uint i = 0; i < treeGroup.size(); i++){
@@ -748,10 +807,10 @@ void StageState::InitializeObstacles(void){
 				Vec2 offset(0,0);
 				if(treeTilesVector.size() <= (j+1) ){
 					//checar as alternativas gerará um seg fault
-					tree = new Obstacle("./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+                    tree = new Obstacle("./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 				}
 				else{
-					auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
+                    auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
 					if(baixo != treeTilesVector.end()){
 						//tem um tile em baixo
 						if(treeTilesVector[j+1] == (index+1) ){
@@ -790,8 +849,11 @@ void StageState::InitializeObstacles(void){
 					}
 				}
 				if(nullptr != tree){
-					tileMap.InsertGO(tree, false);
-					AddObstacle(tree);
+                    int tilePos= tileMap.GetCoordTilePos(tree->box.Center(), false, 0);
+                    REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+                    Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+                    tile.setObject(tree);
+                    AddObject(tree);
 					tree->box = tree->box - offset;
 				}
 				else{
@@ -807,8 +869,11 @@ void StageState::InitializeObstacles(void){
 		for(uint j = 0; j < poleTiles->at(i).size(); j++){
 			index = poleTiles->at(i)[j];
 			Obstacle* pole = new Obstacle("./img/obstacle/poste_aceso.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-			tileMap.InsertGO(pole, false);
-			AddObstacle(pole);
+            int tilePos= tileMap.GetCoordTilePos(pole->box.Center(), false, 0);
+            REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            tile.setGO(pole);
+            AddObject(pole);
 			pole->box = pole->box - Vec2((float)10.5*pole->box.w/16., (float)5.5*pole->box.h/8.);
 		}
 	}
@@ -817,8 +882,11 @@ void StageState::InitializeObstacles(void){
 		for(uint j = 0; j < benchTiles->at(i).size(); j++){
 			index = benchTiles->at(i)[j];
 			Obstacle* bench = new Obstacle("./img/obstacle/banco_h.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-			tileMap.InsertGO(bench, false);
-			AddObstacle(bench);
+            int tilePos= tileMap.GetCoordTilePos(bench->box.Center(), false, 0);
+            REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            tile.setGO(bench);
+            ddObject(bench);
 		}
 	}
 	delete benchTiles;
