@@ -76,7 +76,7 @@ StageState::StageState(void)
     TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO)
     waveManagerGO->AddComponent(tileMap);
 
-    TileMap* tileMap = new TileMap<BaseTile>(*waveManagerGO,"map/tileMap.txt",tileSet)
+    TileMap* tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet)
     tileMap->ObserveMapChanges(this);
     waveManagerGOO->AddComponent(tileMap);
 
@@ -886,7 +886,7 @@ void StageState::InitializeObstacles(void){
             REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
             Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
             tile.setGO(bench);
-            ddObject(bench);
+            AddObject(bench);
 		}
 	}
 	delete benchTiles;

@@ -22,7 +22,7 @@
 #include "Sound.h"
 #include "NearestGOFinder.h"
 #include "Grouper.h"
-#include "BaseTile.h"
+#include "Tile.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "

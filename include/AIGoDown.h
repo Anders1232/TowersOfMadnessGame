@@ -6,7 +6,7 @@
 #include "GameResources.h"
 #include "ManhattanDistance.h"
 #include "WaveManager.h"
-#include "BaseTile.h"
+#include "Tile.h"
 /**
 	\brief Componete IA que se move para baixo
 	
@@ -21,7 +21,7 @@ class AIGoDown : public Component
 			
 			Instancia o componente.
 		*/
-        AIGoDown(float speed, int dest, TileMap<BaseTile>& tileMap, WaveManager &wManager, GameObject &associated);
+        AIGoDown(float speed, int dest, TileMap<Tile>& tileMap, WaveManager &wManager, GameObject &associated);
 //		AIGoDown::~AI AIGoDown(void);
 		//AIGoDown(float speed, GameObject &associated);
 		/**
@@ -40,7 +40,7 @@ class AIGoDown : public Component
 	private:
 		float speed;/**< Velocidade de movimento do GameObject com esse componente.*/
 		int destTile;
-        TileMap<BaseTile>& tileMap;
+        TileMap<Tile>& tileMap;
 		WaveManager &waveManager;
 		GameObject &associated;
 };
