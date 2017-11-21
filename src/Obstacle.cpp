@@ -23,7 +23,7 @@ Rect Obstacle::GetWorldRenderedRect(void) const {
 	return Camera::WorldToScreen(box);
 }
 
-bool Obstacle::Is(string type) {
+bool Obstacle::Is(string type){
 	return "Obstacle" == type;
 }
 

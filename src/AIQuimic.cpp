@@ -2,7 +2,7 @@
 #include "AIQuimic.h"
 #include "Shooter.h"
 
-AIQuimic::AIQuimic(float speed, int dest, TileMap<TileSet>& tileMap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager){
+AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();

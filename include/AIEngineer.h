@@ -8,6 +8,7 @@
 #include <list>
 #include "Enemy.h"
 #include "Timer.h"
+#include "Tile.h"
 
 /**
 	\brief Componete IA que se move para ponto de destino
@@ -22,7 +23,7 @@ class AIEngineer : public Component, public TileMapObserver
 			\param associado objeto associado a essa IA.
 			Instancia o componente.
 		*/
-        AIEngineer(float speed, int dest, TileMap<TileSet> &tilemap, GameObject &associated,WaveManager& wManager);
+        AIEngineer(float speed, int dest, TileMap<Tile> &tilemap, GameObject &associated,WaveManager& wManager);
 		~AIEngineer();
 		/**
 			\brief Atualiza estado.
@@ -55,7 +56,7 @@ class AIEngineer : public Component, public TileMapObserver
 		ManhattanDistance *heuristic;/**<Heuristica a ser utilizada pelo A* no calculo do caminho*/
 		std::map<int, double> tileWeightMap;
 		Vec2 tempDestination;
-        TileMap<TileSet>& tileMap;
+        TileMap<Tile>& tileMap;
 		GameObject &associated;
 		WaveManager& waveManager;
 		Timer getPathTimer;

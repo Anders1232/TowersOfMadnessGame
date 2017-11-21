@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "Shooter.h"
 #include "Enemy.h"
+#include "Tile.h"
 
 #define QUIMIC_MAX_BULLET_COOLDOWN 10.0
 
@@ -27,7 +28,7 @@ class AIQuimic : public Component, public TileMapObserver
 			\param associado objeto associado a essa IA.
 			Instancia o componente.
 		*/
-        AIQuimic(float speed,int dest,TileMap<TileSet>& tileMap,GameObject &associated,WaveManager& wManager);
+        AIQuimic(float speed,int dest,TileMap<Tile>& tileMap,GameObject &associated,WaveManager& wManager);
 		~AIQuimic(void);
 		/**
 			\brief Atualiza estado.
@@ -58,7 +59,7 @@ class AIQuimic : public Component, public TileMapObserver
 		ManhattanDistance *heuristic;/**<Heuristica a ser utilizada pelo A* no calculo do caminho*/
 		std::map<int, double> tileWeightMap;
 		Vec2 tempDestination;
-        TileMap<TileSet>& tileMap;
+        TileMap<Tile>& tileMap;
 		GameObject &associated;
 		WaveManager& waveManager;
 		Timer getPathTimer;

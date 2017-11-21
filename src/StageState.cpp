@@ -13,6 +13,8 @@
 #include "Obstacle.h"
 #include "Vec2.h"
 #include "PlayerData.h"
+#include "RectTransform.h"
+#include "BaseTile.h"
 
 #define INCLUDE_SDL
 #define INCLUDE_SDL_IMAGE
@@ -90,8 +92,18 @@ StageState::StageState(void)
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
+
 	GameObject* waveManagerGO= new GameObject();
-	waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
+	waveManagerGO = new GameObject();
+	TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO)
+	waveManagerGO->AddComponent(tileMap);
+
+	TileMap* tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet)
+	tileMap->ObserveMapChanges(this);
+	waveManagerGOO->AddComponent(tileMap);
+
+	WaveManager* waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
+
 	waveManagerGO->AddComponent(waveManager);
 	AddObject(waveManagerGO);
 	
@@ -111,55 +123,132 @@ StageState::StageState(void)
 		SetUIWaveProgress(0.);
 	}
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
+
 }
 
-void StageState::SetupUI() {
-	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
+void StageState::SetupUI(){
+    Rect windowBox = Game::GetInstance().GetWindowDimensions();
+    // Side Menu
+    menuIsShowing = false;
 
-	// Side Menu
-	menuIsShowing = false;
+    //HUDCanvas
+    RectTransform* HUDCanvasRect = new RectTransform(HUDcanvasGO);
+    HUDcanvasGO->AddComponent(HUDCanvasRect);
+    AddObject(HUDcanvasGO);
+    //menuBG
+    RectTransform* menuBGRect = new RectTransform(menuBgGO,HUDcanvasGO);
+    menuBGRect->SetBehaviorType(RectTransform::BehaviorType::FIT);
+    menuBGRect->SetAnchors(Vec2(1., 0.5),Vec2(1., 0.5));
+    Sprite* menuBGSP = new Sprite("img/UI/HUD/menu.png",menuBgGO);
+    menuBGRect->SetOffsets(-10., (float)(menuBGSP->GetHeight()/2.),(float)(menuBGSP->GetWidth()-(float)10.), (float)(menuBGSP->GetHeight()/2.));
+    menuBgGO->AddComponent(menuBGRect);
+    menuBgGO->AddComponent(menuBGSP);
+    AddObject(menuBgGO);
+    //openMenuBtn
+    RectTransform* openMenuBtnRect = new RectTransform(openMenuBtnGO,menuBgGO);
+    openMenuBtnGO->AddComponent(openMenuBtnRect);
+    openMenuBtn = Button(openMenuBtnGO);
+    openMenuBtnRect->SetAnchors(Vec2(0., 0.),Vec2(0., 0.));
+    //rect->SetOffsets((float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.,0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10. );
+    openMenuBtn.SetClickCallback(this, [] (void* ptr) {
+                                                StageState* it = static_cast<StageState*>(ptr);
+                                                it->RemoveComponent(ComponentType::SPRITE);
+                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",openMenuBtn);
+                                                it->AddComponent(sp);
+                                                it->ToggleMenu();
+                                            } );
+    openMenuBtn.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    StageState* it = static_cast<StageState*>(ptr);
+                                                                    it->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
+                                                                    it->AddComponent(sp);
+                                                                } );
+    openMenuBtn.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                    StageState* it = static_cast<StageState*>(ptr);
+                                                                    it->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
+                                                                    it->AddComponent(sp);
+                                                                } );
+    AddObject(openMenuBtnGO);
+    //towerInfoGroup
+    //Faltamdo algo aqui?
+    RectTransform* towerInfoGrpupRect = new RectTransform(towerInfoGroupGO,menuBgGO);
+    towerInfoGrpupRect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425);
+    towerInfoGrpupRect->SetOffsets(5., 5.,-5., -5.);
+    towersInfoGroup = Grouper(towerInfoGroupGO);
+    towersBtnGroupGO->AddComponent(towersInfoGroup);
+    towerInfoGroupGO->AddComponent(towerInfoGrpupRect);
+    AddObject(towerInfoGroupGO);
+    //towerName
+    RectTransform* towerNameRect = new RectTransform(towerNameGO,towerInfoGroupGO);
+    Text* towerNameText = new Text(towerNameGO);
+    towerNameText->SetText(TOWERNAME_DEFAULT_TEXT);
+    towerNameText->SetColor(TOWER_INFO_TXT_COLOR);
+    towerNameText->SetFont("font/SHPinscher-Regular.otf");
+    towerNameText->SetFontSize(95);
+    towerNameGO->AddComponent(towerNameRect);
+    towerNameGO->AddComponent(towerNameText);
+    AddObject(towerNameGO);
+    //towerCost
+    RectTransform* TowerCostRect = new RectTransform(towerCostGO,towerInfoGroupGO);
+    Text* towerCostText = new Text(towerCostGO);
+    towerCostText->SetText(TOWERCOST_DEFAULT_TEXT);
+    towerCostText->SetColor(TOWER_INFO_TXT_COLOR);
+    towerCostText->SetFont("font/SHPinscher-Regular.otf");
+    towerCostText->SetFontSize(95);
+    towerCostGO->AddComponent(TowerCostRect);
+    towerCostGO->AddComponent(towerCostText);
+    AddObject(towerCostGO);
+    //towerDamage
+    RectTransform* towerDamageRect = new RectTransform(towerDamageGO,towerInfoGroupGO);
+    Text* towerDamageText = new Text(towerDamageGO);
+    towerDamageText->SetText(TOWERDAMAGE_DEFAULT_TEXT);
+    towerDamageText->SetColor(TOWER_INFO_TXT_COLOR);
+    towerDamageText->SetFont("font/SHPinscher-Regular.otf");
+    towerDamageText->SetFontSize(95);
+    towerDamageGO->AddComponent(towerDamageRect);
+    towerDamageGO->AddComponent(towerDamageText);
+    AddObject(towerDamageGO);
+    //towerDamageType
+    RectTransform* towerDamageTypeRect = new RectTransform(towerDamageTypeGO,towerInfoGroupGO);
+    Text* towerDamageTypeText = new Text(towerDamageTypeGO);
+    towerDamageTypeText->SetText(TOWERDAMGETYPE_DEFAULT_TEXT);
+    towerDamageTypeText->SetColor(TOWER_INFO_TXT_COLOR);
+    towerDamageTypeText->SetFont("font/SHPinscher-Regular.otf");
+    towerDamageTypeText->SetFontSize(95);
+    towerDamageTypeGO->AddComponent(towerDamageTypeRect);
+    towerDamageTypeGO->AddComponent(towerDamageTypeText);
+    AddObject(towerDamageTypeGO);
 
-	menuBg.SetAnchors( {1., 0.5},
-					   {1., 0.5});
-	menuBg.SetOffsets( {-10., (float)(-menuBg.GetSprite().GetHeight()/2.)},
-					   {(float)menuBg.GetSprite().GetWidth()-(float)10., (float)(menuBg.GetSprite().GetHeight()/2.)});
+    towersInfoGroup.groupedElements.push_back(towerNameGO);
+    towersInfoGroup.groupedElements.push_back(towerCostGO);
+    towersInfoGroup.groupedElements.push_back(towerDamageGO);
+    towersInfoGroup.groupedElements.push_back(towerDamageTypeGO);
 
-	openMenuBtn.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/openmenu.png"));
-	openMenuBtn.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/openmenu.png"));
-	openMenuBtn.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/openmenu-clicked.png"));
-	openMenuBtn.SetAnchors( {0., 0.},
-							{0., 0.} );
-	openMenuBtn.SetOffsets( {(float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.},
-							{0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10.} );
-	openMenuBtn.SetClickCallback(this, [] (void* ptr) {
-												StageState* it = static_cast<StageState*>(ptr);
-												it->ToggleMenu();
-											} );
-	
-	towerInfoGroup.SetAnchors( {0.165, 0.05},
-						  {0.86, 0.425});
-	towerInfoGroup.SetOffsets( {5., 5.},
-						  {-5., -5.});
+    RectTransform* towersBtnGroupRect = new RectTransform(towersBtnGroupGO,nullptr);
+    towersBtnGroupRect->SetAnchors(Vec2(0., 0.485),Vec2(1., 1.));
+    towersBtnGroupRect->SetOffsets(32., 0.,-27., -30.);
+    //towersBtnGroup.padding = Vec2(10., 10.);
+    towersBtnGroup = Grouper(towersBtnGroupGO);
+    towersBtnGroupGO->AddComponent(towersBtnGroupRect);
+    towersBtnGroupGO->AddComponent(towersBtnGroup);
+    towersBtnGroup.MakeGridGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL);
+    AddObject(towersBtnGroupGO);
 
-	towerInfoGroup.groupedElements.push_back(&towerName);
-	towerInfoGroup.groupedElements.push_back(&towerCost);
-	towerInfoGroup.groupedElements.push_back(&towerDamage);
-	towerInfoGroup.groupedElements.push_back(&towerDamageType);
-	
-	towersBtnGroup.SetAnchors( {0., 0.485},
-							   {1., 1.} );
-	towersBtnGroup.SetOffsets( {32., 0.},
-							   {-27., -30.} );
-	towersBtnGroup.padding = Vec2(10., 10.);
+    //towerBtn1
+    RectTransform* towerBtn1Rect = new RectTransform(towerBtn1GO,towersBtnGroupGO);
+    towerBtn1Rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn1 = Button(towerBtn1GO);
+    towerBtn1GO->AddComponent(towerBtn1Rect);
+    towerBtn1GO->AddComponent(towerBtn1);
+    AddObject(towerBtn1GO);
 
-	towerBtn1.SetCenter({0.5, 0.});
-	towerBtn1.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaotorre.png"));
-	towerBtn1.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaotorre.png"));
-	towerBtn1.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaotorre-clicked.png"));
-
-	towerBtn1.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
+    towerBtn1.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr);
+                                                                    stct->ST->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",towerBtn1);
+                                                                    stct->GO->AddComponent(sp);
 																} );
 	towerBtn1.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
@@ -170,14 +259,20 @@ void StageState::SetupUI() {
 											it->CreateTower(Tower::TowerType::SMOKE);
 										} );
 
-	towerBtn2.SetCenter({0.5, 0.});
-	towerBtn2.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaoantibomba.png"));
-	towerBtn2.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaoantibomba.png"));
-	towerBtn2.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaoantibomba-clicked.png"));
+    //towerBtn2
+    RectTransform* towerBtn2Rect = new RectTransform(towerBtn2,towersBtnGroupGO);
+    rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn2 = Button(towerBtn2GO);
+    towerBtn2GO->AddComponent(towerBtn2Rect);
+    towerBtn2GO->AddComponent(towerBtn2);
+    AddObject(towerBtn2GO);
 
-	towerBtn2.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
+    towerBtn2.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+                                                                    stct = static_cast<btnCallbackArgAux*>(ptr)
+                                                                    stct->ST->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
+                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",towerBtn2));
+                                                                    stct->GO->AddComponent(sp);
 																} );
 	towerBtn2.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
@@ -187,11 +282,13 @@ void StageState::SetupUI() {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::ANTIBOMB);
 										} );
-
-	towerBtn3.SetCenter({0.5, 0.});
-	towerBtn3.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaochoque.png"));
-	towerBtn3.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaochoque.png"));
-	towerBtn3.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaochoque-clicked.png"));
+    //towerBtn3
+    RectTransform* towerBtn3Rect = new RectTransform(towerBtn3,towersBtnGroupGO);
+    towerBtn3Rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn3 = Button(towerBtn3GO);
+    towerBtn3GO->AddComponent(towerBtn3Rect);
+    towerBtn3GO->AddComponent(towerBtn3);
+    AddObject(towerBtn3GO);
 
 	towerBtn3.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
@@ -205,12 +302,15 @@ void StageState::SetupUI() {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::SHOCK);
 										} );
-
-	towerBtn4.SetCenter({0.5, 0.});
-	towerBtn4.SetStateSprite(UIbutton::State::ENABLED, new Sprite("img/UI/HUD/botaostun.png"));
-	towerBtn4.SetStateSprite(UIbutton::State::HIGHLIGHTED, new Sprite("img/UI/HUD/botaostun.png"));
-	towerBtn4.SetStateSprite(UIbutton::State::PRESSED, new Sprite("img/UI/HUD/botaostun-clicked.png"));
-
+    //towerBtn4
+    RectTransform* towerBtn4Rect = new RectTransform(towerBtn4,nullptr);
+    towerBtn4GO->AddComponent(towerBtn4Rect);
+    towerBtn4 = Button(towerBtn4GO);
+    towerBtn4Rect->SetCenterPin(vec2(0.5, 0.));
+    towerBtn4GO->AddComponent(towerBtn4Rect);
+    towerBtn4GO->AddComponent(towerBtn4);
+    AddObject(towerBtn4GO);
+    
 	towerBtn4.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData("Monolito", "$30", "Stun", "Area");
@@ -224,68 +324,109 @@ void StageState::SetupUI() {
 											it->CreateTower(Tower::TowerType::STUN);
 										} );
 
-	towersBtnGroup.groupedElements.push_back(&towerBtn1);
-	towersBtnGroup.groupedElements.push_back(&towerBtn2);
-	towersBtnGroup.groupedElements.push_back(&towerBtn3);
-	towersBtnGroup.groupedElements.push_back(&towerBtn4);
+    towersBtnGroup.groupedElements.push_back(towerBtn1GO);
+    towersBtnGroup.groupedElements.push_back(towerBtn2GO);
+    towersBtnGroup.groupedElements.push_back(towerBtn3GO);
+    towersBtnGroup.groupedElements.push_back(towerBtn4GO);
 
-	// Game Info
-	health.SetAnchors( {(float)(30.+healthIcon.GetSprite().GetWidth())/(2*winSize.x), (float)10./winSize.y},
-					   {(float)300./winSize.x, (float)35./winSize.y} );
-	health.SetOffsets( {(float)(30.+healthIcon.GetSprite().GetWidth())/2, 0.},
-					   {120., 25.} );
+    //health
+    RectTransform* healthRect = new RectTransform(healthGO,HUDcanvasGO);
+    healthGO->AddComponent(healthRect);
+    //healthIcon
+    RectTransform* healthIconRect = new RectTransform(healthIconGO,healthGO);
+    healthIconRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* healthIconSP = new Sprite("img/UI/HUD/CoraçãoHUD_spritesheet.png",healthIconGO,false, 1./4, 8);
+    healthIconRect->SetCenterPin(Vec2(.725, 0.5));
+    healthIconRect->SetAnchors(Vec2(0., 0.1),Vec2(0., 0.9));
+    healthIconGO->AddComponent(healthIconRect);
+    healthIconGO->AddComponent(healthIconSP);
+    AddObject(healthIconGO);
+    //health
+    healthGO.SetAnchors(Vec2((float)(30.+ healthIconSP->GetWidth())/(2*windowBox.x), (float)10./windowBox.y),Vec2((float)300./windowBox.x, (float)35./windowBox.y));
+    healthGO.SetOffsets((float)(30.+healthIconSP->GetWidth())/2, 0.,120., 25. );
+    AddObject(healthGO);
+    //healthbarBg
+    RectTransform* healthbarBgRect = new RectTransform(healthbarBgGO,healthGO);
+    Sprite* healthbarBgSP = new Sprite("img/UI/HUD/hudvida.png",healthbarBgGO);
+    rect->SetAnchors(Vec2(0., 0.3),Vec2(1., 0.7));
+    //healthbarBg.GetSprite().colorMultiplier = {0, 0, 0, 255};
+    healthbarBgGO->AddComponent(healthbarBgRect);
+    healthbarBgGO->AddComponent(healthbarBgSP);
+    AddObject(healthbarBgGO);
+    //healthbarBar
+    RectTransform* healthbarBarRect = new RectTransform(healthbarBarGO,healthGO);
+    Sprite* healthbarBarSP = new Sprite("img/UI/HUD/hudvida.png",healthbarBarGO);
+    Rect healthBox = rect->ComputeBox(healthbarBarRect->ComputeBoundingbox(Rect(0., 0., windowBox.x, windowBox.y)));
+    healthbarBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/healthBox.h),Vec2((float)1., (float)0.7-2/healthBox.h));
+    healthbarBarRect->SetOffsets((float)2., 0.,(float)-2., 0.);
+    //healthbarBar.GetSprite().colorMultiplier = {180, 225, 149, 255};
+    healthbarBarGO->AddComponent(healthbarBarRect);
+    healthbarBarGO->AddComponent(healthbarBarSP);
+    AddObject(healthbarBarGO);
+    //wave
+    RectTransform* waveRect = new RectTransform(waveGO,HUDcanvasGO);
+    waveRect->SetAnchors(Vec2((float)(30.+healthIconSP->GetWidth())/(2*windowBox.x), (float)35./windowBox.y),
+                     Vec2((float)150./windowBox.x, (float)60./windowBox.y));
+    waveGO->AddComponent(waveRect);
+    AddObject(waveGO);
+    //waveIcon
+    RectTransform* waveIconRect = new RectTransform(waveIconGO,waveGO);
+    waveIconRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* waveIconSP = new Sprite("img/UI/HUD/inimigoHUD_spritesheet.png",waveIconGO,false, 1./4, 5);
+    waveRect->SetOffsets((float)(30.+waveIconSP->GetWidth())/2, 25.,120., 50.);
+    waveIconRect->SetCenterPin(Vec2(.725, 0.5));
+    waveIconRect->SetAnchors(0., 0.1,0., 0.9);
+    waveIconGO->AddComponent(waveIconRect);
+    waveIconGO->AddComponent(waveIconSP);
+    AddObject(waveIconGO);
+    //wavebarBg
+    RectTransform* wabebarBGRect = new RectTransform(wavebarBgGO,waveGO);
+    Sprite* wavebarBgSP = new Sprite("img/UI/HUD/hudvida.png",wavebarBgGO);
+    wabebarBGRect->SetAnchors(Vec2(0., 0.3),Vec2(1., 0.7));
+    //wavebarBg.GetSprite().colorMultiplier = {0, 0, 0, 255};
+    wavebarBgGO->AddComponent(wabebarBGRect);
+    wavebarBgGO->AddComponent(wavebarBgSP);
+    AddObject(wavebarBgGO);
+    //wavebarBar
+    RectTransform* waveBarRect = new RectTransform(wavebarBarGO,waveGO);
+    Sprite* wavebarBarSP = new Sprite("img/UI/HUD/hudvida.png",wavebarBarGO);
+    Rect waveBox = waveBarRect->ComputeBox(waveBarRect->ComputeBoundingbox(Rect(0., 0., windowBox.x, windowBox.y)));
+    waveBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/waveBox.h),Vec2((float)1., (float)0.7-2/waveBox.h));
+    wavebarBarRect.SetOffsets((float)2., 0.,(float)-2., 0.);
+    //wavebarBar.GetSprite().colorMultiplier = {154, 148, 104, 255};
+    wavebarBarGO->AddComponent(wavebarBarRect);
+    wavebarBarGO->AddComponent(wavebarBarSP);
+    AddObject(wavebarBarGO);
+    //money
+    RectTransform* moneyRect = new RectTransform(moneyGO,HUDcanvasGO);
+    moneyGO->AddComponent(moneyRect);
+    AddObject(moneyGO);
+    //moneyIcon
+    RectTransform* moneyIconRect = new RectTransform(moneyIconGO,moneyGO);
+    moneyIconRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
+    Sprite* moneyIconSP = new Sprite("img/UI/HUD/spritesheetmoeda_HUD.png",moneyIconGO,false, 1./4, 4);
+    moneyRect->SetAnchors(Vec2((float)(30.+moneyIconSP->GetWidth())/(2*windowBox.x), (float)60./windowBox.y),
+                         Vec2((float)150./windowBox.x, (float)85./windowBox.y));
+    moneyRect->SetOffsets((float)(7.5+moneyIconSP->GetWidth()/2.), 60.,120., 70.);
+    moneyIconRect->SetCenterPin(Vec2(1., 0.5));
+    moneyIconRect->SetAnchors(Vec2(0., 0.),Vec2(0., 1.));
+    moneyIconGO->AddComponent(moneyIconRect);
+    moneyIconGO->AddComponent(moneyIconSP);
+    AddObject(moneyIconGO);
+    //moneyText
+    RectTransform* moneyTextRect = new RectTransform(moneyTextGO,moneyGO);
+    Text* moneyTextText = new Text(moneyTextGO);
+    moneyTextText->SetText("+Inf");
+    moneyTextText->SetColor(MONEY_TXT_COLOR);
+    moneyTextText->SetFont("font/SHPinscher-Regular.otf");
+    moneyTextText->SetFontSize(95);
+    moneyTextRect->SetAnchors(Vec2(0., 0.),Vec2(1., 1.));
+    moneyTextRect->SetOffsets(12.5, 0.,0., 0.);
+    moneyTextRect->SetCenterPin(Vec2(0., .5);
+    moneyTextGO->AddComponent(moneyTextRect);
+    moneyTextGO->AddComponent(moneyTextText);
+    AddObject(moneyTextGO);
 
-	healthIcon.SetCenter( {.725, 0.5} );
-	healthIcon.SetAnchors( {0., 0.1},
-						   {0., 0.9} );
-
-	healthbarBg.SetAnchors( {0., 0.3},
-							 {1., 0.7} );
-	healthbarBg.GetSprite().colorMultiplier = {0, 0, 0, 255};
-	
-	Rect healthBox = health.ComputeBox(health.ComputeBoundingbox( {0., 0., winSize.x, winSize.y} ));
-	healthbarBar.SetAnchors( {(float)0., (float)0.3+2/healthBox.h},
-							 {(float)1., (float)0.7-2/healthBox.h} );
-	healthbarBar.SetOffsets( {(float)2., 0.},
-							 {(float)-2., 0.} );
-	healthbarBar.GetSprite().colorMultiplier = {180, 225, 149, 255};
-
-
-	wave.SetAnchors( {(float)(30.+healthIcon.GetSprite().GetWidth())/(2*winSize.x), (float)35./winSize.y},
-					 {(float)150./winSize.x, (float)60./winSize.y} );
-	wave.SetOffsets( {(float)(30.+waveIcon.GetSprite().GetWidth())/2, 25.},
-					 {120., 50.} );
-
-	waveIcon.SetCenter( {.725, 0.5} );
-	waveIcon.SetAnchors( {0., 0.1},
-						 {0., 0.9} );
-
-	wavebarBg.SetAnchors( {0., 0.3},
-						  {1., 0.7} );
-	wavebarBg.GetSprite().colorMultiplier = {0, 0, 0, 255};
-	
-	Rect waveBox = wave.ComputeBox(wave.ComputeBoundingbox( {0., 0., winSize.x, winSize.y} ));
-	wavebarBar.SetAnchors( {(float)0., (float)0.3+2/waveBox.h},
-						   {(float)1., (float)0.7-2/waveBox.h} );
-	wavebarBar.SetOffsets( {(float)2., 0.},
-						   {(float)-2., 0.} );
-	wavebarBar.GetSprite().colorMultiplier = {154, 148, 104, 255};
-
-
-	money.SetAnchors( {(float)(30.+healthIcon.GetSprite().GetWidth())/(2*winSize.x), (float)60./winSize.y},
-					  {(float)150./winSize.x, (float)85./winSize.y} );
-	money.SetOffsets( {(float)(7.5+moneyIcon.GetSprite().GetWidth()/2.), 60.},
-					  {120., 70.} );
-	
-	moneyIcon.SetCenter( {1., 0.5} );
-	moneyIcon.SetAnchors( {0., 0.},
-						 {0., 1.} );
-
-	moneyText.SetAnchors( {0., 0.},
-						  {1., 1.});
-	moneyText.SetOffsets( {12.5, 0.},
-						  {0., 0.});
-	moneyText.SetCenter( {0., .5} );
 }
 
 StageState::~StageState(void) {
@@ -311,10 +452,12 @@ void StageState::Update(float dt){
 	for(unsigned int cont = 0; cont < objectArray.size(); cont++) {
 		objectArray.at(cont)->Update(dt);
 		if(objectArray.at(cont)->IsDead()) {
-			int64_t objOnTileMap= tileMap.Have(objectArray[cont].get());
+            /*Como isso dev e ser feito agora?
+              int64_t objOnTileMap= tileMap.Have(objectArray[cont].get());
 			if(0 <= objOnTileMap){
 				tileMap.RemoveGO(objOnTileMap);
 			}
+            */
 			objectArray.erase(objectArray.begin()+cont);
 			cont--;
 		}
@@ -413,8 +556,6 @@ void StageState::Update(float dt){
 	}
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
 
-	UpdateUI(dt);
-
 	REPORT_DEBUG("\tFrame rate: " << Game::GetInstance().GetCurrentFramerate() << "/" << Game::GetInstance().GetMaxFramerate());
 	//depois isolar essa lógica num componente.
 	frameRateTimer.Update(dt);
@@ -474,8 +615,8 @@ void StageState::Render(void) const {
 			break;
 		}
 	}
-	tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
-	RenderObstacleArray();
+    //Como registro para chamadas a serem feitas em outras funções de tilemap
+    //tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
 	REPORT_I_WAS_HERE;
 	State::RenderArray();
 	if(isLightning){
@@ -486,8 +627,8 @@ void StageState::Render(void) const {
 
 	RenderUI();
 }
-
-void StageState::RenderUI(void) const {
+//Comentado para futuro esclaricimento sobre compatibilidade retroativa
+/*void StageState::RenderUI(void) const {
 	// Se tivesse como ser estatico para a funcao mas uma para cada instancia, melhor ainda...
 	// Mas como StageState nao teram instancias multiplas simultaneas, serve...
 	static bool menuIsShowing = this->menuIsShowing;
@@ -561,41 +702,26 @@ void StageState::NotifyTileMapChanged(int tilePosition){
 	GameResources::NotifyTileMapChanged(tilePosition);
 }
 
-void StageState::AddObstacle(Obstacle *obstacle) {
-	obstacleArray.push_back(std::unique_ptr<Obstacle>(obstacle));
-}
-
-void StageState::RenderObstacleArray(void) const {
-	REPORT_I_WAS_HERE;
-#ifdef RENDER_FOWARD
-	for(unsigned int cont = 0; cont < obstacleArray.size(); cont++) {
-#else
-	for(int64_t cont = ((int64_t)obstacleArray.size()) -1; 0 <= cont ; cont--) {
-#endif
-		obstacleArray[cont]->Render();
-	}
-}
-
-void StageState::ToggleMenu(void) {
+void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
-	Rect menuBgOffsets = menuBg.GetOffsets();
-	Vec2 menuBgDim = {(float)menuBg.GetSprite().GetWidth(), (float)menuBg.GetSprite().GetHeight()};
-	if(menuIsShowing) {
-		menuBg.SetOffsets( {menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y},
+    Rect menuBgOffsets = menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).GetOffsets();
+    Vec2 menuBgDim = {(float)menuBgGO->GetComponent(ComponentType::SPRITE).GetWidth(), (float)menuBgGO->GetComponent(ComponentType::SPRITE).GetHeight()};
+    if(menuIsShowing){
+        menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).SetOffsets( {menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y},
 						   {menuBgOffsets.w-menuBgDim.x, menuBgOffsets.h});
 	} else {
-		menuBg.SetOffsets( {menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y},
+        menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).SetOffsets( {menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y},
 						   {menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h});
 	}
 }
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
-	towerName.SetText(name);
-	towerCost.SetText(cost);
-	towerDamage.SetText(damage);
-	towerDamageType.SetText(damageType);
+    towerNameGO->GetComponent(ComponentType::TEXT).SetText(name);
+    towerCostGO->GetComponent(ComponentType::TEXT).SetText(cost);
+    towerDamageGO->GetComponent(ComponentType::TEXT).SetText(damage);
+    towerDamageTypeGO->GetComponent(ComponentType::TEXT).SetText(damageType);
 }
 
 void StageState::CreateTower(Tower::TowerType towerType) {
@@ -615,20 +741,80 @@ void StageState::CreateTower(Tower::TowerType towerType) {
 
 void StageState::SetUILife(float lifePercent) {
 	lifePercent = (lifePercent < 0) ? 0 : ((lifePercent > 1) ? 1 : lifePercent);
-	Rect oldAnchor = healthbarBar.GetAnchors();
-	healthbarBar.SetAnchors( {oldAnchor.x, oldAnchor.y},
+    Rect oldAnchor = healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).GetAnchors();
+    healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).SetAnchors( {oldAnchor.x, oldAnchor.y},
 							 {lifePercent, oldAnchor.h} );
 }
 
 void StageState::SetUIWaveProgress(float waveProgressPercent) {
 	waveProgressPercent = (waveProgressPercent < 0) ? 0 : ((waveProgressPercent > 1) ? 1 : waveProgressPercent);
-	Rect oldAnchor = wavebarBar.GetAnchors();
-	wavebarBar.SetAnchors( {oldAnchor.x, oldAnchor.y},
+    Rect oldAnchor = wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).GetAnchors();
+    wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM).SetAnchors( {oldAnchor.x, oldAnchor.y},
 							 {waveProgressPercent, oldAnchor.h} );
 }
 
 void StageState::SetUIMoney(int coins) {
-	moneyText.SetText(std::to_string(coins));
+    moneyTextGO->GetComponent(ComponentType::TEXT).SetText(std::to_string(coins));
+}
+
+vector<vector<int>>* StageState::GetTileGroups(int tileType) const{
+    TileMap tileMap = (TileMap)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    vector<vector<int>> *tilePoints = new vector<vector<int>>();
+    vector<int> foundTilePoints;
+    REPORT_I_WAS_HERE;
+
+    for(uint i = 0; i < tileMap.GetWidth() * tileMap.GetHeight(); i++) {
+        if(tileType == tileMap.AtLayer(i,COLLISION_LAYER)){
+            foundTilePoints.push_back(i);
+        }
+    }
+    REPORT_I_WAS_HERE;
+    // Agora que tenho todos os spawn points vou agrupá-los de acordo com suas adjacências.
+    if(foundTilePoints.empty()) {
+        Error("Não foi encontrado spawn points!");
+    }
+
+    tilePoints->emplace_back();
+    (*tilePoints)[0].push_back(foundTilePoints[0]);
+    foundTilePoints.erase(foundTilePoints.begin());
+    while(!foundTilePoints.empty()) {
+        bool neighborFound = false;
+        for(unsigned int i = 0; i < tilePoints->size(); i++) {
+            vector<int> &vec = (*tilePoints)[i];
+            if(
+                    (std::find(vec.begin(), vec.end(), foundTilePoints[0]+1) != vec.end() )//posição à direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-1) != vec.end() )//posição à esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()) != vec.end() )// posição em cima
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()) != vec.end() )//posição em baixo
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()-1) != vec.end() )//diagonal supeior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()+1) != vec.end() )//diagonal supeior direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()-1) != vec.end() )//diagonal inferior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()+1) != vec.end() )//diagonal inferior direita
+            ){
+                vec.push_back(foundTilePoints[0]);
+                foundTilePoints.erase(foundTilePoints.begin());
+                neighborFound = true;
+                break;
+            }
+        }
+        if(!neighborFound) {
+            tilePoints->emplace_back();
+            (*tilePoints)[tilePoints->size()-1].push_back(foundTilePoints[0]);
+            foundTilePoints.erase(foundTilePoints.begin());
+        }
+        REPORT_I_WAS_HERE;
+    }
+#if DEBUG
+    std::cout << WHERE << "\tNumero de tile groups achados: " << (*tilePoints).size() << END_LINE;
+    for(uint i = 0; i < (*tilePoints).size(); i++) {
+        std::cout << WHERE << "\tTile groups " << i <<" tem tamanho " << (*tilePoints)[i].size() << END_LINE;
+        std::cout << WHERE << "\tTileWidth= " << GetWidth() << END_LINE;
+        for(uint i2 = 0; i2 < (*tilePoints)[i].size(); i2++) {
+            std::cout << WHERE << "\tSpawn point: " << (*tilePoints)[i][i2] << END_LINE;
+        }
+    }
+#endif
+    return tilePoints;
 }
 
 void StageState::InitializeObstacles(void){
@@ -638,16 +824,17 @@ void StageState::InitializeObstacles(void){
 	76 banco
 	*/
 	int index;
-	int mapWidth= tileMap.GetWidth();
-	Vec2 tileSize= tileMap.GetTileSize();
+    TileMap& tileMap = (TileMap&)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    int mapWidth= tileMap.GetWidth();
+    Vec2 tileSize= tileMap.GetTileSize();
 	int tileWidth= tileSize.x;
 	int tileHeight= tileSize.y;
 	std::array<vector<vector<int>>*, 3> treeTiles;
-	treeTiles[0] = tileMap.GetTileGroups(TREE_1_TILESET_INDEX);
-	treeTiles[1] = tileMap.GetTileGroups(TREE_2_TILESET_INDEX);
-	treeTiles[2] = tileMap.GetTileGroups(TREE_3_TILESET_INDEX);
-	vector<vector<int>>* poleTiles = tileMap.GetTileGroups(POLE_TILESET_INDEX);
-	vector<vector<int>>* benchTiles = tileMap.GetTileGroups(BENCH_TILESET_INDEX);
+    treeTiles[0] = GetTileGroups(TREE_1_TILESET_INDEX);
+    treeTiles[1] = GetTileGroups(TREE_2_TILESET_INDEX);
+    treeTiles[2] = GetTileGroups(TREE_3_TILESET_INDEX);
+    vector<vector<int>>* poleTiles = GetTileGroups(POLE_TILESET_INDEX);
+    vector<vector<int>>* benchTiles = GetTileGroups(BENCH_TILESET_INDEX);
 	for(uint count = 0; count < treeTiles.size(); count++){
 		vector<vector<int>> &treeGroup= *(treeTiles[count]);
 		for(uint i = 0; i < treeGroup.size(); i++){
@@ -658,10 +845,10 @@ void StageState::InitializeObstacles(void){
 				Vec2 offset(0,0);
 				if(treeTilesVector.size() <= (j+1) ){
 					//checar as alternativas gerará um seg fault
-					tree = new Obstacle("./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
+                    tree = new Obstacle("./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 				}
 				else{
-					auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
+                    auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
 					if(baixo != treeTilesVector.end()){
 						//tem um tile em baixo
 						if(treeTilesVector[j+1] == (index+1) ){
@@ -700,8 +887,11 @@ void StageState::InitializeObstacles(void){
 					}
 				}
 				if(nullptr != tree){
-					tileMap.InsertGO(tree, false);
-					AddObstacle(tree);
+                    int tilePos= tileMap.GetCoordTilePos(tree->box.Center(), false, 0);
+                    REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+                    Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+                    tile.setObject(tree);
+                    AddObject(tree);
 					tree->box = tree->box - offset;
 				}
 				else{
@@ -717,8 +907,11 @@ void StageState::InitializeObstacles(void){
 		for(uint j = 0; j < poleTiles->at(i).size(); j++){
 			index = poleTiles->at(i)[j];
 			Obstacle* pole = new Obstacle("./img/obstacle/poste_aceso.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-			tileMap.InsertGO(pole, false);
-			AddObstacle(pole);
+            int tilePos= tileMap.GetCoordTilePos(pole->box.Center(), false, 0);
+            REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            tile.setGO(pole);
+            AddObject(pole);
 			pole->box = pole->box - Vec2((float)10.5*pole->box.w/16., (float)5.5*pole->box.h/8.);
 		}
 	}
@@ -727,8 +920,11 @@ void StageState::InitializeObstacles(void){
 		for(uint j = 0; j < benchTiles->at(i).size(); j++){
 			index = benchTiles->at(i)[j];
 			Obstacle* bench = new Obstacle("./img/obstacle/banco_h.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-			tileMap.InsertGO(bench, false);
-			AddObstacle(bench);
+            int tilePos= tileMap.GetCoordTilePos(bench->box.Center(), false, 0);
+            REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
+            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            tile.setGO(bench);
+            AddObject(bench);
 		}
 	}
 	delete benchTiles;

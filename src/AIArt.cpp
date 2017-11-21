@@ -3,7 +3,7 @@
 //enum AIState{WALKING,WAITING,STUNNED,STATE_NUM};
 //enum AIEvent{NONE,PATH_BLOCKED,PATH_FREE,STUN,NOT_STUN,EVENT_NUM}; 
 
-AIArt::AIArt(float speed, int dest, TileMap<TileSet> &tileMap, GameObject &associated, WaveManager &wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated), waveManager(wManager){
+AIArt::AIArt(float speed, int dest, TileMap<Tile> &tileMap, GameObject &associated, WaveManager &wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated), waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();
