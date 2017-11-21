@@ -1,5 +1,7 @@
 #include "AIGoTo.h"
 
+#define WALKABLE_LAYER 1
+
 AIGoTo::AIGoTo(float speed,int dest,TileMap<Tile>& tilemap,GameObject &associated)
 			: Component(associated)
 			, speed(speed)
