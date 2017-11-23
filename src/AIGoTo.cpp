@@ -31,12 +31,13 @@ void AIGoTo::Update(float dt){
 			pathIndex++;
 			if(pathIndex != path->size()){
 				tempDestination = Vec2(tileMap.GetCurrentTileSet().GetTileSize().x * ((*path)[pathIndex] % tileMap.GetWidth()),tileMap.GetCurrentTileSet().GetTileSize().y*((*path)[pathIndex] / tileMap.GetWidth()));
-				float weight = tileWeightMap.at(tileMap.AtLayer((*path)[pathIndex],WALKABLE_LAYER));
+				int here = tileMap.AtLayer((*path)[pathIndex], WALKABLE_LAYER);
+				float weight = tileWeightMap.at(here );
 				vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / (weight * 2));
 			}
 		}
 		else if(vecSpeed.Magnitude() == 0.0){
-			float weight = tileWeightMap.at(tileMap.AtLayer((*path)[pathIndex],WALKABLE_LAYER));
+			float weight = tileWeightMap.at(tileMap.AtLayer((*path)[pathIndex], WALKABLE_LAYER) );
 			vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / (weight * 2));
 		}
 		else{
