@@ -5,10 +5,12 @@
 
 class Tile : public BaseTile{
 
+    public:
+        void setGO(GameObject obstacle);
+
     private:
         GameObject* obstacle;
 
-        void setGO(GameObject obstacle);
 };
 
 #endif // TILE_H
