@@ -96,7 +96,7 @@ StageState::StageState(void)
 	GameObject* waveManagerGO= new GameObject();
 	waveManagerGO = new GameObject();
 	TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO)
-	waveManagerGO->AddComponent(tileMap);
+    waveManagerGO->AddComponent(tileSet);
 
 	TileMap* tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet)
 	tileMap->ObserveMapChanges(this);

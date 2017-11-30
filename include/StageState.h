@@ -23,6 +23,7 @@
 #include "NearestGOFinder.h"
 #include "Grouper.h"
 #include "Tile.h"
+#include "Button.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "
@@ -59,7 +60,7 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		);
 		void CreateTower(Tower::TowerType towerType);
 		TileSet tileSet;
-		TileMap tileMap;/**< Mapa de tiles do jogo. */
+        TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
 		vector<vector<int>>* GetTileGroups(int tileType) const;
 		InputManager &inputManager;
 

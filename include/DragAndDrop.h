@@ -4,6 +4,9 @@
 #include "Component.h"
 #include "TileMap.h"
 #include "Sound.h"
+
+#define COLLISION_LAYER (1)
+
 /**
     \brief Classe responsável por arrastar e posicionar Objetos.
 
@@ -72,6 +75,7 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj,Vec2 initialPos){
     REPORT_DEBUG("\t position = " << position << "\t of " << mapHeight*mapWidth << " tiles.");
     if(0 > position) {
         std::cout << WHERE << "[ERROR] Tried to put the gameObject on an invalid tileMap position." << END_LINE;
+        return false;
     }
     int initialTile = tileMap.GetCoordTilePos(initialPos, false, 0);
     if(-1 == tileMap.AtLayer(position, COLLISION_LAYER)) {
@@ -89,21 +93,24 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj,Vec2 initialPos){
         int column = initialTile % mapWidth;
         obj->box.x = column*tileMap.GetTileSize().x;
         obj->box.y = line*tileMap.GetTileSize().y;
+        return false;
     }
+    return true;
 }
 template <class T>
 bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
     Vec2 mousePos = Camera::ScreenToWorld(InputManager::GetInstance().GetMousePos());
-    int position = GetCoordTilePos(mousePos, false, 0);
+    int position = tileMap.GetCoordTilePos(mousePos, false, 0);
     int mapHeight = tileMap.GetHeight();
     int mapWidth = tileMap.GetWidth();
     REPORT_DEBUG("\t position = " << position << "\t of " << mapHeight*mapWidth << " tiles.");
     if(0 > position) {
         std::cout << WHERE << "[ERROR] Tried to put the gameObject on an invalid tileMap position." << END_LINE;
         obj->RequestDelete();
+        return false;
     }
     if(checkCollision){
-        if(-1 == AtLayer(position, COLLISION_LAYER)) {
+        if(-1 == tileMap.AtLayer(position, COLLISION_LAYER)) {
             REPORT_DEBUG("\tInserting the gameObject at position " << position);
             tileMap.At(position,COLLISION_LAYER).setGO(obj);
             int line = position / mapWidth;
@@ -113,17 +120,19 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
             //TODO: aqui ajudar a box para ficar exatamente no tileMap
             tileMap.ReportChanges(position);
         }
-        else if(0 > AtLayer(position, COLLISION_LAYER)) {
-            REPORT_DEBUG("\ttentado inserir objeto em posição inválida, pois nela está" << tileMatrix[position+(COLLISION_LAYER * mapWidth*mapHeight)]);
+        else if(0 > tileMap.AtLayer(position, COLLISION_LAYER)) {
+            REPORT_DEBUG("\ttentado inserir objeto em posição inválida,está ocupada");
             obj->RequestDelete();
+            return false;
         }
         else {
             REPORT_DEBUG("\ttentado inserir objeto em posição já ocupada!");
             obj->RequestDelete();
+            return false;
         }
     }
     else{
-        int tilePos= GetCoordTilePos(obj->box.Center(), false, 0);
+        int tilePos= tileMap.GetCoordTilePos(obj->box.Center(), false, 0);
         REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
         tileMap.At(position,COLLISION_LAYER).setGO(obj);
         int line = tilePos / mapWidth;
@@ -132,6 +141,7 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
         obj->box.y = line*tileMap.GetTileSize().y;
         //TODO: aqui ajudar a box para ficar exatamente no tileMap
     }
+    return true;
 }
 
 template <class T>
