@@ -449,19 +449,19 @@ void StageState::Update(float dt){
 	}
 
 	//fazendo o prórpio loop de atualização ao invés do UpdateArray pois estamos fazendo checagens adicionais
-	for(unsigned int cont = 0; cont < objectArray.size(); cont++) {
+    /*for(unsigned int cont = 0; cont < objectArray.size(); cont++) {
 		objectArray.at(cont)->Update(dt);
 		if(objectArray.at(cont)->IsDead()) {
-            /*Como isso dev e ser feito agora?
+            Como isso dev e ser feito agora?
               int64_t objOnTileMap= tileMap.Have(objectArray[cont].get());
 			if(0 <= objOnTileMap){
 				tileMap.RemoveGO(objOnTileMap);
 			}
-            */
+
 			objectArray.erase(objectArray.begin()+cont);
 			cont--;
 		}
-	}
+    }*/
 
 	if(!objectArray.empty()){
 		for(uint count1 = 0; count1 < objectArray.size()-1; count1++) {
@@ -567,45 +567,6 @@ void StageState::Update(float dt){
 	}
 }
 
-void StageState::UpdateUI(float dt) {
-	Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
-
-	openMenuBtn.angle = 180*menuIsShowing;
-
-	HUDcanvas.Update(dt, winSize);
-
-	menuBg.Update(dt, HUDcanvas);
-
-	openMenuBtn.Update(dt, menuBg);
-
-	towerInfoGroup.Update(dt, menuBg);
-	towerName.Update(dt, towerInfoGroup);
-	towerCost.Update(dt, towerInfoGroup);
-	towerDamage.Update(dt, towerInfoGroup);
-	towerDamageType.Update(dt, towerInfoGroup);
-
-	towersBtnGroup.Update(dt, menuBg);
-	towerBtn1.Update(dt, towersBtnGroup);
-	towerBtn2.Update(dt, towersBtnGroup);
-	towerBtn3.Update(dt, towersBtnGroup);
-	towerBtn4.Update(dt, towersBtnGroup);
-
-
-	health.Update(dt, HUDcanvas);
-	healthIcon.Update(dt, health);
-	healthbarBg.Update(dt, health);
-	healthbarBar.Update(dt, health);
-
-	wave.Update(dt, HUDcanvas);
-	waveIcon.Update(dt, wave);
-	wavebarBg.Update(dt, wave);
-	wavebarBar.Update(dt, wave);
-
-	money.Update(dt, HUDcanvas);
-	moneyIcon.Update(dt, money);
-	moneyText.Update(dt, money);
-}
-
 void StageState::Render(void) const {
 	REPORT_I_WAS_HERE;
 	bool highlighted = true;
@@ -663,7 +624,7 @@ void StageState::Render(void) const {
 	moneyText.Render();
 
 	menuIsShowing = this->menuIsShowing;
-}
+}*/
 
 void StageState::Pause(void) {
 	nightSound.Stop();
@@ -818,11 +779,11 @@ vector<vector<int>>* StageState::GetTileGroups(int tileType) const{
 }
 
 void StageState::InitializeObstacles(void){
-	/*
-	70 a 72 3 tipos de arvores
-	73 poste
-	76 banco
-	*/
+
+    //70 a 72 3 tipos de arvores
+    //73 poste
+    //76 banco
+
 	int index;
     TileMap& tileMap = (TileMap&)waveManagerGO->GetComponent(ComponentType::TILEMAP);
     int mapWidth= tileMap.GetWidth();
