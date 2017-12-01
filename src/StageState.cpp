@@ -46,8 +46,6 @@
 
 StageState::StageState(void)
 		: State()
-		, tileSet(120, 120,"map/tileset_vf.png")
-		, tileMap("map/tileMap.txt", &tileSet)
 		, inputManager(INPUT_MANAGER)
 		, music("audio/trilha_sonora/loop_3_atualizado.ogg")
 		, isLightning(false)
@@ -58,51 +56,26 @@ StageState::StageState(void)
 		, thunderSound("audio/Ambiente/Trovao.wav")
 		, towerMenuSounds("audio/Acoes/Dinheiro1.wav")
 		, frameRateCounter(0)
-		, HUDcanvas()
-		, menuBg("img/UI/HUD/menu.png", UIelement::BehaviorType::FIT)
-		, openMenuBtn()
-		, menuMove("audio/Interface/Click1.wav")
-		, towerInfoGroup()
-		, towerName("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERNAME_DEFAULT_TEXT)
-		, towerCost("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERCOST_DEFAULT_TEXT)
-		, towerDamage("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMAGE_DEFAULT_TEXT)
-		, towerDamageType("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, TOWER_INFO_TXT_COLOR, TOWERDAMGETYPE_DEFAULT_TEXT)
-		, towersBtnGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL)
-		, towerBtn1()
-		, towerBtn2()
-		, towerBtn3()
-		, towerBtn4()
-		, health()
-		, healthIcon("img/UI/HUD/CoraçãoHUD_spritesheet.png", 1./4, 8, UIelement::BehaviorType::FILL)
-		, healthbarBg("img/UI/HUD/hudvida.png")
-		, healthbarBar("img/UI/HUD/hudvida.png")
-		, wave()
-		, waveIcon("img/UI/HUD/inimigoHUD_spritesheet.png", 1./4, 5, UIelement::BehaviorType::FILL)
-		, wavebarBg("img/UI/HUD/hudvida.png")
-		, wavebarBar("img/UI/HUD/hudvida.png")
-		, money()
-		, moneyIcon("img/UI/HUD/spritesheetmoeda_HUD.png", 1./4, 4, UIelement::BehaviorType::FILL)
-		, moneyText("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, MONEY_TXT_COLOR, "+Inf") {
+        , menuMove("audio/Interface/Click1.wav"){
+
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
-	GameResources::SetTileMap(&tileMap);
 	REPORT_I_WAS_HERE;
 	music.Play(0);
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
-
-	GameObject* waveManagerGO= new GameObject();
-	waveManagerGO = new GameObject();
-	TileSet* tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO)
+    waveManagerGO = new GameObject();
+    tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO);
     waveManagerGO->AddComponent(tileSet);
 
-	TileMap* tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet)
+    tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet);
 	tileMap->ObserveMapChanges(this);
-	waveManagerGOO->AddComponent(tileMap);
+    waveManagerGO->AddComponent(tileMap);
+    GameResources::SetTileMap(&tileMap);
 
-	WaveManager* waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
+    waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
 
 	waveManagerGO->AddComponent(waveManager);
 	AddObject(waveManagerGO);
