@@ -37,7 +37,7 @@ class GameResources{
 		static void Clear(void);
 //		static void SaveWeightData(std::array<std::map<int, int>, EnemyType::ENEMY_TYPE_SIZE > &data);
 //		static void SaveWaveData(std::pair<std::vector<WaveData>, std::vector<EnemyData> > &data);
-        static void SetTileMap(TileMap<TileSet>* map);
+        static void SetTileMap(TileMap<Tile>* map);
 		static void NotifyTileMapChanged(int tilePosition);
 		static std::shared_ptr<std::vector<int> > GetPath(EnemyType type, AStarHeuristic *heuristic, int origin, int dest, std::string weightDataFile);
 		static float GetPathHitRate(void);
@@ -72,7 +72,7 @@ class GameResources{
 		static std::unordered_map<std::string, std::shared_ptr<std::array<std::map<int, double>, EnemyType::ENEMY_TYPE_SIZE> > > weightDataMap;/**<Mapa de WeightData indexada pelo nome do arquivo.*/
 		static std::unordered_map<std::string, std::shared_ptr<std::pair<std::vector<WaveData>, std::vector<EnemyData> > > > waveDataMap;/**<Mapa de WaveData indexado pelo nome do arquivo.*/
 		static std::unordered_map<std::string, std::pair<uint, std::shared_ptr<std::vector<int> > > >pathMap;
-        static TileMap<TileSet>* tileMap;
+        static TileMap<Tile>* tileMap;
 		static uint lastMapUpdate;
 		static uint pathMapHits;
 		static uint pathMapCalls;

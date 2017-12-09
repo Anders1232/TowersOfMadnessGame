@@ -56,7 +56,37 @@ StageState::StageState(void)
 		, thunderSound("audio/Ambiente/Trovao.wav")
 		, towerMenuSounds("audio/Acoes/Dinheiro1.wav")
 		, frameRateCounter(0)
-        , menuMove("audio/Interface/Click1.wav"){
+        , menuMove("audio/Interface/Click1.wav")
+        , waveManagerGO(new GameObject())
+        , tileSet("map/tileSetDescriptor.txt",*waveManagerGO)
+        , tileMap(*waveManagerGO,"map/tileMap.txt",&tileSet)
+        , waveManager(new WaveManager(tileMap,"assets/wave&enemyData.txt"))
+        , healthGO(new GameObject())
+        , healthIconGO(new GameObject())
+        , healthbarBgGO(new GameObject())
+        , healthbarBarGO(new GameObject())
+        , waveGO(new GameObject())
+        , waveIconGO(new GameObject())
+        , wavebarBgGO(new GameObject())
+        , wavebarBarGO(new GameObject())
+        , moneyGO(new GameObject())
+        , moneyIconGO(new GameObject())
+        , moneyTextGO(new GameObject())
+        , towerBtn1GO()
+        , towerBtn2GO()
+        , towerBtn3GO()
+        , towerBtn4GO()
+        , openMenuBtnGO()
+        , openMenuBtn(openMenuBtnGO)
+        , towerBtn1(towerBtn1GO)
+        , towerBtn2(towerBtn2GO)
+        , towerBtn3(towerBtn3GO)
+        , towerBtn4(towerBtn4GO)
+        , towerInfoGroupGO()
+        , towersBtnGroupGO()
+        , towersInfoGroup(towerInfoGroupGO)
+        , towersBtnGroup(towersBtnGroupGO)
+     {
 
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
@@ -66,16 +96,11 @@ StageState::StageState(void)
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
-    waveManagerGO = new GameObject();
-    tileSet = new TileSet("map/tileSetDescriptor.txt",*waveManagerGO);
-    waveManagerGO->AddComponent(tileSet);
+    waveManagerGO->AddComponent(&tileSet);
 
-    tileMap = new TileMap<Tile>(*waveManagerGO,"map/tileMap.txt",tileSet);
-	tileMap->ObserveMapChanges(this);
-    waveManagerGO->AddComponent(tileMap);
+    tileMap.ObserveMapChanges(this);
+    waveManagerGO->AddComponent(&tileMap);
     GameResources::SetTileMap(&tileMap);
-
-    waveManager= new WaveManager(tileMap, "assets/wave&enemyData.txt");
 
 	waveManagerGO->AddComponent(waveManager);
 	AddObject(waveManagerGO);
@@ -120,7 +145,6 @@ void StageState::SetupUI(){
     //openMenuBtn
     RectTransform* openMenuBtnRect = new RectTransform(openMenuBtnGO,menuBgGO);
     openMenuBtnGO->AddComponent(openMenuBtnRect);
-    openMenuBtn = Button(openMenuBtnGO);
     openMenuBtnRect->SetAnchors(Vec2(0., 0.),Vec2(0., 0.));
     //rect->SetOffsets((float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.,0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10. );
     openMenuBtn.SetClickCallback(this, [] (void* ptr) {
@@ -148,7 +172,6 @@ void StageState::SetupUI(){
     RectTransform* towerInfoGrpupRect = new RectTransform(towerInfoGroupGO,menuBgGO);
     towerInfoGrpupRect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425);
     towerInfoGrpupRect->SetOffsets(5., 5.,-5., -5.);
-    towersInfoGroup = Grouper(towerInfoGroupGO);
     towersBtnGroupGO->AddComponent(towersInfoGroup);
     towerInfoGroupGO->AddComponent(towerInfoGrpupRect);
     AddObject(towerInfoGroupGO);
@@ -202,7 +225,6 @@ void StageState::SetupUI(){
     towersBtnGroupRect->SetAnchors(Vec2(0., 0.485),Vec2(1., 1.));
     towersBtnGroupRect->SetOffsets(32., 0.,-27., -30.);
     //towersBtnGroup.padding = Vec2(10., 10.);
-    towersBtnGroup = Grouper(towersBtnGroupGO);
     towersBtnGroupGO->AddComponent(towersBtnGroupRect);
     towersBtnGroupGO->AddComponent(towersBtnGroup);
     towersBtnGroup.MakeGridGroup(UIgridGroup::ConstraintType::FIXED_N_COLS, 2, UIgridGroup::BehaviorOnLess::NORMAL);
@@ -211,7 +233,6 @@ void StageState::SetupUI(){
     //towerBtn1
     RectTransform* towerBtn1Rect = new RectTransform(towerBtn1GO,towersBtnGroupGO);
     towerBtn1Rect->SetCenterPin(vec2(0.5, 0.));
-    towerBtn1 = Button(towerBtn1GO);
     towerBtn1GO->AddComponent(towerBtn1Rect);
     towerBtn1GO->AddComponent(towerBtn1);
     AddObject(towerBtn1GO);
@@ -235,7 +256,6 @@ void StageState::SetupUI(){
     //towerBtn2
     RectTransform* towerBtn2Rect = new RectTransform(towerBtn2,towersBtnGroupGO);
     rect->SetCenterPin(vec2(0.5, 0.));
-    towerBtn2 = Button(towerBtn2GO);
     towerBtn2GO->AddComponent(towerBtn2Rect);
     towerBtn2GO->AddComponent(towerBtn2);
     AddObject(towerBtn2GO);
@@ -258,7 +278,6 @@ void StageState::SetupUI(){
     //towerBtn3
     RectTransform* towerBtn3Rect = new RectTransform(towerBtn3,towersBtnGroupGO);
     towerBtn3Rect->SetCenterPin(vec2(0.5, 0.));
-    towerBtn3 = Button(towerBtn3GO);
     towerBtn3GO->AddComponent(towerBtn3Rect);
     towerBtn3GO->AddComponent(towerBtn3);
     AddObject(towerBtn3GO);
@@ -278,7 +297,6 @@ void StageState::SetupUI(){
     //towerBtn4
     RectTransform* towerBtn4Rect = new RectTransform(towerBtn4,nullptr);
     towerBtn4GO->AddComponent(towerBtn4Rect);
-    towerBtn4 = Button(towerBtn4GO);
     towerBtn4Rect->SetCenterPin(vec2(0.5, 0.));
     towerBtn4GO->AddComponent(towerBtn4Rect);
     towerBtn4GO->AddComponent(towerBtn4);

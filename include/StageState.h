@@ -90,11 +90,11 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		GameObject* waveManagerGO;
 
 		GameObject* menuBgGO;
-		GameObject* openMenuBtnGO;
+        GameObject openMenuBtnGO;
 		Button openMenuBtn;
 		Sound menuMove;
 
-		GameObject* towerInfoGroupGO;
+        GameObject towerInfoGroupGO;
 		GameObject* towerNameGO;
 		GameObject* towerCostGO;
 		GameObject* towerDamageGO;
@@ -102,18 +102,18 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		Grouper towersBtnGroup;
 		Grouper towersInfoGroup;
-		GameObject* towersBtnGroupGO;
-		GameObject* towerBtn1GO;
-		GameObject* towerBtn2GO;
-		GameObject* towerBtn3GO;
-		GameObject* towerBtn4GO;
+        GameObject towersBtnGroupGO;
+        GameObject towerBtn1GO;
+        GameObject towerBtn2GO;
+        GameObject towerBtn3GO;
+        GameObject towerBtn4GO;
 
 		Button towerBtn1;
 		Button towerBtn2;
 		Button towerBtn3;
 		Button towerBtn4;
 
-		GameObject* healthGO;
+        GameObject* healthGO;
 		GameObject* healthIconGO;
 		GameObject* healthbarBgGO;
 		GameObject* healthbarBarGO;

@@ -10,6 +10,7 @@
 #include "Error.h"
 #include "Sound.h"
 #include <memory>
+#include <Tile.h>
 
 using std::vector;
 
@@ -26,7 +27,7 @@ class WaveManager : public Component {
 			\param tileMap Usada para inicializar spawnGroup, um vetor de grupos, e cada grupo, um vetor de spawn points. Um vetor de vetor!
 			\param waveFile Nome do arquivo aonde será feita a leitura dos dados contendo todas as informações de wave e inimigos do jogo.
 		*/
-        WaveManager(TileMap<TileSet>& tileMap, string waveFile);
+        WaveManager(TileMap<Tile>& tileMap, string waveFile);
 		/**
 			\brief Destrutor.
 			Destrói o ponteiro de spawnGroups.
@@ -101,7 +102,7 @@ class WaveManager : public Component {
 		
 		int enemiesLeft;/**<Contador de inimigos restantes da wave atual.*/
 		int playerLifes;/**<Contador de inimigos restantes da wave atual.*/
-        TileMap<TileSet>& tileMap;/**<Endereço de TileMap. Usado para conseguir spwanGroups */
+        TileMap<Tile>& tileMap;/**<Endereço de TileMap. Usado para conseguir spwanGroups */
 		bool endWave; /**<Flag de fim da wave atual. true se a level acabou.*/
 		std::shared_ptr< std::pair< std::vector<WaveData>, std::vector<EnemyData> > > wavesAndEnemysData; /**<Shared Pointer, vai armazenar a leitura do arquivo com as informaçoes de Wave e Inimigo.*/
 		int waveIndex, enemyIndex, totalWaves;/**<Identificador da wave atual, identificador do inimigo atual e o contador de waves. Vitória se da quando contador for igual ao número total.*/
