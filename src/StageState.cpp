@@ -72,6 +72,7 @@ StageState::StageState(void)
         , moneyGO(new GameObject())
         , moneyIconGO(new GameObject())
         , moneyTextGO(new GameObject())
+        , HUDcanvasGO()
         , towerBtn1GO()
         , towerBtn2GO()
         , towerBtn3GO()
@@ -103,7 +104,7 @@ StageState::StageState(void)
     GameResources::SetTileMap(&tileMap);
 
 	waveManagerGO->AddComponent(waveManager);
-	AddObject(waveManagerGO);
+    AddObject(waveManagerGO);
 	
 	tileMap.ObserveMapChanges(this);
 	lightningInterval = rand() % (LIGHTINING_MAX_INTERVAL - LIGHTINING_MIN_INTERVAL) + LIGHTINING_MIN_INTERVAL;
@@ -130,9 +131,9 @@ void StageState::SetupUI(){
     menuIsShowing = false;
 
     //HUDCanvas
-    RectTransform* HUDCanvasRect = new RectTransform(HUDcanvasGO);
-    HUDcanvasGO->AddComponent(HUDCanvasRect);
-    AddObject(HUDcanvasGO);
+    RectTransform* HUDCanvasRect = new RectTransform(HUDcanvasGO,nullptr);
+    HUDcanvasGO.AddComponent(HUDCanvasRect);
+    AddObject(&HUDcanvasGO);
     //menuBG
     RectTransform* menuBGRect = new RectTransform(menuBgGO,HUDcanvasGO);
     menuBGRect->SetBehaviorType(RectTransform::BehaviorType::FIT);

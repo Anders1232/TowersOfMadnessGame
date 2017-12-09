@@ -86,7 +86,7 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		bool menuIsShowing;
 
-		GameObject* HUDcanvasGO;
+        GameObject HUDcanvasGO;
 		GameObject* waveManagerGO;
 
 		GameObject* menuBgGO;
