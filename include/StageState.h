@@ -128,6 +128,11 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
         GameObject moneyTextGO;
 };
 
+struct btnCallbackArgAux{
+    StageState* ST;
+    GameObject* GO;
+};
+
 #include "EndState.h"
 
 #endif // STAGE_STATE_H

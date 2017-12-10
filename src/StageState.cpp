@@ -164,25 +164,25 @@ void StageState::SetupUI(){
     openMenuBtnGO.AddComponent(openMenuBtnRect);
     openMenuBtnRect->SetAnchors(Vec2(0., 0.),Vec2(0., 0.));
     //rect->SetOffsets((float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.,0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10. );
-    openMenuBtn.SetClickCallback(this, [] (void* ptr) {
-                                                StageState* it = static_cast<StageState*>(ptr);
-                                                it->RemoveComponent(ComponentType::SPRITE);
-                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",openMenuBtn);
-                                                it->AddComponent(sp);
-                                                it->ToggleMenu();
-                                            } );
-    openMenuBtn.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-                                                                    StageState* it = static_cast<StageState*>(ptr);
+    openMenuBtn.SetReleaseCallback({ [] (void* ptr) {
+                                                btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
+                                                stct->GO->RemoveComponent(ComponentType::SPRITE);
+                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",*stct->GO);
+                                                stct->GO->AddComponent(sp);
+                                                stct->ST->ToggleMenu();
+                                            },this} );
+    openMenuBtn.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
+                                                                    GameObject* it = static_cast<GameObject*>(ptr);
                                                                     it->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",*it);
                                                                     it->AddComponent(sp);
-                                                                } );
-    openMenuBtn.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
-                                                                    StageState* it = static_cast<StageState*>(ptr);
-                                                                    it->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",openMenuBtn);
-                                                                    it->AddComponent(sp);
-                                                                } );
+                                                                },this} );
+    openMenuBtn.SetCallback(Button::State::ENABLED, { [] (void* ptr) {
+                                                                        GameObject* it = static_cast<GameObject*>(ptr);
+                                                                        it->RemoveComponent(ComponentType::SPRITE);
+                                                                        Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",*it);
+                                                                        it->AddComponent(sp);
+                                                                    }, this } );
     AddObject(&openMenuBtnGO);
     //towerInfoGroup
     //Faltamdo algo aqui?
@@ -253,21 +253,21 @@ void StageState::SetupUI(){
     towerBtn1GO.AddComponent(&towerBtn1);
     AddObject(&towerBtn1GO);
 
-    towerBtn1.SetCallback(Button::State::HIGHLIGHTED, this, [] (void* ptr) {
-                                                                    stct = static_cast<btnCallbackArgAux*>(ptr);
+    towerBtn1.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
+                                                                    btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
                                                                     stct->ST->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
                                                                     stct->GO->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",towerBtn1);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",*stct->GO);
                                                                     stct->GO->AddComponent(sp);
-																} );
-	towerBtn1.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn1.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();
-																} );
-	towerBtn1.SetClickCallback(this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn1.SetReleaseCallback( { [] (void* ptr) {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::SMOKE);
-										} );
+                                        },this} );
 
     //towerBtn2
     RectTransform* towerBtn2Rect = new RectTransform(towerBtn2GO,&towersBtnGroupGO);
@@ -276,21 +276,21 @@ void StageState::SetupUI(){
     towerBtn2GO.AddComponent(&towerBtn2);
     AddObject(&towerBtn2GO);
 
-    towerBtn2.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
-                                                                    stct = static_cast<btnCallbackArgAux*>(ptr)
+    towerBtn2.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
+                                                                    btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
                                                                     stct->ST->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
                                                                     stct->GO->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",towerBtn2));
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",*stct->GO);
                                                                     stct->GO->AddComponent(sp);
-																} );
-	towerBtn2.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn2.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();
-																} );
-	towerBtn2.SetClickCallback(this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn2.SetReleaseCallback({ [] (void* ptr) {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::ANTIBOMB);
-										} );
+                                        },this} );
     //towerBtn3
     RectTransform* towerBtn3Rect = new RectTransform(towerBtn3GO,&towersBtnGroupGO);
     towerBtn3Rect->SetCenterPin(Vec2(0.5, 0.));
@@ -298,18 +298,18 @@ void StageState::SetupUI(){
     towerBtn3GO.AddComponent(&towerBtn3);
     AddObject(&towerBtn3GO);
 
-	towerBtn3.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+    towerBtn3.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData("Bobina", "$30", "1 tiro/2s", "Dano");
-																} );
-	towerBtn3.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn3.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();
-																} );
-	towerBtn3.SetClickCallback(this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn3.SetReleaseCallback({ [] (void* ptr) {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::SHOCK);
-										} );
+                                        },this} );
     //towerBtn4
     RectTransform* towerBtn4Rect = new RectTransform(towerBtn4GO,nullptr);
     towerBtn4GO.AddComponent(towerBtn4Rect);
@@ -318,18 +318,18 @@ void StageState::SetupUI(){
     towerBtn4GO.AddComponent(&towerBtn4);
     AddObject(&towerBtn4GO);
     
-	towerBtn4.SetCallback(UIbutton::State::HIGHLIGHTED, this, [] (void* ptr) {
+    towerBtn4.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData("Monolito", "$30", "Stun", "Area");
-																} );
-	towerBtn4.SetCallback(UIbutton::State::ENABLED, this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn4.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();
-																} );
-	towerBtn4.SetClickCallback(this, [] (void* ptr) {
+                                                                },this} );
+    towerBtn4.SetReleaseCallback({[] (void* ptr) {
 											StageState* it = static_cast<StageState*>(ptr);
 											it->CreateTower(Tower::TowerType::STUN);
-										} );
+                                        },this} );
 
     towersBtnGroup.groupedElements.push_back(&towerBtn1GO);
     towersBtnGroup.groupedElements.push_back(&towerBtn2GO);
@@ -363,9 +363,10 @@ void StageState::SetupUI(){
     //healthbarBar
     RectTransform* healthbarBarRect = new RectTransform(healthbarBarGO,&healthGO);
     Sprite* healthbarBarSP = new Sprite("img/UI/HUD/hudvida.png",healthbarBarGO);
-    Rect healthBox = healthbarBarRect->ComputeBox(healthbarBarRect->ComputeBoundingBox(Rect(0., 0., windowBox.x, windowBox.y)));
-    healthbarBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/healthBox.h),Vec2((float)1., (float)0.7-2/healthBox.h));
-    healthbarBarRect->SetOffsets((float)2., 0.,(float)-2., 0.);
+    //Verificar se o trecho abaixo é necessário
+    //Rect healthBox = healthbarBarRect->ComputeBox(healthbarBarRect->ComputeBoundingBox(Rect(0., 0., windowBox.x, windowBox.y)));
+    //healthbarBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/healthBox.h),Vec2((float)1., (float)0.7-2/healthBox.h));
+    //healthbarBarRect->SetOffsets((float)2., 0.,(float)-2., 0.);
     //healthbarBar.GetSprite().colorMultiplier = {180, 225, 149, 255};
     healthbarBarGO.AddComponent(healthbarBarRect);
     healthbarBarGO.AddComponent(healthbarBarSP);
@@ -395,11 +396,12 @@ void StageState::SetupUI(){
     wavebarBgGO.AddComponent(wavebarBgSP);
     AddObject(&wavebarBgGO);
     //wavebarBar
-    RectTransform* waveBarRect = new RectTransform(wavebarBarGO,&waveGO);
+    RectTransform* wavebarBarRect = new RectTransform(wavebarBarGO,&waveGO);
     Sprite* wavebarBarSP = new Sprite("img/UI/HUD/hudvida.png",wavebarBarGO);
-    Rect waveBox = waveBarRect->ComputeBox(waveBarRect->ComputeBoundingBox(Rect(0., 0., windowBox.x, windowBox.y)));
-    waveBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/waveBox.h),Vec2((float)1., (float)0.7-2/waveBox.h));
-    wavebarBarRect->SetOffsets((float)2., 0.,(float)-2., 0.);
+    //Verificar necessidade do trecho abaixo
+    // Rect waveBox = waveBarRect->ComputeBox(waveBarRect->ComputeBoundingBox(Rect(0., 0., windowBox.x, windowBox.y)));
+    //waveBarRect->SetAnchors(Vec2((float)0., (float)0.3+2/waveBox.h),Vec2((float)1., (float)0.7-2/waveBox.h));
+    //wavebarBarRect->SetOffsets((float)2., 0.,(float)-2., 0.);
     //wavebarBar.GetSprite().colorMultiplier = {154, 148, 104, 255};
     wavebarBarGO.AddComponent(wavebarBarRect);
     wavebarBarGO.AddComponent(wavebarBarSP);
@@ -412,9 +414,10 @@ void StageState::SetupUI(){
     RectTransform* moneyIconRect = new RectTransform(moneyIconGO,&moneyGO);
     moneyIconRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
     Sprite* moneyIconSP = new Sprite("img/UI/HUD/spritesheetmoeda_HUD.png",moneyIconGO,false, 1./4, 4);
-    moneyRect->SetAnchors(Vec2((float)(30.+moneyIconSP->GetWidth())/(2*windowBox.x), (float)60./windowBox.y),
-                         Vec2((float)150./windowBox.x, (float)85./windowBox.y));
-    moneyRect->SetOffsets((float)(7.5+moneyIconSP->GetWidth()/2.), 60.,120., 70.);
+    //Verificar necessidade do trecho abaixo
+    //moneyRect->SetAnchors(Vec2((float)(30.+moneyIconSP->GetWidth())/(2*windowBox.x), (float)60./windowBox.y),
+    //Vec2((float)150./windowBox.x, (float)85./windowBox.y));
+    //moneyRect->SetOffsets((float)(7.5+moneyIconSP->GetWidth()/2.), 60.,120., 70.);
     moneyIconRect->SetCenterPin(Vec2(1., 0.5));
     moneyIconRect->SetAnchors(Vec2(0., 0.),Vec2(0., 1.));
     moneyIconGO.AddComponent(moneyIconRect);
