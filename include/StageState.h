@@ -89,16 +89,16 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
         GameObject HUDcanvasGO;
 		GameObject* waveManagerGO;
 
-		GameObject* menuBgGO;
+        GameObject menuBgGO;
         GameObject openMenuBtnGO;
 		Button openMenuBtn;
 		Sound menuMove;
 
         GameObject towerInfoGroupGO;
-		GameObject* towerNameGO;
-		GameObject* towerCostGO;
-		GameObject* towerDamageGO;
-		GameObject* towerDamageTypeGO;
+        GameObject towerNameGO;
+        GameObject towerCostGO;
+        GameObject towerDamageGO;
+        GameObject towerDamageTypeGO;
 
 		Grouper towersBtnGroup;
 		Grouper towersInfoGroup;
@@ -113,19 +113,19 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		Button towerBtn3;
 		Button towerBtn4;
 
-        GameObject* healthGO;
-		GameObject* healthIconGO;
-		GameObject* healthbarBgGO;
-		GameObject* healthbarBarGO;
+        GameObject healthGO;
+        GameObject healthIconGO;
+        GameObject healthbarBgGO;
+        GameObject healthbarBarGO;
 
-		GameObject* waveGO;
-		GameObject* waveIconGO;
-		GameObject* wavebarBgGO;
-		GameObject* wavebarBarGO;
+        GameObject waveGO;
+        GameObject waveIconGO;
+        GameObject wavebarBgGO;
+        GameObject wavebarBarGO;
 
-		GameObject* moneyGO;
-		GameObject* moneyIconGO;
-		GameObject* moneyTextGO;
+        GameObject moneyGO;
+        GameObject moneyIconGO;
+        GameObject moneyTextGO;
 };
 
 #include "EndState.h"
