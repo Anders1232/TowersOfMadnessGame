@@ -511,9 +511,10 @@ void StageState::Update(float dt){
 	if(INPUT_MANAGER.MousePress(RIGHT_MOUSE_BUTTON)) {
 		Vec2 mousePos = Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos());
 		int position = tileMap.GetCoordTilePos(mousePos, false, COLLISION_LAYER);
-		GameObject *go = tileMap.GetGO(position);
-		if(nullptr != go) {
-			go->AddComponent(new DragAndDrop(tileMap, mousePos, *go));
+        Tile tile = tileMap.AtLayer(position,COLLISION_LAYER);
+        GameObject *go = (GameObject*)tile.GetGO();
+        if(nullptr != go) {
+            go->AddComponent(new DragAndDrop(tileMap, mousePos, *go));
 			REPORT_I_WAS_HERE;
 		}
 	}
@@ -525,7 +526,6 @@ void StageState::Update(float dt){
 		Game &game = Game::GetInstance();
 		game.SetMaxFramerate( ( (int64_t)game.GetMaxFramerate() )-5);
 	}
-	tileMap.ShowCollisionInfo(INPUT_MANAGER.IsKeyDown('g'));
 	if(INPUT_MANAGER.IsKeyDown('[')){
 		Resources::ChangeMusicVolume(-STAGE_STATE_DELTA_VOLUME);
 	}
@@ -588,14 +588,14 @@ void StageState::Render(void) const {
     //Como registro para chamadas a serem feitas em outras funções de tilemap
     //tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
 	REPORT_I_WAS_HERE;
-	State::RenderArray();
+    State::Render();
 	if(isLightning){
 		SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), lightningColor.r, lightningColor.g, lightningColor.b, lightningColor.a);
 		SDL_SetRenderDrawBlendMode(Game::GetInstance().GetRenderer(), SDL_BLENDMODE_BLEND);
 		SDL_RenderFillRect(Game::GetInstance().GetRenderer(), NULL);
 	}
 
-	RenderUI();
+    //RenderUI();
 }
 //Comentado para futuro esclaricimento sobre compatibilidade retroativa
 /*void StageState::RenderUI(void) const {
@@ -676,7 +676,8 @@ void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
-    Rect menuBgOffsets = menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).GetOffsets();
+    RectTransform rect = (RectTransform)menuBgGO.GetComponent(ComponentType::RECT_TRANSFORM)
+    Rect menuBgOffsets = rect.GetOffsets();
     Vec2 menuBgDim = {(float)menuBgGO->GetComponent(ComponentType::SPRITE).GetWidth(), (float)menuBgGO->GetComponent(ComponentType::SPRITE).GetHeight()};
     if(menuIsShowing){
         menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM).SetOffsets( {menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y},
@@ -728,13 +729,13 @@ void StageState::SetUIMoney(int coins) {
 }
 
 vector<vector<int>>* StageState::GetTileGroups(int tileType) const{
-    TileMap tileMap = (TileMap)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    TileMap<Tile> tileMap = (TileMap)waveManagerGO->GetComponent(ComponentType::TILEMAP);
     vector<vector<int>> *tilePoints = new vector<vector<int>>();
     vector<int> foundTilePoints;
     REPORT_I_WAS_HERE;
 
     for(uint i = 0; i < tileMap.GetWidth() * tileMap.GetHeight(); i++) {
-        if(tileType == tileMap.AtLayer(i,COLLISION_LAYER)){
+        if(tileType == tileMap.AtLayer(i,COLLISION_LAYER).GetTileType()){
             foundTilePoints.push_back(i);
         }
     }
@@ -860,7 +861,7 @@ void StageState::InitializeObstacles(void){
                     int tilePos= tileMap.GetCoordTilePos(tree->box.Center(), false, 0);
                     REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
                     Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
-                    tile.setObject(tree);
+                    tile.SetGO(tree);
                     AddObject(tree);
 					tree->box = tree->box - offset;
 				}
@@ -880,7 +881,7 @@ void StageState::InitializeObstacles(void){
             int tilePos= tileMap.GetCoordTilePos(pole->box.Center(), false, 0);
             REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
             Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
-            tile.setGO(pole);
+            tile.SetGO(pole);
             AddObject(pole);
 			pole->box = pole->box - Vec2((float)10.5*pole->box.w/16., (float)5.5*pole->box.h/8.);
 		}
@@ -893,7 +894,7 @@ void StageState::InitializeObstacles(void){
             int tilePos= tileMap.GetCoordTilePos(bench->box.Center(), false, 0);
             REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
             Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
-            tile.setGO(bench);
+            tile.SetGO(bench);
             AddObject(bench);
 		}
 	}

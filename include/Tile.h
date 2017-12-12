@@ -3,13 +3,16 @@
 #include "GameObject.h"
 #include "BaseTile.h"
 
-class Tile : public BaseTile{
+class Tile{
 
     public:
-        void setGO(GameObject obstacle);
+        void SetGO(GameObject* obstacle);
+        GameObject* GetGO();
+        int GetTileType();
 
     private:
         GameObject* obstacle;
+        int tileType;
 
 };
 
