@@ -60,6 +60,8 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 		);
 		void CreateTower(Tower::TowerType towerType);
 		TileSet tileSet;
+        GameObject *waveManagerGO;
+        Sound menuMove;
         TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
 		vector<vector<int>>* GetTileGroups(int tileType) const;
 		InputManager &inputManager;
@@ -86,46 +88,51 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
 
 		bool menuIsShowing;
 
-        GameObject HUDcanvasGO;
-		GameObject* waveManagerGO;
+        GameObject* healthGO;
+        GameObject* healthIconGO;
+        GameObject* healthbarBgGO;
+        GameObject* healthbarBarGO;
 
-        GameObject menuBgGO;
-        GameObject openMenuBtnGO;
+        GameObject* waveGO;
+        GameObject* waveIconGO;
+        GameObject* wavebarBgGO;
+        GameObject* wavebarBarGO;
+
+        GameObject* moneyGO;
+        GameObject* moneyIconGO;
+        GameObject* moneyTextGO;
+
+        GameObject* menuBgGO;
+
+        GameObject* HUDcanvasGO;
+
+        GameObject* towerBtn1GO;
+        GameObject* towerBtn2GO;
+        GameObject* towerBtn3GO;
+        GameObject* towerBtn4GO;
+
+        Button towerBtn1;
+        Button towerBtn2;
+        Button towerBtn3;
+        Button towerBtn4;
+
+        GameObject* towersBtnGroupGO;
+
+        GameObject* openMenuBtnGO;
 		Button openMenuBtn;
-		Sound menuMove;
 
-        GameObject towerInfoGroupGO;
-        GameObject towerNameGO;
-        GameObject towerCostGO;
-        GameObject towerDamageGO;
-        GameObject towerDamageTypeGO;
+        GameObject* towerInfoGroupGO;
+        GameObject* towerNameGO;
+        GameObject* towerCostGO;
+        GameObject* towerDamageGO;
+        GameObject* towerDamageTypeGO;
 
-		Grouper towersBtnGroup;
-		Grouper towersInfoGroup;
-        GameObject towersBtnGroupGO;
-        GameObject towerBtn1GO;
-        GameObject towerBtn2GO;
-        GameObject towerBtn3GO;
-        GameObject towerBtn4GO;
 
-		Button towerBtn1;
-		Button towerBtn2;
-		Button towerBtn3;
-		Button towerBtn4;
+        Grouper towersInfoGroup;
+        Grouper towersBtnGroup;
 
-        GameObject healthGO;
-        GameObject healthIconGO;
-        GameObject healthbarBgGO;
-        GameObject healthbarBarGO;
 
-        GameObject waveGO;
-        GameObject waveIconGO;
-        GameObject wavebarBgGO;
-        GameObject wavebarBarGO;
 
-        GameObject moneyGO;
-        GameObject moneyIconGO;
-        GameObject moneyTextGO;
 };
 
 struct btnCallbackArgAux{

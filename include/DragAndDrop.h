@@ -78,14 +78,14 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj,Vec2 initialPos){
         return false;
     }
     int initialTile = tileMap.GetCoordTilePos(initialPos, false, 0);
-    if(-1 == tileMap.AtLayer(position, COLLISION_LAYER)) {
+    if(-1 == tileMap.AtLayer(position, COLLISION_LAYER).GetTileSetIndex()) {
         REPORT_DEBUG("\tInserting the gameObject at position " << position);
-        tileMap.At(position,COLLISION_LAYER).setGO(obj);
+        tileMap.At(position,COLLISION_LAYER).SetGO(obj);
         int line = position / mapWidth;
         int column = position % mapWidth;
         obj->box.x = column*tileMap.GetTileSize().x;
         obj->box.y = line*tileMap.GetTileSize().y;
-        tileMap.At(initialTile,COLLISION_LAYER).setGO(nullptr);//Retira da posicao inicial
+        tileMap.At(initialTile,COLLISION_LAYER).SetGO(nullptr);//Retira da posicao inicial
         //TODO: aqui ajudar a box para ficar exatamente no tileMap
     }
     else {
@@ -110,9 +110,9 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
         return false;
     }
     if(checkCollision){
-        if(-1 == tileMap.AtLayer(position, COLLISION_LAYER)) {
+        if(-1 == tileMap.AtLayer(position, COLLISION_LAYER).GetTileSetIndex()) {
             REPORT_DEBUG("\tInserting the gameObject at position " << position);
-            tileMap.At(position,COLLISION_LAYER).setGO(obj);
+            tileMap.At(position,COLLISION_LAYER).SetGO(obj);
             int line = position / mapWidth;
             int column = position % mapWidth;
             obj->box.x = column*tileMap.GetTileSize().x;
@@ -120,7 +120,7 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
             //TODO: aqui ajudar a box para ficar exatamente no tileMap
             tileMap.ReportChanges(position);
         }
-        else if(0 > tileMap.AtLayer(position, COLLISION_LAYER)) {
+        else if(0 > tileMap.AtLayer(position, COLLISION_LAYER).GetTileSetIndex()) {
             REPORT_DEBUG("\ttentado inserir objeto em posição inválida,está ocupada");
             obj->RequestDelete();
             return false;
@@ -134,7 +134,7 @@ bool DragAndDrop<T>::InsertGO(GameObject* obj, bool checkCollision) {
     else{
         int tilePos= tileMap.GetCoordTilePos(obj->box.Center(), false, 0);
         REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
-        tileMap.At(position,COLLISION_LAYER).setGO(obj);
+        tileMap.At(position,COLLISION_LAYER).SetGO(obj);
         int line = tilePos / mapWidth;
         int column = tilePos % mapWidth;
         obj->box.x = column*tileMap.GetTileSize().x;
@@ -150,9 +150,9 @@ void DragAndDrop<T>::Update(float dt) {
     if(inputManager.MouseRelease(RIGHT_MOUSE_BUTTON)) {
         bool success = false;
         if(redrag) {
-            success = tileMap.InsertGO(&associated, associatedInitialPos);
+            success = InsertGO(&associated, associatedInitialPos);
         } else {
-            success = tileMap.InsertGO(&associated);
+            success = InsertGO(&associated);
         }
         if(success) { dragNDrop.Play(1); }
         associated.RemoveComponent(DRAG_AND_DROP);
