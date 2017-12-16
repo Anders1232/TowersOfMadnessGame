@@ -1,6 +1,6 @@
 #include "AIPrintPath.h"
 
-AIPrintPath::AIPrintPath(TileMap<Tile>& tilemap, GameObject &associated):tilemap(tilemap),associated(associated){
+AIPrintPath::AIPrintPath(TileMap<Tile>& tilemap, GameObject &associated):tilemap(tilemap),associated(associated), Component(associated){
 	heuristic = new ManhattanDistance();
 }
 

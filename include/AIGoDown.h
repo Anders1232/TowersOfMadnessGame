@@ -7,6 +7,9 @@
 #include "ManhattanDistance.h"
 #include "WaveManager.h"
 #include "Tile.h"
+
+#define WALKABLE_LAYER 1
+
 /**
 	\brief Componete IA que se move para baixo
 	

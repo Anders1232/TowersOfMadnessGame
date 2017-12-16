@@ -14,6 +14,7 @@
 #include "Tile.h"
 
 #define QUIMIC_MAX_BULLET_COOLDOWN 10.0
+#define WALKABLE_LAYER 1
 
 /**
 	\brief Componete IA que reproduz o comportamento do estudande de quimica

@@ -1,14 +1,12 @@
 #include "AIGoTo.h"
 
-#define WALKABLE_LAYER 1
-
 AIGoTo::AIGoTo(float speed,int dest,TileMap<Tile>& tilemap,GameObject &associated)
 			: Component(associated)
 			, speed(speed)
 			, destTile(dest)
 			, pathIndex(0)
 			, associated(associated)
-			, tileMap(tilemap) {
+            , tileMap(tilemap){
 
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];

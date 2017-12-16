@@ -9,6 +9,8 @@
 #include "Tile.h"
 #include <list>
 
+#define WALKABLE_LAYER 1
+
 /**
 	\brief Componete IA que se move para ponto de destino
 */

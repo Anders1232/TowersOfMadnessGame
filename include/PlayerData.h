@@ -14,7 +14,7 @@
 
 	 PlayerData funciona como uma singleton e eh chamada em StageState e WaveManager.
 */
-class PlayerData: public Component {
+class PlayerData {
 	public:
 		static PlayerData& GetInstance(void);
         ~PlayerData();

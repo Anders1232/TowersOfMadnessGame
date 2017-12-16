@@ -31,16 +31,6 @@ PlayerData::PlayerData() {
 PlayerData::~PlayerData() {
 }
 
-void PlayerData::Render() const {
-}
-
-void PlayerData::Update(float dt) {
-}
-
-bool PlayerData::Is(ComponentType type) const{
-	return type == PLAYER_DATA;
-}
-
 void PlayerData::IncrementKills(void){
 	++kills;
 	GoldUpdate(-LIFE_LOST_POINTS, true);

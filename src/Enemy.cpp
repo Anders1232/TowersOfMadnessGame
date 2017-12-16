@@ -10,7 +10,7 @@
 #include "HitPoints.h"
 #include "Timer.h"
 
-Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<TileSet>&  tileMap, WaveManager &wManager)
+Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager)
 	: sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager){
 	box = position;
 	this->enemyIndex = enemyIndex; 
@@ -25,26 +25,26 @@ Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, ui
 	std::string basePath= "img/"+enemyData.spFolder;
 	basePath= basePath+ "/";
 
-	sp[EnemyDirections::UP].emplace_back(basePath+"perna_tras.png", true, 0.5, 4);
-	sp[EnemyDirections::UP].emplace_back(basePath+"cabeca_tras.png", true, 0.5, 4);
-	sp[EnemyDirections::UP].emplace_back(basePath+"cabelo_tras.png", true, 0.5, 4);
-	sp[EnemyDirections::UP].emplace_back(basePath+"torso_tras.png", true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"perna_tras.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"cabeca_tras.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"cabelo_tras.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"torso_tras.png",*this, true, 0.5, 4);
 	
 	box = position;
-	sp[EnemyDirections::RIGHT].emplace_back(basePath+"perna_dir.png", true, 0.5, 4);
-	sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabeca_dir.png", true, 0.5, 4);
-	sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabelo_dir.png", true, 0.5, 4);
-	sp[EnemyDirections::RIGHT].emplace_back(basePath+"torso_dir.png", true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"perna_dir.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabeca_dir.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabelo_dir.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"torso_dir.png",*this, true, 0.5, 4);
 
-	sp[EnemyDirections::DOWN].emplace_back(basePath+"perna_frente.png", true, 0.5, 4);
-	sp[EnemyDirections::DOWN].emplace_back(basePath+"cabeca_frente.png", true, 0.5, 4);
-	sp[EnemyDirections::DOWN].emplace_back(basePath+"cabelo_frente.png", true, 0.5, 4);
-	sp[EnemyDirections::DOWN].emplace_back(basePath+"torso_frente.png", true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"perna_frente.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabeca_frente.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabelo_frente.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"torso_frente.png",*this, true, 0.5, 4);
 	
-	sp[EnemyDirections::LEFT].emplace_back(basePath+"perna_esq.png", true, 0.5, 4);
-	sp[EnemyDirections::LEFT].emplace_back(basePath+"cabeca_esq.png", true, 0.5, 4);
-	sp[EnemyDirections::LEFT].emplace_back(basePath+"cabelo_esq.png", true, 0.5, 4);
-	sp[EnemyDirections::LEFT].emplace_back(basePath+"torso_esq.png", true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"perna_esq.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabeca_esq.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabelo_esq.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"torso_esq.png",*this, true, 0.5, 4);
 	
 	for(uint i =0; i < EnemyDirections::ENEMY_DIRECTIONS_SIZE; i++){
 		for(uint i2= 0; i2 < sp[i].size(); i2++){
@@ -191,7 +191,7 @@ void Enemy::Update(float dt) {
 void Enemy::Render(void) {
 	REPORT_DEBUG("\t Box:: x("<<box.x<<"), y(" <<box.y<< "), w("<<box.w<<"), h("<<box.h<<")");
 	for(uint i=0; i< sp[direction].size(); i++){
-		sp[direction][i].Render(box);
+        sp[direction][i].Render();
 	}
 	for(uint i=0; i< components.size(); i++){
 		components[i]->Render();
