@@ -22,7 +22,16 @@ void StartFinalLoop() {
 
 EndState::EndState(EndStateData stateData)
 		: music("audio/tela_de_vitoria_derrota/loop_tela_vitoria_derrota.ogg")
-		, intro( (stateData.playerVictory) ? "audio/tela_de_vitoria_derrota/vitoria.ogg" : "audio/tela_de_vitoria_derrota/derrota.ogg"){
+        , intro( (stateData.playerVictory) ? "audio/tela_de_vitoria_derrota/vitoria.ogg" : "audio/tela_de_vitoria_derrota/derrota.ogg")
+        ,HUDcanvasGO(new GameObject)
+        ,menuBgGO(new GameObject)
+        ,venceuTextGO(new GameObject)
+        ,optionsGroupGO(new GameObject)
+        ,playBtnGO(new GameObject)
+        ,exitBtnGO(new GameObject)
+        ,exitBtn(*exitBtnGO)
+        ,playBtn(*playBtnGO)
+        ,optionsGroup(*optionsGroupGO){
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
@@ -32,97 +41,79 @@ EndState::EndState(EndStateData stateData)
 	SetupUI(stateData);
 }
 
-void EndState::SetupUI(EndStateData stateData) {
+void EndState::SetupUI(EndStateData stateData){
 
     //HUDcanvas
-    RectTransform* rect = new RectTransform(HUDcanvas,nullptr);
-    HUDCanvas->AddComponent(rect);
+    HUDcanvasRect = new RectTransform(*HUDcanvasGO,nullptr);
+    HUDcanvasGO->AddComponent(HUDcanvasRect);
     //bg
-    RectTransform* rect = new RectTransform(menuBg,nullptr);
-    rect->SetBehaviorType(BehaviorType::FIT);
-    Sprite* sp = new Sprite(stateData.playerVictory ? "img/UI/end-game/win.jpg" : "img/UI/end-game/lose.jpg")
-    bg->AddComponent(rect);
-    bg->AddComponent(sp);
+    menuBgRect = new RectTransform(*menuBgGO,HUDcanvasGO);
+    menuBgRect->SetBehaviorType(RectTransform::BehaviorType::FIT);
+    Sprite* sp = new Sprite(stateData.playerVictory ? "img/UI/end-game/win.jpg" : "img/UI/end-game/lose.jpg",*menuBgGO);
+    menuBgGO->AddComponent(menuBgRect);
+    menuBgGO->AddComponent(sp);
     //venceuText
-    RectTransform* rect = new RectTransform(venceuText,nullptr);
-    Text* t = new Text(moneyText);
-    t->SetText(stateData.playerVictory ? std::string("Vit") + (char)0xF3 /*ó*/ + "ria" : "Derrota");
-    t->SetColor(COLOR_WIN);
-    t->SetFont("font/SHPinscher-Regular.otf");
-    t->SetFontSize(95);
-    venceuText->AddComponent(rect);
-    venceuText->AddComponent(t);
+    venceuTextRect = new RectTransform(*venceuTextGO,HUDcanvasGO);
+    Text* venceuTextComponent = new Text(*venceuTextGO);
+    venceuTextComponent->SetText(stateData.playerVictory ? std::string("Vit") + (char)0xF3 /*ó*/ + "ria" : "Derrota");
+    venceuTextComponent->SetColor(COLOR_WIN);
+    venceuTextComponent->SetFont("font/SHPinscher-Regular.otf");
+    venceuTextComponent->SetFontSize(95);
+    venceuTextGO->AddComponent(venceuTextRect);
+    venceuTextGO->AddComponent(venceuTextComponent);
     //optionsGroup ***Terminar***
-    RectTransform* rect = new RectTransform(optionsGroup,nullptr);
-    optionsGroup->AddComponent(rect);
+    optionsGroupRect = new RectTransform(*optionsGroupGO,HUDcanvasGO);
+    optionsGroupGO->AddComponent(optionsGroupRect);
     //playBtn
-    RectTransform* rect = new RectTransform(playBtn,nullptr);
-    Text* t = new Text(playBtn);
+    playBtnRect = new RectTransform(*playBtnGO,optionsGroupGO);
+    Text* t = new Text(*playBtnGO);
     t->SetText("Menu Principal");
     t->SetColor({255,255,255,255});
     t->SetFont("font/SHPinscher-Regular.otf");
     t->SetFontSize(95);
-    towerBtn2->AddComponent(rect);
-    , exitBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Sair")
+    playBtnGO->AddComponent(playBtnRect);
 
     //bg.GetSprite().colorMultiplier = {255, 255, 255, 200};
 
-	venceuText.SetAnchors( {0.2, 0.},
-						   {0.8, 0.4});
+    venceuTextRect->SetAnchors(Vec2(0.2, 0.),Vec2(0.8, 0.4));
 	if( stateData.playerVictory) {
-		venceuText.SetColor( COLOR_WIN );
+        venceuTextComponent->SetColor( COLOR_WIN );
 	} else {
-		venceuText.SetColor( COLOR_LOSE );
+        venceuTextComponent->SetColor( COLOR_LOSE );
 	}
 
-	optionsGroup.padding = 30.;
-	optionsGroup.SetAnchors( {0.15, 0.5},
-							 {0.85, 0.8});
-	optionsGroup.groupedElements.push_back(&playBtn);
-	optionsGroup.groupedElements.push_back(&exitBtn);
+    //optionsGroupRect.padding = 30.;
+    optionsGroupRect->SetAnchors(Vec2(0.15, 0.5),Vec2(0.85, 0.8));
+    optionsGroup.groupedElements.push_back(playBtnGO);
+    optionsGroup.groupedElements.push_back(exitBtnGO);
 
-	playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	playBtn.SetClickCallback( this, [] (void* caller) {
-									EndState* endState = static_cast<EndState*>(caller);
+    //playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
+    playBtn.SetReleaseCallback({ [] (void* ptr) {
+                                    EndState* endState = static_cast<EndState*>(ptr);
 									endState->MainMenu();
-								} );
+                                },this} );
+    //exitBtn("font/SHPinscher-Regular.otf", 95, Text::TextStyle::BLENDED, {255,255,255,255}, "Sair")
+    exitBtnRect = new RectTransform(*exitBtnGO,optionsGroupGO);
+    Text* exitBtnTextComponent = new Text(*exitBtnGO);
+    exitBtnTextComponent->SetText(stateData.playerVictory ? std::string("Vit") + (char)0xF3 /*ó*/ + "ria" : "Derrota");
+    exitBtnGO->AddComponent(exitBtnTextComponent);
+    exitBtnGO->AddComponent(exitBtnRect);
+    //exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
 
-	exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	exitBtn.SetClickCallback( this, [] (void* caller) {
-									EndState* endState = static_cast<EndState*>(caller);
+    exitBtn.SetReleaseCallback({[] (void* ptr) {
+                                    EndState* endState = static_cast<EndState*>(ptr);
 									endState->Close();
-								} );
+                                },this} );
 }
 
 void EndState::Update(float dt) {
 	if(INPUT_MANAGER.QuitRequested()) {
 		quitRequested = true;
 	}
-
-	UpdateUI(dt);
-}
-
-void EndState::UpdateUI(float dt) {
-	Rect winSize = Rect(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
-
-	HUDcanvas.Update(dt, winSize);
-	bg.Update(dt, HUDcanvas);
-	venceuText.Update(dt, HUDcanvas);
-	optionsGroup.Update(dt, HUDcanvas);
-	playBtn.Update(dt, optionsGroup);
-	exitBtn.Update(dt, optionsGroup);
 }
 
 void EndState::Render() const {
-	RenderUI();
-}
 
-void EndState::RenderUI() const {
-	bg.Render();
-	venceuText.Render();
-	optionsGroup.Render();
-	playBtn.Render();
-	exitBtn.Render();
 }
 
 void EndState::Pause() {}
