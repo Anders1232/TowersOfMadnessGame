@@ -1,14 +1,16 @@
 #include "HitPoints.h"
 
 HitPoints::HitPoints(uint hp,GameObject &associated, float scaleX)
-		: healthBar("img/effect/health_bar.png")
-		, healthColor("img/effect/health_color.png")
-		, associated(associated) {
+        : healthBar(new Sprite("img/effect/health_bar.png",associated))
+        , healthColor(new Sprite("img/effect/health_color.png",associated))
+        , Component(associated){
 			
 	this->hp = (int)hp;
 	maxHp = (int)hp;
-	healthBar.SetScaleX(scaleX);
-	healthColor.SetScaleX(scaleX);
+    healthBar->SetScaleX(scaleX);
+    healthColor->SetScaleX(scaleX);
+    associated.AddComponent(healthBar);
+    associated.AddComponent(healthColor);
 }
 
 HitPoints::~HitPoints(){
@@ -16,15 +18,10 @@ HitPoints::~HitPoints(){
 
 
 void HitPoints::Update(float dt){
-	Color& c = healthColor.colorMultiplier;
+    Color& c = healthColor->colorMultiplier;
 	c.r = 255*(1-(float)hp/maxHp);
 	c.b = 0;
 	c.g = 255*((float)hp/maxHp);
-}
-
-void HitPoints::Render(){
-	healthBar.Render(associated.box);
-	healthColor.Render(associated.box);
 }
 
 bool HitPoints::Is(ComponentType type) const{

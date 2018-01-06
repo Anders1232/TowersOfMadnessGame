@@ -27,7 +27,8 @@ Shooter::Shooter(GameObject &associated,
 	bulletScale(bulletScale),
 	bulletSpeed(bulletSpeed),
 	bulletMaxDistance(bulletMaxDistance),
-	bulletSprite(bulletSprite){
+    bulletSprite(bulletSprite),
+    Component(associated){
 }
 
 bool Shooter::Is(ComponentType type) const{

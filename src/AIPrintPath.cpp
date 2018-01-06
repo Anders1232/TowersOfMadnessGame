@@ -24,7 +24,7 @@ void AIPrintPath::Update(float dt){
 //			std::list<int> path = tilemap->AStar(position,dest,heuristic,weightMap);
 			Vec2 originCoord= associated.box.Center();
 			path= GameResources::GetPath(((Enemy&)associated).GetType(), heuristic, tilemap.GetCoordTilePos(originCoord, false, 0), dest, "map/WeightData.txt");
-			tilemap.ShowPath(path);
+            //tilemap.ShowPath(path);
 		}
 	}
 }

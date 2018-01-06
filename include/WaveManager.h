@@ -12,6 +12,9 @@
 #include <memory>
 #include <Tile.h>
 
+#define SPAWN_POINT (75)
+#define END_POINT (74)
+
 using std::vector;
 
 /**
@@ -27,7 +30,7 @@ class WaveManager : public Component {
 			\param tileMap Usada para inicializar spawnGroup, um vetor de grupos, e cada grupo, um vetor de spawn points. Um vetor de vetor!
 			\param waveFile Nome do arquivo aonde será feita a leitura dos dados contendo todas as informações de wave e inimigos do jogo.
 		*/
-        WaveManager(TileMap<Tile>& tileMap, string waveFile);
+        WaveManager(TileMap<Tile>& tileMap, string waveFile,GameObject& associated);
 		/**
 			\brief Destrutor.
 			Destrói o ponteiro de spawnGroups.
@@ -83,7 +86,9 @@ class WaveManager : public Component {
 			\return victory: verdadeiro se as waves acabaram.
 			Retorna true se a condiçao de vitoria foi satisfeita.
 		*/
-		bool Victory(void);
+        bool Victory(void);
+
+        vector<vector<int>>* GetTileGroups(int tileType) const;
 	private:
 		/**
 			\brief Criar um novo inimigo no mapa.

@@ -7,7 +7,7 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();
 	path= GameResources::GetPath(((Enemy&)associated).GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
-	actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER));
+    actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
 	vecSpeed = Vec2(0.0,0.0);
 	lastDistance = std::numeric_limits<float>::max();
 	randomMaxTimer = 0;

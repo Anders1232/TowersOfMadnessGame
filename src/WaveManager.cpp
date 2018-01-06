@@ -6,26 +6,30 @@
 #include "Enemy.h"
 #include "GameResources.h"
 #include "Error.h"
+#include "PlayerData.h"
+
+#define COLLISION_LAYER (1)
 
 #define TIME_BETWEEN_SPAWN 0.8
 #define TIME_BETWEEN_WAVES 5.0
 
 int WaveManager::waveCount = 0;
 
-WaveManager::WaveManager(TileMap<T> &tileMap, string waveFile)
+WaveManager::WaveManager(TileMap<Tile> &tileMap, string waveFile,GameObject& associated)
 		: tileMap(tileMap)
 		, waveStartSound("audio/Acoes/Inicio de Wave.wav")
 		, levelUpSound("audio/Acoes/Level Up.wav")
 		, lostEnemySound("audio/Acoes/perdeu1.wav")
 		, betweenWavesTimer()
-		, waitingForTheNextWave(false) {
+        , waitingForTheNextWave(false)
+        , Component(associated){
 	endWave=true;
 	enemiesLeft = 1;
 	playerLifes = 30;
 	REPORT_DEBUG2(1, "Buscando spawn points.");
-	spawnGroups= tileMap.GetTileGroups(SPAWN_POINT);
+    spawnGroups= GetTileGroups(SPAWN_POINT);
 	REPORT_DEBUG2(1, "Buscando end points.");
-	endGroups= tileMap.GetTileGroups(END_POINT);
+    endGroups= GetTileGroups(END_POINT);
 	wavesAndEnemysData = GameResources::GetWaveData("assets/wave&enemyData.txt");
 	enemyIndex = 0;
 	waveIndex=-1;
@@ -38,18 +42,14 @@ WaveManager::~WaveManager(){
 	delete spawnGroups;
 	delete endGroups;
 }
-/*
-vector<vector<int>>* WaveManager::GetTileGroups(int tileType) const {
+vector<vector<int>>* WaveManager::GetTileGroups(int tileType) const{
     vector<vector<int>> *tilePoints = new vector<vector<int>>();
     vector<int> foundTilePoints;
-    uint countLimit = GetWidth()*GetHeight();
-    int base = countLimit*COLLISION_LAYER;
     REPORT_I_WAS_HERE;
 
-    for(uint i = 0; i < countLimit; i++) {
-        int positionToBeSearch = base+i;
-        if(tileType == tileMatrix[positionToBeSearch]) {
-            foundTilePoints.push_back(positionToBeSearch%(GetWidth()*GetHeight()));
+    for(int i = 0; i < tileMap.GetWidth() * tileMap.GetHeight(); i++) {
+        if(tileType == tileMap.AtLayer(i,COLLISION_LAYER).GetTileSetIndex()){
+            foundTilePoints.push_back(i);
         }
     }
     REPORT_I_WAS_HERE;
@@ -68,12 +68,12 @@ vector<vector<int>>* WaveManager::GetTileGroups(int tileType) const {
             if(
                     (std::find(vec.begin(), vec.end(), foundTilePoints[0]+1) != vec.end() )//posição à direita
                     || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-1) != vec.end() )//posição à esquerda
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+GetWidth()) != vec.end() )// posição em cima
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-GetWidth()) != vec.end() )//posição em baixo
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-GetWidth()-1) != vec.end() )//diagonal supeior esquerda
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-GetWidth()+1) != vec.end() )//diagonal supeior direita
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+GetWidth()-1) != vec.end() )//diagonal inferior esquerda
-                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+GetWidth()+1) != vec.end() )//diagonal inferior direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()) != vec.end() )// posição em cima
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()) != vec.end() )//posição em baixo
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()-1) != vec.end() )//diagonal supeior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]-tileMap.GetWidth()+1) != vec.end() )//diagonal supeior direita
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()-1) != vec.end() )//diagonal inferior esquerda
+                    || (std::find(vec.begin(), vec.end(), foundTilePoints[0]+tileMap.GetWidth()+1) != vec.end() )//diagonal inferior direita
             ){
                 vec.push_back(foundTilePoints[0]);
                 foundTilePoints.erase(foundTilePoints.begin());
@@ -99,7 +99,7 @@ vector<vector<int>>* WaveManager::GetTileGroups(int tileType) const {
     }
 #endif
     return tilePoints;
-}*/
+}
 
 void WaveManager::StartWave(void){
 	enemiesLeft=0;

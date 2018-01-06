@@ -63,7 +63,6 @@ class StageState: public State, public TileMapObserver, public NearestGOFinder {
         GameObject *waveManagerGO;
         Sound menuMove;
         TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
-		vector<vector<int>>* GetTileGroups(int tileType) const;
 		InputManager &inputManager;
 
 		Music music;
