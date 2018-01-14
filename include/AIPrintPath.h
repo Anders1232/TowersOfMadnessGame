@@ -5,6 +5,7 @@
 #include "TileMap.h"
 #include "GameResources.h"
 #include "ManhattanDistance.h"
+#include "GameComponentType.h"
 #include "Camera.h"
 #include "Tile.h"
 #include <list>
@@ -36,7 +37,7 @@ class AIPrintPath : public Component
 			
 			Método herdade do componente com o objetivo de identificar que tipo de componente é.
 		*/
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 	private:
 		int dest;/**< indice do tile de destino*/
         TileMap<Tile>& tilemap;/**< indice do tile de destino*/

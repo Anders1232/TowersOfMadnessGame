@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "Timer.h"
 #include "Tile.h"
+#include "GameComponentType.h"
 
 #define WALKABLE_LAYER 1
 
@@ -41,7 +42,7 @@ class AIArt : public Component, public TileMapObserver
 			
 			Método herdade do componente com o objetivo de identificar que tipo de componente é.
 		*/
-		bool Is(ComponentType type) const;
+        bool Is(int type) const;
 		void NotifyTileMapChanged(int tilePosition);
 	private:
 		enum AIState{WALKING,WAITING,STUNNED,STATE_NUM};

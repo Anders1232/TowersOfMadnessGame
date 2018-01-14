@@ -47,7 +47,7 @@ class WaveManager : public Component {
 			Retorna o tipo da componente se é igual a WAVE_MANAGER. true ou false.
 			\param type Tipo da Compomente a ser comparada com WAVE_MANAGER.
 		*/
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 		/** 
 			\brief Inicializa um nova wave.
 			reinicia os atributos da classe (enemyIndex, endWave e waveCount) para executar uma nova wave e conta o novo número de inimigos restantes.
@@ -102,6 +102,7 @@ class WaveManager : public Component {
 
 		vector<vector<int>> *spawnGroups;/**<Armazena o vetor de SpawnGroup, cada spawnGroup armazena um vetor de spawnPoint.*/
 		vector<vector<int>> *endGroups;/**<Armazena o vetor de SpawnGroup, cada spawnGroup armazena um vetor de spawnPoint.*/
+        vector<GameObject*> enemies;/**<Armazena o vetor de Enemies */
 		static int waveCount; /**<Contador de waves restantes. Também usado para nivelar as waves.*/
 		Timer spawnTimer; /**<Contador para o cooldown de respawn. **/
 		

@@ -138,6 +138,6 @@ void AIArt::NotifyTileMapChanged(int tilePosition){
 	}
 }
 
-bool AIArt::Is(ComponentType type) const{
-	return (type == ComponentType::AI_ART);
+bool AIArt::Is(int type) const{
+    return (type == GameComponentType::AI_ART);
 }

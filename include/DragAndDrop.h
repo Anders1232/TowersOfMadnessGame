@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "TileMap.h"
 #include "Sound.h"
+#include "GameComponentType.h"
 
 #define COLLISION_LAYER (1)
 
@@ -163,7 +164,7 @@ void DragAndDrop<T>::Update(float dt) {
 }
 
 template <class T>
-bool DragAndDrop<T>::Is(ComponentType type) const {
+bool DragAndDrop<T>::Is(int type) const {
     return ComponentType::DRAG_AND_DROP == type;
 }
 

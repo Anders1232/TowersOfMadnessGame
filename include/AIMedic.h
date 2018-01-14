@@ -5,6 +5,7 @@
 #include "TileMap.h"
 #include "GameResources.h"
 #include "ManhattanDistance.h"
+#include "GameComponentType.h"
 #include <list>
 #include "Enemy.h"
 #include "Timer.h"
@@ -39,7 +40,7 @@ class AIMedic : public Component, public TileMapObserver
 			
 			Método herdade do componente com o objetivo de identificar que tipo de componente é.
 		*/
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 		void NotifyTileMapChanged(int tilePosition);
 	private:
 

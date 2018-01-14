@@ -16,6 +16,6 @@ void AIGoDown::Update(float dt){
 	*/
 }
 
-bool AIGoDown::Is(ComponentType type) const{
+bool AIGoDown::Is(int type) const{
 	return (type == ComponentType::AI_GO_DOWN);
 }

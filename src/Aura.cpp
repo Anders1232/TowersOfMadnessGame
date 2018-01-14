@@ -62,7 +62,7 @@ void Aura::Render(void){
 	}
 }
 
-bool Aura::Is(ComponentType type) const{
+bool Aura::Is(int type) const{
 	if(Enemy::Event::SMOKE == auraType){
 		return ComponentType::SLOW_AURA== type;
 	}

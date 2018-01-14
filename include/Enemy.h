@@ -12,7 +12,7 @@
 #include "HitPoints.h"
 #include "Sound.h"
 #include "WaveManager.h"
-//#include "componentType.h"
+#include "GameComponentType.h"
 
 #define BASE_HIT_POINTS 100
 #define MAX_EVENT_TIME 5
@@ -59,27 +59,27 @@ enum EnemyDirections{
 	
 	Turbinando ela para instanciar diferentes tipos de componentes/sprites essa classe provavelmente se manterá no projeto até o final.
 */
-class Enemy : public GameObject
+class Enemy : public Component
 {
 	public:
 		/**
 			\brief Construtor
-			\param position posição onde o inimigo deve ser instancido.
+            \param position posição onde o inimigo deve ser instancido.
 			\param life Quantidade de vida que o inimigo deve ter.
 			
 			No momento a position informa o extremo superior esquedo a partir do qual o gameObject será instanciado.
 		*/
-		Enemy(Vec2 position,EnemyType type, int life); // calcula vida e velocidade 
+        Enemy(EnemyType type, int life); // calcula vida e velocidade
 		/**
 			\brief Construtor
 			\todo Documentar!
 			\todo Verificar se está sendo usado.
-			\param position posição onde o inimigo deve ser instancido.
+            \param position posição onde o inimigo deve ser instancido.
 			\param life Quantidade de vida que o inimigo deve ter.
 			
 			No momento a position informa o extremo superior esquedo a partir do qual o gameObject será instanciado.
 		*/
-        Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>& tileMap, WaveManager &wManager);
+        Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>& tileMap, WaveManager &wManager,GameObject &associated);
 		/**
 			\brief Destrutor
 			
@@ -91,39 +91,39 @@ class Enemy : public GameObject
 			
 			Chama o método Update de todas as suas componentes.
 		*/
-		void Update(float dt);
-		/**
-			\brief Atualiza estado
-			
-			Chama o método Update de todas as suas componentes.
-		*/
-		void Render(void);
-		/**
-			\brief Verifica se esse GameObject deve ser destruído.
-			
-			Se necessário pode consultar suas componentes para tal, mas o ideal que é as componentes informem isso ao GameObject antes, pela chamado do método RequestDelete.
-		*/
-		bool IsDead(void);
-		/**
-			\brief Solicita que esse GaeObject seja destruído
-			
-			Deve fazer o necessário para que futuras chamadas a IsDead retornem verdadeiro.
-		*/
-		void RequestDelete(void);
-		/**
-			\brief Notifica evento de colisão.
-			\todo Verificar viabilidade de tratar colisão em componentes.
-			
-			No momento não faz nada.
-		*/
-		void NotifyCollision(GameObject &object);
-		/**
-			\brief Identifica tipo de GameObject.
-			\todo Verificar viabilidade de usar enum no lugar de string
-			
-			Retorna verdadeiro se type for "Enemy", falso caso contrário.
-		*/
-		bool Is(string type);
+        void Update(float dt);
+        /**
+            \brief Atualiza estado
+
+            Chama o método Update de todas as suas componentes.
+        */
+        void Render(void);
+        /**
+            \brief Verifica se esse GameObject deve ser destruído.
+
+            Se necessário pode consultar suas componentes para tal, mas o ideal que é as componentes informem isso ao GameObject antes, pela chamado do método RequestDelete.
+        */
+        bool IsDead(void);
+        /**
+            \brief Solicita que esse GaeObject seja destruído
+
+            Deve fazer o necessário para que futuras chamadas a IsDead retornem verdadeiro.
+        */
+        void RequestDelete(void);
+        /**
+            \brief Notifica evento de colisão.
+            \todo Verificar viabilidade de tratar colisão em componentes.
+
+            No momento não faz nada.
+        */
+        void NotifyCollision(GameObject &object);
+        /**
+            \brief Identifica tipo de GameObject.
+            \todo Verificar viabilidade de usar enum no lugar de string
+
+            Retorna verdadeiro se type for "Enemy", falso caso contrário.
+        */
+        bool Is(int type) const;
 		/**
 			\brief Obtém rect do GameObject renderizado na tela
 			

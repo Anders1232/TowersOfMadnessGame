@@ -24,8 +24,8 @@ void HitPoints::Update(float dt){
 	c.g = 255*((float)hp/maxHp);
 }
 
-bool HitPoints::Is(ComponentType type) const{
-	return (ComponentType::HIT_POINTS == type);
+bool HitPoints::Is(int type) const{
+    return (GameComponentType::HIT_POINTS == type);
 }
 
 int HitPoints::GetHp(){

@@ -29,6 +29,6 @@ void AIPrintPath::Update(float dt){
 	}
 }
 
-bool AIPrintPath::Is(ComponentType type) const{
+bool AIPrintPath::Is(int type) const{
 	return (type == ComponentType::AI_PRINT_PATH);
 }

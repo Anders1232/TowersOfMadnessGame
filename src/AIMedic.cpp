@@ -188,6 +188,6 @@ void AIMedic::NotifyTileMapChanged(int tilePosition){
 	}
 }
 
-bool AIMedic::Is(ComponentType type) const{
-	return (type == ComponentType::AI_MEDIC);
+bool AIMedic::Is(int type) const{
+    return (type == GameComponentType::AI_MEDIC);
 }

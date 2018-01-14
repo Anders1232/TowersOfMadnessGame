@@ -9,9 +9,10 @@
 #include "AIGoDown.h"
 #include "HitPoints.h"
 #include "Timer.h"
+#include "Component.h"
 
-Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager)
-	: sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager){
+Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager,GameObject &associated)
+    : sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager),Component(associated){
 	box = position;
 	this->enemyIndex = enemyIndex; 
 	this->baseHP = baseHP; 
@@ -229,8 +230,8 @@ Enemy::Event Enemy::GetLastEvent(){
 	return(lastEvent);
 }
 
-bool Enemy::Is(string type) {
-	return type == "Enemy";
+bool Enemy::Is(int type) const{
+    return type == GameComponentType::ENEMY;
 }
 
 Rect Enemy::GetWorldRenderedRect(void) const {

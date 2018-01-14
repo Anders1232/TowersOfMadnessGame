@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "Timer.h"
 #include "Tile.h"
+#include "GameComponentType.h"
 
 #define WALKABLE_LAYER 1
 
@@ -39,7 +40,7 @@ class AIEngineer : public Component, public TileMapObserver
 			
 			Método herdade do componente com o oMapChangedbjetivo de identificar que tipo de componente é.
 		*/
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 		void NotifyTileMapChanged(int tilePosition);
 	private:
 

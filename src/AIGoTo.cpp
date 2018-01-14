@@ -45,6 +45,6 @@ void AIGoTo::Update(float dt){
 	}
 }
 
-bool AIGoTo::Is(ComponentType type) const{
+bool AIGoTo::Is(int type) const{
 	return (type == ComponentType::AI_GO_TO);
 }

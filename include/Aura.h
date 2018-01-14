@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Timer.h"
 #include "NearestGOFinder.h"
+#include "GameComponentType.h"
 
 class Aura: public Component
 {
@@ -13,7 +14,7 @@ class Aura: public Component
 		~Aura(void){};
 		void Update(float dt);
 		void Render(void);
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 	private:
 		GameObject &associated;
 		Enemy::Event auraType;

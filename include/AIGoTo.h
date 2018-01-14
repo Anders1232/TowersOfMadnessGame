@@ -6,6 +6,7 @@
 #include "GameResources.h"
 #include "ManhattanDistance.h"
 #include "Tile.h"
+#include "GameComponentType.h"
 #include <map>
 #include <list>
 
@@ -38,7 +39,7 @@ class AIGoTo : public Component
 			
 			Método herdade do componente com o objetivo de identificar que tipo de componente é.
 		*/
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 	private:
 		
 		float speed;/**< Velocidade de movimento do GameObject com esse componente.*/

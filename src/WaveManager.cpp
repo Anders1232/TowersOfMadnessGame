@@ -128,6 +128,13 @@ bool WaveManager::EndWave(void) const{
 }
  
 void WaveManager::Update(float dt){
+    //Retira Enemies mortos da lista de enemies
+    for(int i = 0;i < enemies.size();i ++){
+        if(enemies[i]->IsDead()){
+            enemies.erase(enemies.begin() + i);
+        }
+    }
+
 	if(EndWave()){
 		if(totalWaves==waveCount){ //Check Game over Condition
 			//Ao invés de não fazer nada deve-ser informar o fim de jogo
@@ -219,11 +226,15 @@ void WaveManager::SpawnEnemy(int tileMapPosition, int enemyId, uint baseHP, uint
 	spawnPosition.x = (tileMapPosition%tileMap.GetWidth() ) * tileSize.x;
 	REPORT_I_WAS_HERE;
 	spawnPosition.y = (tileMapPosition/tileMap.GetWidth() ) * tileSize.y;
-	Enemy* enemy = new Enemy(spawnPosition, enemyIndex, currentWaveEnemyData, baseHP, endPoint, tileMap, *this);
-	Game::GetInstance().GetCurrentState().AddObject(enemy);
+    GameObject* enemyGO = new GameObject();
+    enemyGO->box = spawnPosition;
+    Enemy* enemy = new Enemy(enemyIndex, currentWaveEnemyData, baseHP, endPoint, tileMap, *this,*enemyGO);
+    enemyGO->AddComponent(enemy);
+    Game::GetInstance().GetCurrentState().AddObject(enemyGO);
+    enemies.push_back(enemyGO);
 }
 
-bool WaveManager::Is(ComponentType type) const{
+bool WaveManager::Is(int type) const{
 	return type == WAVE_MANAGER;
 }
 

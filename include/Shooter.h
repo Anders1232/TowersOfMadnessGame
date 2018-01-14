@@ -4,8 +4,9 @@
 #include <string>
 #include "Component.h"
 #include "GameObject.h"
-#include "NearestGOFinder.h"
+#include "NearestFinder.h"
 #include "Timer.h"
+#include "Tile.h"
 
 class Shooter : public Component{
 	public:
@@ -14,7 +15,8 @@ class Shooter : public Component{
 			SHOOT_UNTIL_OUT_OF_RANGE
 		};
 		Shooter(GameObject &associated,
-				NearestGOFinder &finder,
+                NearestFinder<GameObject> &nearestFinder,
+                Finder<GameObject> &finder,
 				std::string targetType,
 				float range,
 				float betweetShootsTime,
@@ -26,11 +28,12 @@ class Shooter : public Component{
 				int frameRate,
 				float bulletScale);
 		void Update(float dt);
-		bool Is(ComponentType type) const;
+        bool Is(int type) const;
 		void SetActive(bool active);
 	private:
 		GameObject &associated;
-		NearestGOFinder &finder;
+        NearestFinder<GameObject> &nearestFinder;
+        Finder<GameObject> &finder;
 		bool active;
 		std::string targetType;
 		float range;

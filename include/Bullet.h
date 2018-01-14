@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "Vec2.h"
 #include "RectTransform.h"
+#include "GameComponentType.h"
 #include <string>
 
 #define BULLET_VEL 210

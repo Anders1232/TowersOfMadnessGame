@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Sprite.h"
 #include "Error.h"
+#include "GameComponentType.h"
 
 class HitPoints : public Component{
 	public:
@@ -12,7 +13,7 @@ class HitPoints : public Component{
 		void Update(float dt);
 		void RequestDelete(void);
 		void Damage(int damage);
-		bool Is(ComponentType) const;
+        bool Is(int type) const;
 		int GetHp();
 	private:
 		int hp;

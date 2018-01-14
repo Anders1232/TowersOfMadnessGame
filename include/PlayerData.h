@@ -20,7 +20,7 @@ class PlayerData {
         ~PlayerData();
 		void Render() const;
 		void Update(float dt);
-		bool Is(ComponentType type) const;
+		bool Is(int type) const;
 		static void Reset(void);
 		void GoldUpdate(int amount, bool winPoints=true);
 		void PointsUpdate(int amount);

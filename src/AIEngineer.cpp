@@ -188,6 +188,6 @@ void AIEngineer::NotifyTileMapChanged(int tilePosition){
 	}
 }
 
-bool AIEngineer::Is(ComponentType type) const{
-	return (type == ComponentType::AI_ENGINEER);
+bool AIEngineer::Is(int type) const{
+    return (type == GameComponentType::AI_ENGINEER);
 }

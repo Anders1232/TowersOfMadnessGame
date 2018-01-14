@@ -197,6 +197,6 @@ void AIQuimic::NotifyTileMapChanged(int tilePosition){
 	}
 }
 
-bool AIQuimic::Is(ComponentType type) const{
+bool AIQuimic::Is(int type) const{
 	return (type == ComponentType::AI_QUIMIC);
 }
