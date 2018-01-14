@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "Error.h"
 #include "GameComponentType.h"
+#include "GameObject.h"
 
 class HitPoints : public Component{
 	public:
