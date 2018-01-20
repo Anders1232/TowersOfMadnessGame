@@ -16,6 +16,7 @@
 #define END_POINT (74)
 
 using std::vector;
+using namespace RattletrapEngine;
 
 /**
 	\brief Classe que gerencia as waves do jogo. Responsavel por iniciar, encerrar e contar as waves. Também gerencia o spawn dos inimigos na wave atual.

@@ -10,6 +10,8 @@
 
 #include <string>
 
+using namespace RattletrapEngine;
+
 class Obstacle : public GameObject{
 	public:
 		Obstacle(std::string path, Vec2 position);

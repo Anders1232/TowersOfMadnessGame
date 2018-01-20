@@ -7,6 +7,8 @@
 #include "NearestGOFinder.h"
 #include "GameComponentType.h"
 
+using namespace RattletrapEngine;
+
 class Aura: public Component
 {
 	public:

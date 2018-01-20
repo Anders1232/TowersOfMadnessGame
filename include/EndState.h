@@ -13,6 +13,8 @@
 #include "Button.h"
 #include "Grouper.h"
 
+using namespace RattletrapEngine;
+
 #define END_STATE_FONT_SIZE (40)
 #define END_STATE_DELTA_VOLUME (1) //11*11 = 121 ~128
 

@@ -1,6 +1,9 @@
 #ifndef GAMECOMPONENTTYPE
 #define GAMECOMPONENTTYPE
 #include "ComponentType.h"
+
+using namespace RattletrapEngine;
+
 /**
     \brief Tipos de Componentes
 
@@ -9,7 +12,7 @@
 */
 
 enum GameComponentType{
-    DRAG_AND_DROP=RattletrapEngine::ComponentType::COMPONENT_TYPE_SIZE,
+    DRAG_AND_DROP=ComponentType::COMPONENT_TYPE_SIZE,
     HIT_POINTS,
     AI_GO_DOWN,
     AI_GO_TO,

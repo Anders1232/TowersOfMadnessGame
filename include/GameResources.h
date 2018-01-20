@@ -13,6 +13,8 @@
 #include "Enemy.h"
 #include "TileMap.h"
 
+using namespace RattletrapEngine;
+
 /**
 	\brief Classe estática que gerencia recursos específicos do jogo
 	

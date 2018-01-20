@@ -4,6 +4,8 @@
 #include "StateData.h"
 #include "Defines.h"
 
+using namespace RattletrapEngine;
+
 class EndStateData: StateData {
 	public:
 		bool Is(StateDataType typeToCheck) const;

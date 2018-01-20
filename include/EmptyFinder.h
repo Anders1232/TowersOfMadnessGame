@@ -2,6 +2,8 @@
 #define EMPTYFINDER
 #include "NearestFinder.h"
 
+using namespace RattletrapEngine;
+
 class EmptyFinder: public Finder {
 
 };

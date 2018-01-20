@@ -12,6 +12,8 @@
 #include "Sound.h"
 #include "Music.h"
 
+using namespace RattletrapEngine;
+
 class TitleState: public State {
 	public:
 		TitleState(void);

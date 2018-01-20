@@ -14,6 +14,8 @@
 #include "WaveManager.h"
 #include "GameComponentType.h"
 
+using namespace RattletrapEngine;
+
 #define BASE_HIT_POINTS 100
 #define MAX_EVENT_TIME 5
 #define DIFICULTY_CONSTANT 12

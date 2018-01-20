@@ -6,6 +6,8 @@
 #include "Sound.h"
 #include "GameComponentType.h"
 
+using namespace RattletrapEngine;
+
 #define COLLISION_LAYER (1)
 
 /**

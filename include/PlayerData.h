@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "WaveManager.h"
 
+using namespace RattletrapEngine;
+
 #define PLAYER_DATA_INSTANCE PlayerData::GetInstance()
 
 #define TOTAL_LIFES 30

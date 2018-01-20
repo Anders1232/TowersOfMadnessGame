@@ -8,6 +8,8 @@
 #include "Timer.h"
 #include "Tile.h"
 
+using namespace RattletrapEngine;
+
 class Shooter : public Component{
 	public:
 		enum TargetPolicy{
