@@ -21,14 +21,14 @@ AIGoTo::~AIGoTo(void){
 
 void AIGoTo::Update(float dt){
 	if(pathIndex != path->size()){
-		tempDestination = Vec2(tileMap.GetCurrentTileSet().GetTileSize().x * ((*path)[pathIndex] % tileMap.GetWidth()),tileMap.GetCurrentTileSet().GetTileSize().y*((*path)[pathIndex] / tileMap.GetWidth()));
+		tempDestination = Vec2(tileMap.GetCurrentTileSet()->GetTileSize().x * ((*path)[pathIndex] % tileMap.GetWidth()),tileMap.GetCurrentTileSet()->GetTileSize().y*((*path)[pathIndex] / tileMap.GetWidth()));
 		float lastDistance = associated.box.Center().VecDistance(tempDestination).Magnitude();
 		if((vecSpeed.MemberMult(dt)).Magnitude() >= lastDistance){
 			associated.box.x = (tempDestination.x - (associated.box.w/2));
 			associated.box.y = (tempDestination.y - (associated.box.h/2));
 			pathIndex++;
 			if(pathIndex != path->size()){
-				tempDestination = Vec2(tileMap.GetCurrentTileSet().GetTileSize().x * ((*path)[pathIndex] % tileMap.GetWidth()),tileMap.GetCurrentTileSet().GetTileSize().y*((*path)[pathIndex] / tileMap.GetWidth()));
+				tempDestination = Vec2(tileMap.GetCurrentTileSet()->GetTileSize().x * ((*path)[pathIndex] % tileMap.GetWidth()),tileMap.GetCurrentTileSet()->GetTileSize().y*((*path)[pathIndex] / tileMap.GetWidth()));
 				int here = tileMap.AtLayer((*path)[pathIndex], WALKABLE_LAYER).GetTileSetIndex();
 				float weight = tileWeightMap.at(here );
 				vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / (weight * 2));
