@@ -14,7 +14,7 @@
 #include "Enemy.h"
 #include "Tile.h"
 
-using namespace RattletrapEngine;
+//using namespace RattletrapEngine;
 
 #define QUIMIC_MAX_BULLET_COOLDOWN 10.0
 #define WALKABLE_LAYER 1

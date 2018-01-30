@@ -2,8 +2,6 @@
 #define GAMECOMPONENTTYPE
 #include "ComponentType.h"
 
-using namespace RattletrapEngine;
-
 /**
     \brief Tipos de Componentes
 

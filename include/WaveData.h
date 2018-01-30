@@ -5,7 +5,6 @@
 #include <vector>
 #include "Error.h"
 
-using namespace RattletrapEngine;
 
 struct EnemyData{
 		//todo: ver como colocar cores e transparência aqui

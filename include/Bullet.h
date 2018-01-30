@@ -10,7 +10,7 @@
 #include "GameComponentType.h"
 #include <string>
 
-using RattletrapEngine;
+//using RattletrapEngine;
 
 #define BULLET_VEL 210
 #define BULLET_REACH 1000

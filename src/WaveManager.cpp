@@ -235,7 +235,7 @@ void WaveManager::SpawnEnemy(int tileMapPosition, int enemyId, uint baseHP, uint
 }
 
 bool WaveManager::Is(int type) const{
-	return type == WAVE_MANAGER;
+    return type == GameComponentType::WAVE_MANAGER;
 }
 
 void WaveManager::NotifyEnemyGotToHisDestiny(void){

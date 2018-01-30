@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "WaveManager.h"
 
-using namespace RattletrapEngine;
+//using namespace RattletrapEngine;
 
 #define PLAYER_DATA_INSTANCE PlayerData::GetInstance()
 

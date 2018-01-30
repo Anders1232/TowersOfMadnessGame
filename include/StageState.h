@@ -31,7 +31,7 @@
 #define TOWERDAMGETYPE_DEFAULT_TEXT " "
 
 using std::vector;
-using namespace RattletrapEngine;
+//using namespace RattletrapEngine;
 
 class StageState: public State, public TileMapObserver, public NearestGOFinder {
 	public:

@@ -6,7 +6,7 @@
 #include "Sound.h"
 #include "GameComponentType.h"
 
-using namespace RattletrapEngine;
+//using namespace RattletrapEngine;
 
 #define COLLISION_LAYER (1)
 
@@ -41,7 +41,7 @@ class DragAndDrop : public Component{
 
             Retorna Verdadeiro se CompomentType também é do tipo DragAndDrop, caso contrário retorna falso.
         */
-        bool Is(ComponentType) const;
+        bool Is(int type) const;
     private:
         bool InsertGO(GameObject* obj,Vec2 initialPos);
         bool InsertGO(GameObject* obj, bool checkCollision = true);
@@ -167,7 +167,7 @@ void DragAndDrop<T>::Update(float dt) {
 
 template <class T>
 bool DragAndDrop<T>::Is(int type) const {
-    return ComponentType::DRAG_AND_DROP == type;
+    return GameComponentType::DRAG_AND_DROP == type;
 }
 
 

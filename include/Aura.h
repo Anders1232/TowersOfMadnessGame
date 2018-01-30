@@ -9,7 +9,7 @@
 
 #include <string>
 
-using namespace RattletrapEngine;
+//using namespace RattletrapEngine;
 
 class Aura: public Component
 {
