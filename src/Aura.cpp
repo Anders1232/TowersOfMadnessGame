@@ -13,19 +13,19 @@ Aura::Aura(GameObject &associated,
 		finder(finder),
 		targetType(targetType){
 	if(Enemy::Event::SMOKE == auraType){
-		sp = Sprite("img/SpriteSheets/aura_spritesheet.png", false, 0.3f, 7);
+		sp = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp.colorMultiplier = Color(179, 150, 120);
-		sp2 = Sprite("img/SpriteSheets/aura_spritesheet.png", false, 0.3f, 7);
+		sp2 = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp2.colorMultiplier = Color(179, 150, 120);
 		sp2.SetFrame(3);
 	}
 	else if(Enemy::Event::STUN == auraType){
-		sp = Sprite("img/SpriteSheets/stun_spritesheet.png", false, 0.3f, 7);
-		sp2 = Sprite("img/SpriteSheets/stun_spritesheet.png", false, 0.3f, 7);
+		sp = Sprite(std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
+		sp2 = Sprite(std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
 		sp2.SetFrame(3);
 	}
 	else if(Enemy::Event::HEALER == auraType){
-		sp = Sprite("img/SpriteSheets/aura_spritesheet.png", false, 0.3f, 7);
+		sp = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 	}
 	sp.ScaleX(2*auraRange/(float)sp.GetWidth());
 	sp.ScaleY(2*auraRange/(float)sp.GetHeight());
@@ -54,11 +54,11 @@ void Aura::Update(float dt){
 void Aura::Render(void){
 	Vec2 startPoint = associated.box;
 	startPoint = startPoint - Vec2((-associated.box.w + sp.GetWidth())/2, (-associated.box.w + sp.GetHeight())/2);
-	sp.Render(Rect(startPoint.x, startPoint.y, sp.GetWidth(), sp.GetHeight()));
+	sp.Render();
 	if(Enemy::Event::HEALER != auraType){
 		startPoint= associated.box;
 		startPoint= startPoint -  Vec2((-associated.box.w + sp.GetWidth())/2, (-associated.box.w + sp.GetHeight())/2);
-		sp2.Render(Rect(startPoint.x, startPoint.y, sp2.GetWidth(), sp2.GetHeight()));
+		sp2.Render();
 	}
 }
 
