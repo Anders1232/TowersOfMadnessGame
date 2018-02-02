@@ -16,6 +16,7 @@ Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp)
 			type == TowerType::STUN ? "img/tower/torrestun.png" :
 			type == TowerType::SHOCK ? "img/SpriteSheets/torrechoque_lvl1.png" :
 			"",
+			*this,
 			true,
 			0.25,
 			type == TowerType::SMOKE ? 1:
