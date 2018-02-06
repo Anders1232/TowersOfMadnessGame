@@ -11,9 +11,8 @@
 #include "Timer.h"
 #include "Component.h"
 
-Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager,GameObject &associated)
+Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager,GameObject &associated)
     : sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager),Component(associated){
-	box = position;
 	this->enemyIndex = enemyIndex; 
 	this->baseHP = baseHP; 
 	this->endPoint = endPoint;
@@ -31,7 +30,6 @@ Enemy::Enemy(Vec2 position, int enemyIndex, EnemyData enemyData, uint baseHP, ui
     sp[EnemyDirections::UP].emplace_back(basePath+"cabelo_tras.png",*this, true, 0.5, 4);
     sp[EnemyDirections::UP].emplace_back(basePath+"torso_tras.png",*this, true, 0.5, 4);
 	
-	box = position;
     sp[EnemyDirections::RIGHT].emplace_back(basePath+"perna_dir.png",*this, true, 0.5, 4);
     sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabeca_dir.png",*this, true, 0.5, 4);
     sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabelo_dir.png",*this, true, 0.5, 4);

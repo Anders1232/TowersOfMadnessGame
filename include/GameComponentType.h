@@ -8,6 +8,7 @@
     Enumeração com os tipos de componentes possíveis, usado no método Is que todo componente deve implementar.
     Foi colocado em um arquivo separado por problemas de inclusão circular entre GameObject e Component.
 */
+using namespace RattletrapEngine;
 
 enum GameComponentType{
     DRAG_AND_DROP=RattletrapEngine::ComponentType::COMPONENT_TYPE_SIZE,
