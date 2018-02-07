@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "BaseTile.h"
 
+using namespace RattletrapEngine;
+
 class Tile : public BaseTile{
 
     public:

@@ -25,25 +25,25 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 	std::string basePath= "img/"+enemyData.spFolder;
 	basePath= basePath+ "/";
 
-    sp[EnemyDirections::UP].emplace_back(basePath+"perna_tras.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::UP].emplace_back(basePath+"cabeca_tras.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::UP].emplace_back(basePath+"cabelo_tras.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::UP].emplace_back(basePath+"torso_tras.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"perna_tras.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"cabeca_tras.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"cabelo_tras.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::UP].emplace_back(basePath+"torso_tras.png",associated, true, 0.5, 4);
 	
-    sp[EnemyDirections::RIGHT].emplace_back(basePath+"perna_dir.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabeca_dir.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabelo_dir.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::RIGHT].emplace_back(basePath+"torso_dir.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"perna_dir.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabeca_dir.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"cabelo_dir.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::RIGHT].emplace_back(basePath+"torso_dir.png",associated, true, 0.5, 4);
 
-    sp[EnemyDirections::DOWN].emplace_back(basePath+"perna_frente.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabeca_frente.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabelo_frente.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::DOWN].emplace_back(basePath+"torso_frente.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"perna_frente.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabeca_frente.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"cabelo_frente.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::DOWN].emplace_back(basePath+"torso_frente.png",associated, true, 0.5, 4);
 	
-    sp[EnemyDirections::LEFT].emplace_back(basePath+"perna_esq.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabeca_esq.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabelo_esq.png",*this, true, 0.5, 4);
-    sp[EnemyDirections::LEFT].emplace_back(basePath+"torso_esq.png",*this, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"perna_esq.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabeca_esq.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"cabelo_esq.png",associated, true, 0.5, 4);
+    sp[EnemyDirections::LEFT].emplace_back(basePath+"torso_esq.png",associated, true, 0.5, 4);
 	
 	for(uint i =0; i < EnemyDirections::ENEMY_DIRECTIONS_SIZE; i++){
 		for(uint i2= 0; i2 < sp[i].size(); i2++){
@@ -69,7 +69,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 85;
 				}
 			}
-			components.emplace_back(new AIGoTo(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , *this));
+            associated.AddComponent(new AIGoTo(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap ,associated));
 			break;
 		case EnemyType::NEUTRAL:
 			REPORT_DEBUG("Enemy type: NEUTRAL "<< enemyData.enemyType);
@@ -81,7 +81,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 255;
 				}
 			}
-			components.emplace_back(new AIGoTo(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , *this));
+            associated.AddComponent(new AIGoTo(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , associated));
 			break;
 		case EnemyType::ENGINEER:
 			REPORT_DEBUG("Enemy type: ENGINEER "<< enemyData.enemyType);
@@ -93,7 +93,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 105;
 				}
 			}
-			components.emplace_back(new AIEngineer(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , *this, wManager));
+            associated.AddComponent(new AIEngineer(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , associated, wManager));
 			break;
 		case EnemyType::ARQUITET:
 			REPORT_DEBUG("Enemy type: ARQUITET "<< enemyData.enemyType);
@@ -105,7 +105,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 255;
 				}
 			}
-			components.emplace_back(new AIEngineer(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , *this, wManager));
+            associated.AddComponent(new AIEngineer(ENEMY_ENGINEER_MOVE_SPEED, endPoint, tileMap , associated, wManager));
 			break;
 		case EnemyType::ART:
 			REPORT_DEBUG("Enemy type: ART "<< enemyData.enemyType);
@@ -117,8 +117,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 15;
 				}
 			}
-			components.emplace_back(new AIArt(ENEMY_ART_MOVE_SPEED, endPoint, tileMap, *this, wManager));
-			//components.emplace_back(new AIGoDown(500, endPoint, tileMap, *this, wManager));
+            associated.AddComponent(new AIArt(ENEMY_ART_MOVE_SPEED, endPoint, tileMap, associated, wManager));
 			
 			break;
 		case EnemyType::QUIMIC:
@@ -131,7 +130,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 100;
 				}
 			}
-			components.emplace_back(new AIQuimic(ENEMY_QUIMIC_MOVE_SPEED, endPoint, tileMap, *this, wManager));
+            associated.AddComponent(new AIQuimic(ENEMY_QUIMIC_MOVE_SPEED, endPoint, tileMap,associated, wManager));
 			break;
 		case EnemyType::MEDIC:
 			REPORT_DEBUG("Enemy type: MEDIC "<< enemyData.enemyType);
@@ -143,40 +142,28 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 					sp[i][i2].colorMultiplier.b = 10;
 				}
 			}
-			components.emplace_back(new AIMedic(ENEMY_QUIMIC_MOVE_SPEED, endPoint, tileMap, *this, wManager));
+            associated.AddComponent(new AIMedic(ENEMY_QUIMIC_MOVE_SPEED, endPoint, tileMap,associated, wManager));
 			break;
 		default:
 			Error("Unkown Enemy type: "<< enemyData.enemyType << END_LINE);
 			break;
 	}
-	hitpoints = new HitPoints(baseHP,*this, enemyData.scaleX);
-	components.push_back(hitpoints);
+    hitpoints = new HitPoints(baseHP,associated, enemyData.scaleX);
+    associated.AddComponent(hitpoints);
 
 	walkingSound.Play(0);
 
-	box.w= sp[EnemyDirections::DOWN][3].GetWidth();
-	box.h= sp[EnemyDirections::DOWN][3].GetHeight();
-}
-
-Enemy::~Enemy(){
-	REPORT_I_WAS_HERE;
-	walkingSound.Stop();
-	for(uint i = 0; i < components.size(); i++) {
-		delete components[i];
-	}
-	components.clear();
-	sp.clear();
+    associated.box.w= sp[EnemyDirections::DOWN][3].GetWidth();
+    associated.box.h= sp[EnemyDirections::DOWN][3].GetHeight();
 }
 
 void Enemy::Update(float dt) {
 	for(uint i=0; i< sp[direction].size(); i++){
 		sp[direction][i].Update(dt);
 	}
-	int forLimit = components.size();
-	Vec2 positionBefore= box;
-	for(int i = 0; i < forLimit; i++){
-		components[i]->Update(dt);
-	}
+
+    Vec2 positionBefore = associated.box;
+
 	UpdateEnemyDirection(positionBefore);
 	if(hitpoints->GetHp() < 0){
 		dead = true;
@@ -188,14 +175,10 @@ void Enemy::Update(float dt) {
 }
 
 void Enemy::Render(void) {
-	REPORT_DEBUG("\t Box:: x("<<box.x<<"), y(" <<box.y<< "), w("<<box.w<<"), h("<<box.h<<")");
+    REPORT_DEBUG("\t Box:: x("<<associated.box.x<<"), y(" <<associated.box.y<< "), w("<<associated.box.w<<"), h("<<associated.box.h<<")");
 	for(uint i=0; i< sp[direction].size(); i++){
         sp[direction][i].Render();
 	}
-	for(uint i=0; i< components.size(); i++){
-		components[i]->Render();
-	}
-	hitpoints->Render();
 }
 
 bool Enemy::IsDead(void) {
@@ -233,7 +216,7 @@ bool Enemy::Is(int type) const{
 }
 
 Rect Enemy::GetWorldRenderedRect(void) const {
-	return Camera::WorldToScreen(box);
+    return Camera::WorldToScreen(associated.box);
 }
 
 EnemyType Enemy::GetType(void) const{
@@ -241,7 +224,7 @@ EnemyType Enemy::GetType(void) const{
 }
 
 void Enemy::UpdateEnemyDirection(Vec2 lastPosition){
-	int inclination= ( (int)( (lastPosition-(Vec2)box).Inclination()*CONVERSAO_GRAUS_RADIANOS) )%360;
+    int inclination= ( (int)( (lastPosition-(Vec2)associated.box).Inclination()*CONVERSAO_GRAUS_RADIANOS) )%360;
 	if(0 > inclination){
 		inclination+=360;
 	}
