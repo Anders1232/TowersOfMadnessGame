@@ -6,26 +6,27 @@ Aura::Aura(GameObject &associated,
 			float timeBetweetNotifications,
 			NearestGOFinder &finder,
 			std::string targetType)
-	:associated(associated),
+	:Component(associated),
+		associated(associated),
 		auraType(auraType),
 		auraRange(auraRange),
 		timeBetweetNotifications(timeBetweetNotifications),
 		finder(finder),
 		targetType(targetType){
 	if(Enemy::Event::SMOKE == auraType){
-		sp = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
+		sp (std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp.colorMultiplier = Color(179, 150, 120);
-		sp2 = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
+		sp2(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp2.colorMultiplier = Color(179, 150, 120);
 		sp2.SetFrame(3);
 	}
 	else if(Enemy::Event::STUN == auraType){
-		sp = Sprite(std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
-		sp2 = Sprite(std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
+		sp (std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
+		sp2(std::string("img/SpriteSheets/stun_spritesheet.png"), associated, false, 0.3f, 7);
 		sp2.SetFrame(3);
 	}
 	else if(Enemy::Event::HEALER == auraType){
-		sp = Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
+		sp (std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 	}
 	sp.ScaleX(2*auraRange/(float)sp.GetWidth());
 	sp.ScaleY(2*auraRange/(float)sp.GetHeight());
