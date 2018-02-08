@@ -11,7 +11,7 @@
 #include "Timer.h"
 #include "Tile.h"
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 #define WALKABLE_LAYER 1
 

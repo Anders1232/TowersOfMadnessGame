@@ -9,7 +9,7 @@
 
 #include <string>
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 class Aura: public Component
 {
@@ -23,8 +23,8 @@ class Aura: public Component
 		GameObject &associated;
 		Enemy::Event auraType;
 		float auraRange;
-		Sprite sp;
-		Sprite sp2;
+		Sprite* sp;
+		Sprite* sp2;
 		float timeBetweetNotifications;
 		Timer notificationTimer;
 		NearestGOFinder &finder;

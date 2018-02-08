@@ -13,7 +13,7 @@
 #define TOTAL_TOWER_TYPES 5
 #define TOWER_BULLET_DAMAGE 10
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 
 class Tower : public GameObject{

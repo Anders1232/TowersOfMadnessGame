@@ -10,7 +10,7 @@
 
 #include <string>
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 class Obstacle : public GameObject{
 	public:
