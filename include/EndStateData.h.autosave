@@ -2,7 +2,6 @@
 #define ENDSTATEDATA_H
 
 #include "StateData.h"
-#include "GameStateDataType.h"
 
 using namespace RattletrapEngine;
 
