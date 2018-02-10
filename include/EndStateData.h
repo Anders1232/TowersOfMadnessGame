@@ -2,9 +2,9 @@
 #define ENDSTATEDATA_H
 
 #include "StateData.h"
-#include "Defines.h"
+#include "GameStateDataType.h"
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 class EndStateData: StateData {
 	public:
@@ -12,14 +12,5 @@ class EndStateData: StateData {
 		EndStateData(bool playerVictory);
 		bool playerVictory;
 };
-
-inline EndStateData::EndStateData(bool playerVictory) {
-	this-> playerVictory= playerVictory;
-}
-
-inline bool EndStateData::Is(StateDataType typeToCheck) const {
-	return typeToCheck == STATE_DATA_END;
-}
-
 
 #endif

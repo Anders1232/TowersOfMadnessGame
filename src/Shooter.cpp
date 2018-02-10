@@ -4,8 +4,8 @@
 #include "Error.h"
 
 Shooter::Shooter(GameObject &associated,
-        NearestFinder<GameObject> &nearestFinder,
-        Finder<GameObject> &finder,
+        NearestFinder<Tile> &nearestFinder,
+        Finder<Tile> &finder,
 		std::string targetType,
 		float range,
 		float betweetShootsTime,
@@ -17,7 +17,7 @@ Shooter::Shooter(GameObject &associated,
 		int frameRate,
 		float bulletScale):
 	associated(associated),
-    nearestFinder(nearestFinder)
+    nearestFinder(nearestFinder),
 	finder(finder),
 	active(active),
 	targetType(targetType),
@@ -34,7 +34,7 @@ Shooter::Shooter(GameObject &associated,
 }
 
 bool Shooter::Is(int type) const{
-	return ComponentType::SHOOTER == type;
+    return GameComponentType::SHOOTER == type;
 }
 
 void Shooter::Update(float dt){
@@ -43,14 +43,14 @@ void Shooter::Update(float dt){
 		if(timerBetweetShoots.Get() > betweetShootsTime){
 			timerBetweetShoots.Restart();
 			if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
-                target= nearestFinder.FindNearestGO(associated.box.Center(),finder, targetType, range);
+                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
 			}
 			else if(target->IsDead()){
-                target= nearestFinder.FindNearestGO(associated.box.Center(),finder, targetType, range);
+                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
 			}
 			//supoe-se aqui que já existe um algo e a políica de tipo é SHOOT_UNTIL_OUT_OF_RANGE
 			else if( (target->box.Center()-associated.box.Center() ).Magnitude() > range){
-                target= nearestFinder.FindNearestGO(associated.box.Center(),finder, targetType, range);
+                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
 			}
 			if(nullptr!= target){
 				Vec2 origin= associated.box.Center();

@@ -17,8 +17,8 @@ class Shooter : public Component{
 			SHOOT_UNTIL_OUT_OF_RANGE
 		};
 		Shooter(GameObject &associated,
-                NearestFinder<GameObject> &nearestFinder,
-                Finder<GameObject> &finder,
+                NearestFinder<Tile> &nearestFinder,
+                Finder<Tile> &finder,
 				std::string targetType,
 				float range,
 				float betweetShootsTime,
@@ -34,8 +34,8 @@ class Shooter : public Component{
 		void SetActive(bool active);
 	private:
 		GameObject &associated;
-        NearestFinder<GameObject> &nearestFinder;
-        Finder<GameObject> &finder;
+        NearestFinder<Tile> &nearestFinder;
+        Finder<Tile> &finder;
 		bool active;
 		std::string targetType;
 		float range;

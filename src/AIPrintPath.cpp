@@ -30,5 +30,5 @@ void AIPrintPath::Update(float dt){
 }
 
 bool AIPrintPath::Is(int type) const{
-	return (type == ComponentType::AI_PRINT_PATH);
+    return (type == GameComponentType::AI_PRINT_PATH);
 }
