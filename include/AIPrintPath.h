@@ -10,7 +10,7 @@
 #include "Tile.h"
 #include <list>
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 #define WALKABLE_LAYER 1
 

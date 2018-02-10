@@ -13,7 +13,7 @@
 #include "Tile.h"
 #include "GameComponentType.h"
 
-//using namespace RattletrapEngine;
+using namespace RattletrapEngine;
 
 #define WALKABLE_LAYER 1
 

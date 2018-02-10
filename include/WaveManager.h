@@ -12,6 +12,8 @@
 #include <memory>
 #include <Tile.h>
 
+using namespace RattletrapEngine;
+
 #define SPAWN_POINT (75)
 #define END_POINT (74)
 
