@@ -834,38 +834,31 @@ void StageState::InitializeObstacles(void){
 	delete benchTiles;
 }
 
-GameObject* StageState::FindNearestGO(Vec2 origin, std::string targetType, float range){
-	GameObject* closerObj = nullptr;
-	double closerObjDistance = std::numeric_limits<double>::max();
-	for(unsigned int i = 0; i < objectArray.size(); i ++){
-		std::unique_ptr<GameObject> &gameObjectInAnalisis= objectArray[i];
-		if(nullptr != gameObjectInAnalisis){
-			if(gameObjectInAnalisis->Is(targetType)){
-				double distance = origin.VecDistance(gameObjectInAnalisis->box.Center()).Magnitude();
-				if(distance < closerObjDistance && distance <= range){
-					closerObjDistance = distance;
-					closerObj = gameObjectInAnalisis.get();
-				}
-			}
-		}
-	}
-	return(closerObj);
+GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject*> &finder, float range){
+
+    GameObject* closerObj = nullptr;
+    double closerObjDistance = std::numeric_limits<double>::max();
+
+    for(unsigned int i = 0; i < objectArray.size(); i ++){
+        float tempRes= finder(objectArray[i].get());
+        if(tempRes < closerObjDistance){
+            closerObj = (objectArray[i].get());
+            closerObjDistance = tempRes;
+        }
+    }
+    return(closerObj);
 }
 
-std::vector<GameObject*>* StageState::FindNearestGOs(Vec2 origin, std::string targetType, float range){
-	vector<GameObject*> *objectsInRange= new vector<GameObject*>();
+
+std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range){
+    vector<GameObject*> *objectsInRange = new vector<GameObject*>();
 	for(unsigned int i = 0; i < objectArray.size(); i ++){
-		std::unique_ptr<GameObject> &gameObjectInAnalisis= objectArray[i];
-		if(nullptr != gameObjectInAnalisis){
-			if(gameObjectInAnalisis->Is(targetType)){
-				double distance = origin.VecDistance(gameObjectInAnalisis->box.Center()).Magnitude();
-				if(distance <= range){
-					objectsInRange->push_back(gameObjectInAnalisis.get());
-				}
-			}
-		}
-	}
-	return(objectsInRange);
+        float distance= finder(objectArray[i].get());
+        if(distance <= range){
+            objectsInRange->push_back(objectArray[i].get());
+        }
+    }
+    return(objectsInRange);
 }
 
 void StageState::LoadAssets(void) const{

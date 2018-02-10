@@ -16,26 +16,26 @@ class Shooter : public Component{
 			ALWAYS_NEAREST,
 			SHOOT_UNTIL_OUT_OF_RANGE
 		};
-		Shooter(GameObject &associated,
-                NearestFinder<Tile> &nearestFinder,
-                Finder<Tile> &finder,
-				std::string targetType,
-				float range,
-				float betweetShootsTime,
-				Shooter::TargetPolicy policy,
-				bool active,
-				float bulletSpeed,
-				float bulletMaxDistance,
-				std::string bulletSprite,
-				int frameRate,
-				float bulletScale);
+        Shooter(GameObject &associated,
+                NearestFinder<GameObject*> &nearestFinder,
+                Finder<GameObject*> &finder,
+                std::string targetType,
+                float range,
+                float betweetShootsTime,
+                TargetPolicy policy,
+                bool active,
+                float bulletSpeed,
+                float bulletMaxDistance,
+                std::string bulletSprite,
+                int frameRate,
+                float bulletScale);
 		void Update(float dt);
         bool Is(int type) const;
 		void SetActive(bool active);
 	private:
 		GameObject &associated;
-        NearestFinder<Tile> &nearestFinder;
-        Finder<Tile> &finder;
+        NearestFinder<GameObject*> &nearestFinder;
+        Finder<GameObject*> &finder;
 		bool active;
 		std::string targetType;
 		float range;

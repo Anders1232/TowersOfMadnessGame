@@ -140,7 +140,7 @@ struct btnCallbackArgAux{
     GameObject* GO;
 };
 
-#include "EndState.h"
+
 
 #endif // STAGE_STATE_H
 

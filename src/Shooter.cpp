@@ -4,18 +4,18 @@
 #include "Error.h"
 
 Shooter::Shooter(GameObject &associated,
-        NearestFinder<Tile> &nearestFinder,
-        Finder<Tile> &finder,
-		std::string targetType,
-		float range,
-		float betweetShootsTime,
-		TargetPolicy policy,
-		bool active,
-		float bulletSpeed,
-		float bulletMaxDistance,
-		std::string bulletSprite,
-		int frameRate,
-		float bulletScale):
+                 NearestFinder<GameObject*> &nearestFinder,
+                 Finder<GameObject*> &finder,
+                 std::string targetType,
+                 float range,
+                 float betweetShootsTime,
+                 TargetPolicy policy,
+                 bool active,
+                 float bulletSpeed,
+                 float bulletMaxDistance,
+                 std::string bulletSprite,
+                 int frameRate,
+                 float bulletScale):
 	associated(associated),
     nearestFinder(nearestFinder),
 	finder(finder),
@@ -43,14 +43,14 @@ void Shooter::Update(float dt){
 		if(timerBetweetShoots.Get() > betweetShootsTime){
 			timerBetweetShoots.Restart();
 			if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
-                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
+                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			else if(target->IsDead()){
-                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
+                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			//supoe-se aqui que já existe um algo e a políica de tipo é SHOOT_UNTIL_OUT_OF_RANGE
 			else if( (target->box.Center()-associated.box.Center() ).Magnitude() > range){
-                target = ((Tile*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)))->GetGO();
+                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			if(nullptr!= target){
 				Vec2 origin= associated.box.Center();
