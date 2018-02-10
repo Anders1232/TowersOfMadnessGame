@@ -24,6 +24,7 @@
 #include "Grouper.h"
 #include "Tile.h"
 #include "Button.h"
+#include "Text.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "

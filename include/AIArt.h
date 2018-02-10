@@ -12,6 +12,7 @@
 #include "Timer.h"
 #include "Tile.h"
 #include "GameComponentType.h"
+#include "NearestGOFinder.h"
 
 using namespace RattletrapEngine;
 

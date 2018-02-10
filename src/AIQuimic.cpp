@@ -2,7 +2,7 @@
 #include "AIQuimic.h"
 #include "Shooter.h"
 
-AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager), Component(associated){
+AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager),finder(NearestGOFinder("Tower",associated.box.Center())), Component(associated){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
 	Vec2 originCoord= associated.box.Center();
@@ -33,8 +33,9 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	actualState = AIState::WALKING;
 	
 	tileMap.ObserveMapChanges(this);
-	shooter= new Shooter(associated, tileMap, "Tower",500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
-	associated.AddComponent(shooter);
+    shooter = new Shooter(associated,(NearestFinder<GameObject*>&)Game::GetInstance().GetCurrentState(),finder, "Tower",500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
+    associated.AddComponent(shooter);
+
 }
 
 AIQuimic::~AIQuimic(void){

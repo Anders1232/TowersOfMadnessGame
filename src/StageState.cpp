@@ -853,7 +853,7 @@ GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject*> &finder, fl
 std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range){
     vector<GameObject*> *objectsInRange = new vector<GameObject*>();
 	for(unsigned int i = 0; i < objectArray.size(); i ++){
-        float distance= finder(objectArray[i].get());
+        float distance = finder(objectArray[i].get());
         if(distance <= range){
             objectsInRange->push_back(objectArray[i].get());
         }

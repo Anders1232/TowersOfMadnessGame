@@ -11,3 +11,7 @@ float NearestGOFinder::operator()(GameObject* go){
         }
     }
 }
+
+void NearestGOFinder::setOrigin(Vec2 origin){
+    this->origin = origin;
+}

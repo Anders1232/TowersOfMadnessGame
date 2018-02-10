@@ -42,16 +42,19 @@ void Shooter::Update(float dt){
 		timerBetweetShoots.Update(dt);
 		if(timerBetweetShoots.Get() > betweetShootsTime){
 			timerBetweetShoots.Restart();
-			if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
+            if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
+                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			else if(target->IsDead()){
+                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			//supoe-se aqui que já existe um algo e a políica de tipo é SHOOT_UNTIL_OUT_OF_RANGE
 			else if( (target->box.Center()-associated.box.Center() ).Magnitude() > range){
+                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
-			}
+            }
 			if(nullptr!= target){
 				Vec2 origin= associated.box.Center();
 				Vec2 startDistanceFromOrigin(associated.box.w/2, 0);
