@@ -1,0 +1,12 @@
+#ifndef TILEWEIGHTMAPASTAR_H
+#define TILEWEIGHTMAPASTAR_H
+
+
+class TileWeightMapAStar
+{
+public:
+    TileWeightMapAStar();
+};
+
+#endif // TILEWEIGHTMAPASTAR_H
+

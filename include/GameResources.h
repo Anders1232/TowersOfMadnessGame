@@ -12,6 +12,8 @@
 #include "WaveData.h"
 #include "Enemy.h"
 #include "TileMap.h"
+#include "TileWeightMapAStar.h"
+
 
 using namespace RattletrapEngine;
 

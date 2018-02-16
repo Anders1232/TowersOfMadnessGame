@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "GameResources.h"
 #include "Error.h"
+#include "TileWeightMapAStar.h"
 
 #define ENEMY_TYPE_MAX_STRING_SIZE (50)
 #define WAVE_DATA_FILENAME_MAX_SIZE (50)
@@ -15,10 +16,10 @@
 std::unordered_map<std::string, std::shared_ptr<std::array<std::map<int, double>, EnemyType::ENEMY_TYPE_SIZE> > > GameResources::weightDataMap;
 std::unordered_map<std::string, std::shared_ptr<std::pair<std::vector<WaveData>, std::vector<EnemyData> > > > GameResources::waveDataMap;
 std::unordered_map<std::string, std::pair<uint, std::shared_ptr<std::vector<int> > > > GameResources::pathMap;
-uint GameResources::lastMapUpdate=0;
-TileMap* GameResources::tileMap= nullptr;
-uint GameResources::pathMapHits= 0;
-uint GameResources::pathMapCalls= 0;
+uint GameResources::lastMapUpdate = 0;
+TileMap<Tile>* GameResources::tileMap = nullptr;
+uint GameResources::pathMapHits = 0;
+uint GameResources::pathMapCalls = 0;
 
 std::shared_ptr<std::array<std::map<int, double>, EnemyType::ENEMY_TYPE_SIZE> > GameResources::GetWeightData(std::string file){
 	if(weightDataMap.end() == weightDataMap.find(file)) {
@@ -246,8 +247,9 @@ std::shared_ptr<std::vector<int> > GameResources::GetPath(EnemyType type, AStarH
 	catch(...){
 		pathMap.erase(index);
 	}
-	std::map<int, double> weightMap= GetWeightData(weightDataFile)->operator [](type);
-	std::list<int>*pathList= tileMap->AStar(origin, dest, heuristic, weightMap);
+    std::map<int, double> weightMap = GetWeightData(weightDataFile)->operator [](type);
+    TileWeightMapAStar calculator = TileWeightMapAStar(weightMap);
+    std::list<int>*pathList= tileMap->AStar(origin, dest, heuristic, calculator);
 	std::vector<int> *pathVector= new std::vector<int>(pathList->begin(), pathList->end());
 	std::shared_ptr<std::vector<int>> newPath(pathVector);
 	std::pair<uint, std::shared_ptr<std::vector<int> > > newEntry= std::make_pair(lastMapUpdate, newPath);
