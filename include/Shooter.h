@@ -5,7 +5,6 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "NearestFinder.h"
-#include "NearestGOFinder.h"
 #include "Timer.h"
 #include "Tile.h"
 

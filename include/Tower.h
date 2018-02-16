@@ -5,6 +5,7 @@
 #include "Vec2.h"
 #include "HitPoints.h"
 #include "Bullet.h"
+#include "NearestGOFinder.h"
 
 #ifndef TOWER_H
 #define TOWER_H
@@ -45,6 +46,7 @@ class Tower : public GameObject{
 		Sprite sp;
 		HitPoints *hitpoints;
 		bool isDraging;
+        NearestGOFinder finder;
 };
 
 #endif // TOWER_H
