@@ -462,16 +462,17 @@ void StageState::Update(float dt){
     }*/
 
     if(collisionMap.size() >= 2){
-        for(std::map<Component&,GameObject&>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
-            for(std::map<Component&,GameObject&>::iterator it2 = collisionMap.begin() + 1; it2 != collisionMap.end();++ it2) {
-                if(collisionMap[it1] != collisionMap[it2]){
-                    if(Collision::IsColliding(collisionMap[it1]->box, collisionMap[it2]->box,collisionMap[it1]->rotation,collisionMap[it2]->rotation) ) {
-                        it1->NotifyCollision(*it2);
-                        it2->NotifyCollision(*it1);
-				}
-			}
-		}
-	}
+        for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
+            for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it2 = it1 ++; it2 != collisionMap.end();++ it2) {
+                if(collisionMap.at(it1->first).get() != collisionMap.at(it2->first).get()){
+                    if(Collision::IsColliding(collisionMap.at(it1->first).get()->box, collisionMap.at(it2->first).get()->box,collisionMap.at(it1->first).get()->rotation,collisionMap.at(it2->first).get()->rotation) ) {
+                        it1->first.get()->NotifyCollision(*it2->first.get());
+                        it2->first.get()->NotifyCollision(*it1->first.get());
+                    }
+                }
+            }
+        }
+    }
 
 	Camera::Update(dt);
 
@@ -862,10 +863,10 @@ std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject
     return(objectsInRange);
 }
 
-void AddCollider(Component collider,GameObject associated){
+void AddCollider(std::shared_ptr<Component> collider,std::shared_ptr<GameObject> associated){
     collisionMap[collider] = associated;
 }
-void RemoveCollider(Component collider){
+void RemoveCollider(std::shared_ptr<Component> collider){
     collisionMap.erase(collider);
 }
 
