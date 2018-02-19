@@ -7,6 +7,7 @@
 #include "NearestFinder.h"
 #include "Timer.h"
 #include "Tile.h"
+#include "NearestGOFinder.h"
 
 using namespace RattletrapEngine;
 

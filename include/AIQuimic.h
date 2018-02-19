@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "Tile.h"
 #include "NearestGOFinder.h"
+#include "NearestComponentFinder.h"
 
 using namespace RattletrapEngine;
 
@@ -73,7 +74,7 @@ class AIQuimic : public Component, public TileMapObserver
 		AIState actualState;
 		AIState dfa[AIState::STATE_NUM][AIEvent::EVENT_NUM];
 		Shooter *shooter;
-        NearestGOFinder finder;
+        NearestComponentFinder finder;
 };
 
 #endif 

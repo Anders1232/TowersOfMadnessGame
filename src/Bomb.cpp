@@ -1,12 +1,8 @@
-#include "Bullet.h"
-#include "Camera.h"
-#include "Error.h"
-
 #include "Bomb.h"
 #include "Camera.h"
 #include "Error.h"
 
-Bullet::Bullet(float x, float y, float angle, float speed, float maxDistance, std::string sprite, std::string targetType, float scale, float frameTime, int frameCount)
+Bomb::Bomb(float x, float y, float angle, float speed, float maxDistance, std::string sprite, std::string targetType, float scale, float frameTime, int frameCount)
     :targetType(targetType),
      speed(Vec2::FromPolarCoord(speed, angle)),
      distanceLeft(maxDistance),
@@ -22,7 +18,7 @@ Bullet::Bullet(float x, float y, float angle, float speed, float maxDistance, st
     associated.AddComponent(sp);
 }
 
-void Bullet::Update(float dt){
+void Bomb::Update(float dt){
 
     if(0 >= distanceLeft){associated.RequestDelete();}
 
@@ -31,17 +27,17 @@ void Bullet::Update(float dt){
 
 }
 
-Bullet::~Bullet(){
+Bomb::~Bomb(){
 }
 
-void Bullet::NotifyCollision(Component &other){
+void Bomb::NotifyCollision(Component &other){
     if(other.Is(targetType)){
         distanceLeft= 0;
         if(other.Is(GameComponentType::TOWER)){
             animation->AddComponent(new Animation(box.x,box.y,rotation,"img/SpriteSheets/explosao_spritesheet.png",9,0.1,true));
             Game::GetInstance().GetCurrentState().AddObject(animation);
         }
-        else if(other.Is(GameComponentType::BOMB)){
+        else if(other.Is(GameComponentType::BULLET)){
             animation->AddComponent(new Animation(box.x,box.y,rotation,"img/SpriteSheets/anti-bomba_ativ_spritesheet.png",11,0.1,true));
             Game::GetInstance().GetCurrentState().AddObject(animation);
         }
@@ -53,9 +49,9 @@ void Bullet::NotifyCollision(Component &other){
     }
 }
 
-bool Bullet::Is(int type){
+bool Bomb::Is(int type){
 
-    return (GameComponentType::BULLET == type);
+    return (GameComponentType::BOMB == type);
 
 }
 

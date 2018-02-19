@@ -27,6 +27,10 @@ enum GameComponentType{
     HEAL_AURA,
     PLAYER_DATA,
     ENEMY,
+    TOWER,
+    BULLET,
+    BOMB,
+    ANIMATION,
     GAME_COMPONENT_TYPE_SIZE
 };
 

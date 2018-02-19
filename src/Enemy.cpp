@@ -155,6 +155,10 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 
     associated.box.w= sp[EnemyDirections::DOWN][3].GetWidth();
     associated.box.h= sp[EnemyDirections::DOWN][3].GetHeight();
+
+    StageState& stageState = (StageState&)Game::GetInstance().GetCurrentState();
+
+    stageState.AddCollider(this,associated);
 }
 
 void Enemy::Update(float dt) {
@@ -189,7 +193,7 @@ void Enemy::RequestDelete(void) {
 	dead = true;
 }
 
-void Enemy::NotifyCollision(GameObject &object) {
+void Enemy::NotifyCollision(Component &object) {
 	if(object.Is("Bullet")){
 		if(((Bullet&)object).getTargetType() == "Enemy"){
 			hitpoints->Damage(ENEMY_BULLET_DAMAGE);

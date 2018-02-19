@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
 #include "ActionManager.h"
 #include "AIGoDown.h"
@@ -25,6 +26,7 @@
 #include "Tile.h"
 #include "Button.h"
 #include "Text.h"
+#include "Component.h"
 
 #define TOWERNAME_DEFAULT_TEXT " "
 #define TOWERCOST_DEFAULT_TEXT " "
@@ -50,6 +52,8 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 		void NotifyTileMapChanged(int tilePosition);
         GameObject* FindNearest(Vec2 origin, Finder<GameObject*> &finder, float range = std::numeric_limits<float>::max());
         std::vector<GameObject*>* FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range);
+        void AddCollider(Component& collider,GameObject& associated);
+        void RemoveCollider(Component& collider);
 	private:
 		void SetupUI(void);
 		void UpdateUI(float dt);
@@ -66,6 +70,7 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
         Sound menuMove;
         TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
 		InputManager &inputManager;
+        std::map<Component,GameObject> collisionMap;
 
 		Music music;
 		

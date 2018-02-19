@@ -461,12 +461,13 @@ void StageState::Update(float dt){
 		}
     }*/
 
-	if(!objectArray.empty()){
-		for(uint count1 = 0; count1 < objectArray.size()-1; count1++) {
-			for(uint count2 = count1+1; count2 < objectArray.size(); count2++) {
-				if(Collision::IsColliding(objectArray[count1]->box, objectArray[count2]->box, objectArray[count1]->rotation, objectArray[count2]->rotation) ) {
-					objectArray[count1]->NotifyCollision(*objectArray[count2]);
-					objectArray[count2]->NotifyCollision(*objectArray[count1]);
+    if(collisionMap.size() >= 2){
+        for(std::map<Component&,GameObject&>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
+            for(std::map<Component&,GameObject&>::iterator it2 = collisionMap.begin() + 1; it2 != collisionMap.end();++ it2) {
+                if(collisionMap[it1] != collisionMap[it2]){
+                    if(Collision::IsColliding(collisionMap[it1]->box, collisionMap[it2]->box,collisionMap[it1]->rotation,collisionMap[it2]->rotation) ) {
+                        it1->NotifyCollision(*it2);
+                        it2->NotifyCollision(*it1);
 				}
 			}
 		}
@@ -859,6 +860,13 @@ std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject
         }
     }
     return(objectsInRange);
+}
+
+void AddCollider(Component collider,GameObject associated){
+    collisionMap[collider] = associated;
+}
+void RemoveCollider(Component collider){
+    collisionMap.erase(collider);
 }
 
 void StageState::LoadAssets(void) const{

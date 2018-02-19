@@ -10,7 +10,7 @@ float CalculateCost(Tile& tile){
     return weightMap[tile.GetTileSetIndex()]
 }
 virtual bool IsTraversable(Tile& tile){
-    return(tile.GetGO() == nullptr);
+    return(tile.GetGO() == nullptr && tile.GetTileSetIndex() != && tile.GetTileSetIndex() != );
 }
 virtual ~TileWeightMapAStar(void){
 

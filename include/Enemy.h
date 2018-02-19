@@ -118,7 +118,7 @@ class Enemy : public Component
 
             No momento não faz nada.
         */
-        void NotifyCollision(GameObject &object);
+        void NotifyCollision(Component &object);
         /**
             \brief Identifica tipo de GameObject.
             \todo Verificar viabilidade de usar enum no lugar de string

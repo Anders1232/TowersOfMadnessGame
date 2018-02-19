@@ -5,7 +5,7 @@
 #include "Vec2.h"
 #include "HitPoints.h"
 #include "Bullet.h"
-#include "NearestGOFinder.h"
+#include "NearestComponentFinder.h"
 
 #ifndef TOWER_H
 #define TOWER_H
@@ -17,7 +17,7 @@
 using namespace RattletrapEngine;
 
 
-class Tower : public GameObject{
+class Tower : public Component{
 	public:
 		/**
 			\brief Tipos de Torres
@@ -43,10 +43,10 @@ class Tower : public GameObject{
 		bool Is(string type);
 		~Tower();
 	private:
-		Sprite sp;
+        Sprite *sp;
 		HitPoints *hitpoints;
 		bool isDraging;
-        NearestGOFinder finder;
+        NearestComponentFinder finder;
 };
 
 #endif // TOWER_H

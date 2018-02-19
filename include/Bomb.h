@@ -1,6 +1,5 @@
-#ifndef BULLET_H
-#define BULLET_H
-
+#ifndef BOMB
+#define BOMB
 #include "GameObject.h"
 #include "Sprite.h"
 #include "Game.h"
@@ -12,16 +11,11 @@
 
 using namespace RattletrapEngine;
 
-#define BULLET_VEL 210
-#define BULLET_REACH 1000
-
-using namespace RattletrapEngine;
-
-class Bullet: public Component
+class Bomb: public Component
 {
     public:
-        Bullet(float x,float y,float angle,float speed,float maxDistance,std::string sprite,int targetType,float scale = 1.0,float frameTime = 1,int frameCount = 1);
-        ~Bullet(void);
+        Bomb(float x,float y,float angle,float speed,float maxDistance,std::string sprite,int targetType,float scale = 1.0,float frameTime = 1,int frameCount = 1);
+        ~Bomb(void);
         void Update(float dt);
         void NotifyCollision(Component &other);
         bool Is(int type);
@@ -34,4 +28,5 @@ class Bullet: public Component
         GameObject* animation;
 };
 
-#endif
+#endif // BOMB
+
