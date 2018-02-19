@@ -170,7 +170,9 @@ void Enemy::Update(float dt) {
 
 	UpdateEnemyDirection(positionBefore);
 	if(hitpoints->GetHp() < 0){
-		dead = true;
+        StageState& stageState = (StageState&)Game::GetInstance().GetCurrentState();
+        stageState.RemoveCollider(this);
+        associated.RequestDelete();
 	}
 	if(eventTimer.Get() > MAX_EVENT_TIME){
 		lastEvent = Event::NONE;
@@ -183,14 +185,6 @@ void Enemy::Render(void) {
 	for(uint i=0; i< sp[direction].size(); i++){
         sp[direction][i].Render();
 	}
-}
-
-bool Enemy::IsDead(void) {
-	return dead;
-}
-
-void Enemy::RequestDelete(void) {
-	dead = true;
 }
 
 void Enemy::NotifyCollision(Component &object) {

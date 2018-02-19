@@ -101,18 +101,6 @@ class Enemy : public Component
         */
         void Render(void);
         /**
-            \brief Verifica se esse GameObject deve ser destruído.
-
-            Se necessário pode consultar suas componentes para tal, mas o ideal que é as componentes informem isso ao GameObject antes, pela chamado do método RequestDelete.
-        */
-        bool IsDead(void);
-        /**
-            \brief Solicita que esse GaeObject seja destruído
-
-            Deve fazer o necessário para que futuras chamadas a IsDead retornem verdadeiro.
-        */
-        void RequestDelete(void);
-        /**
             \brief Notifica evento de colisão.
             \todo Verificar viabilidade de tratar colisão em componentes.
 
