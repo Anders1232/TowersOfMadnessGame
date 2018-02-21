@@ -10,7 +10,7 @@
 
 #define SORTEAR_TORRES
 
-Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp,GameObject& associated){
+Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp,GameObject& associated):Component(associated){
     sp = new Sprite(type == TowerType::SMOKE ? "img/tower/torre_fumaca.png" :
 			type == TowerType::ANTIBOMB ? "img/SpriteSheets/anti-bomba.png" :
 			type == TowerType::STUN ? "img/tower/torrestun.png" :
@@ -74,7 +74,7 @@ Rect Tower::GetWorldRenderedRect() const {
 	return Camera::WorldToScreen(box);
 }
 
-bool Tower::Is(int type) {
+bool Tower::Is(int componentType) const{
     return GameComponentType::TOWER == type;
 }
 

@@ -32,15 +32,13 @@ class Tower : public Component{
 			COMPUTATION
 		} TowerType;
 		
-		Tower(TowerType type, Vec2 pos, Vec2 tileSize,int hp);
+        Tower(TowerType type, Vec2 pos, Vec2 tileSize,int hp,GameObject& associated);
 		void Damage(int damage);
 		void Update(float dt );
 		void Render(void);
-		bool IsDead(void);
-		void RequestDelete(void);
-		void NotifyCollision(GameObject &other);
+        void NotifyCollision(Component &other);
 		Rect GetWorldRenderedRect(void) const;
-		bool Is(string type);
+        bool Is(int componentType) const;
 		~Tower();
 	private:
         Sprite *sp;

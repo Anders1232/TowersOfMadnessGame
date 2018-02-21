@@ -461,6 +461,8 @@ void StageState::Update(float dt){
 		}
     }*/
 
+
+    /* Esboço de otimização para lógica de colisão contendo um std::map com <Component,GameObject> apenas dos componentes que colidem
     if(collisionMap.size() >= 2){
         for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
             for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it2 = it1 ++; it2 != collisionMap.end();++ it2) {
@@ -472,7 +474,9 @@ void StageState::Update(float dt){
                 }
             }
         }
-    }
+    }*/
+
+
 
 	Camera::Update(dt);
 
@@ -694,9 +698,10 @@ void StageState::CreateTower(Tower::TowerType towerType) {
 
 	if( PLAYER_DATA_INSTANCE.GetGold() >= 30 ) {
 		Vec2 mousePos = Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos())-Vec2(TOWER_LINEAR_SIZE/2, TOWER_LINEAR_SIZE/2);
-		Tower *newTower = new Tower(towerType, mousePos, Vec2(TOWER_LINEAR_SIZE, TOWER_LINEAR_SIZE), TOWER_BASE_HP);
-        newTower->AddComponent(new DragAndDrop<Tile>(tileMap, mousePos, *newTower, false, false));
-		AddObject(newTower);
+        GameObject* GO = new GameObject();
+        GO->AddComponent(new Tower(towerType, mousePos, Vec2(TOWER_LINEAR_SIZE, TOWER_LINEAR_SIZE), TOWER_BASE_HP,*GO));
+        GO->AddComponent(new DragAndDrop<Tile>(tileMap, mousePos, *GO, false, false));
+        AddObject(GO);
 		PLAYER_DATA_INSTANCE.GoldUpdate(-30, false);
 		towerMenuSounds.Play(1);
 	} else {
@@ -863,11 +868,16 @@ std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject
     return(objectsInRange);
 }
 
-void AddCollider(std::shared_ptr<Component> collider,std::shared_ptr<GameObject> associated){
-    collisionMap[collider] = associated;
+void StageState::AddCollider(Component& collider,GameObject& associated){
+    //std::make_unique só funciona para c++14.Além de que essa implementação de mapa está muito obscura.Desse modo essa otimização
+    //de lógica de colisões fica para outra oportunidade
+    //std::shared_ptr<Component> c = std::make_shared<Component>(std::move(std::make_unique<Component>(std::move(&collider))));
+    //std::shared_ptr<GameObject> g = std::make_shared<GameObject>(std::move(std::make_unique<Component>(std::move(&associated))));
+
+    collisionMap[&collider] = &associated;
 }
-void RemoveCollider(std::shared_ptr<Component> collider){
-    collisionMap.erase(collider);
+void StageState::RemoveCollider(Component& collider){
+    collisionMap.erase(&collider);
 }
 
 void StageState::LoadAssets(void) const{
