@@ -461,22 +461,18 @@ void StageState::Update(float dt){
 		}
     }*/
 
-
-    /* Esboço de otimização para lógica de colisão contendo um std::map com <Component,GameObject> apenas dos componentes que colidem
     if(collisionMap.size() >= 2){
-        for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
-            for(std::map<std::shared_ptr<Component>,std::shared_ptr<GameObject>>::iterator it2 = it1 ++; it2 != collisionMap.end();++ it2) {
-                if(collisionMap.at(it1->first).get() != collisionMap.at(it2->first).get()){
-                    if(Collision::IsColliding(collisionMap.at(it1->first).get()->box, collisionMap.at(it2->first).get()->box,collisionMap.at(it1->first).get()->rotation,collisionMap.at(it2->first).get()->rotation) ) {
-                        it1->first.get()->NotifyCollision(*it2->first.get());
-                        it2->first.get()->NotifyCollision(*it1->first.get());
+        for(std::map<Component*,GameObject*>::iterator it1 = collisionMap.begin(); it1 != collisionMap.end();++ it1) {
+            for(std::map<Component*,GameObject*>::iterator it2 = it1 ++; it2 != collisionMap.end();++ it2) {
+                if(collisionMap.at(it1->first) != collisionMap.at(it2->first)){
+                    if(Collision::IsColliding(collisionMap.at(it1->first)->box, collisionMap.at(it2->first)->box,collisionMap.at(it1->first)->rotation,collisionMap.at(it2->first)->rotation) ) {
+                        it1->first->NotifyCollision(*it2->first);
+                        it2->first->NotifyCollision(*it1->first);
                     }
                 }
             }
         }
-    }*/
-
-
+    }
 
 	Camera::Update(dt);
 

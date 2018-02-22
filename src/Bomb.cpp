@@ -2,11 +2,12 @@
 #include "Camera.h"
 #include "Error.h"
 
-Bomb::Bomb(float x, float y, float angle, float speed, float maxDistance, std::string sprite, std::string targetType, float scale, float frameTime, int frameCount)
-    :targetType(targetType),
+Bomb::Bomb(GameObject& associated,float x, float y, float angle, float speed, float maxDistance, std::string sprite, std::string targetType, float scale, float frameTime, int frameCount)
+    :Component(associated),
+     targetType(targetType),
      speed(Vec2::FromPolarCoord(speed, angle)),
      distanceLeft(maxDistance),
-     animation(new GameObject()){
+     animation(new GameObject(){
 
     sp = new Sprite(sprite,associated,false,frameTime, frameCount);
     sp->SetScale(scale);

@@ -20,7 +20,7 @@ using namespace RattletrapEngine;
 class Bullet: public Component
 {
     public:
-        Bullet(float x,float y,float angle,float speed,float maxDistance,std::string sprite,int targetType,float scale = 1.0,float frameTime = 1,int frameCount = 1);
+        Bullet(GameObject& associated,float x,float y,float angle,float speed,float maxDistance,std::string sprite,int targetType,float scale = 1.0,float frameTime = 1,int frameCount = 1);
         ~Bullet(void);
         void Update(float dt);
         void NotifyCollision(Component &other);
