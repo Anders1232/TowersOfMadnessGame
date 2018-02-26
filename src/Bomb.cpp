@@ -50,7 +50,7 @@ void Bomb::NotifyCollision(Component &other){
     }
 }
 
-bool Bomb::Is(int type){
+bool Bomb::Is(int type) const{
 
     return (GameComponentType::BOMB == type);
 

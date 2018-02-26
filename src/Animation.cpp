@@ -1,11 +1,11 @@
 #include "Animation.h"
 #include "Camera.h"
 
-Animation::Animation(
+Animation::Animation(GameObject& associated
             float x, float y, float rotation,
             string sprite, int frameCount,
             float frameTime, bool ends
-            ) : Component(), endTimer(), timeLimit(frameCount*frameTime)
+            ) : Component(associated), endTimer(), timeLimit(frameCount*frameTime)
             , oneTimeOnly(ends){
         sp = new Sprite(sprite,associated, false, frameTime, frameCount );
         associated.AddComponent(sp);

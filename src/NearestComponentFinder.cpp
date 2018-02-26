@@ -4,7 +4,7 @@ NearestComponentFinder::NearestComponentFinder(int componentType,Vec2 origin)
 :componentType(componentType),
  origin(origin){}
 
-NearestComponentFinder::NearestGOFinder()
+NearestComponentFinder::NearestComponentFinder()
 {
 
 }

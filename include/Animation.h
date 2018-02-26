@@ -29,6 +29,7 @@ class Animation: public Component {
             */
         Animation
             (
+                GameObject& associated,
                 float x,
                 float y,
                 float rotation,

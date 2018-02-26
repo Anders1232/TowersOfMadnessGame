@@ -24,7 +24,7 @@ class Bullet: public Component
         ~Bullet(void);
         void Update(float dt);
         void NotifyCollision(Component &other);
-        bool Is(int type);
+        bool Is(int type) const;
         int getTargetType();
     private:
         Sprite sp;
