@@ -24,13 +24,14 @@ using namespace RattletrapEngine;
 */
 class GameResources{
 	public:
+
 		/**
 			\brief Obtém WeightData a partir de arquivo.
 
 			Obtém referência para informações do WeightData do nome do arquivo informado, se as informações do arquivo informado não tiverem sido carregadas elas o serão.
 			Arquivo não existente ou em formato inválido faz com que Error() seja chamada, gerando uma interrupção do programa.
 		*/
-		static std::shared_ptr<std::array<std::map<int, double>, EnemyType::ENEMY_TYPE_SIZE> > GetWeightData(std::string file);//para o pathfiding
+        static std::shared_ptr<std::array<std::map<int, double>, EnemyType::ENEMY_TYPE_SIZE> > GetWeightData(std::string file);//para o pathfiding
 		/**
 			\brief Obtém WaveData a partir de arquivo.
 

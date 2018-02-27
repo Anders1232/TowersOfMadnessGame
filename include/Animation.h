@@ -57,7 +57,7 @@ class Animation: public Component {
 
                 Usado pelos objetos que colidem com a animação para saber que tipo de GameObject é.
             */
-            bool Is(int type);
+            bool Is(int componentType) const;
             /**
                 \brief Obtém Rect informando a posição renderizada da animação.
 

@@ -13,6 +13,7 @@
 #include "Sound.h"
 #include "WaveManager.h"
 #include "GameComponentType.h"
+#include "StageState.h"
 
 using namespace RattletrapEngine;
 

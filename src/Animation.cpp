@@ -28,8 +28,8 @@ Animation::Animation(GameObject& associated
 
     void Animation::NotifyCollision(GameObject &other) {}
 
-    bool Animation::Is(int type) {
-        return type == GameComponentType::ANIMATION;
+    bool Animation::Is(int componentType) const  {
+        return componentType == GameComponentType::ANIMATION;
     }
 
 }

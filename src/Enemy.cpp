@@ -158,7 +158,7 @@ Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, Ti
 
     StageState& stageState = (StageState&)Game::GetInstance().GetCurrentState();
 
-    stageState.AddCollider(this,associated);
+    stageState.AddCollider(*this,associated);
 }
 
 void Enemy::Update(float dt) {
@@ -171,7 +171,7 @@ void Enemy::Update(float dt) {
 	UpdateEnemyDirection(positionBefore);
 	if(hitpoints->GetHp() < 0){
         StageState& stageState = (StageState&)Game::GetInstance().GetCurrentState();
-        stageState.RemoveCollider(this);
+        stageState.RemoveCollider(*this);
         associated.RequestDelete();
 	}
 	if(eventTimer.Get() > MAX_EVENT_TIME){
@@ -188,8 +188,8 @@ void Enemy::Render(void) {
 }
 
 void Enemy::NotifyCollision(Component &object) {
-	if(object.Is("Bullet")){
-		if(((Bullet&)object).getTargetType() == "Enemy"){
+    if(object.Is(GameComponentType::BULLET)){
+        if(((Bullet&)object).getTargetType() == GameComponentType::ENEMY){
 			hitpoints->Damage(ENEMY_BULLET_DAMAGE);
 			if(0 >= hitpoints->GetHp()){
 				wManager.NotifyEnemyGotKilled();

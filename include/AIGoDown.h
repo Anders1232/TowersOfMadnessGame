@@ -7,7 +7,6 @@
 #include "ManhattanDistance.h"
 #include "WaveManager.h"
 #include "Tile.h"
-#include "GameComponentType.h"
 
 using namespace RattletrapEngine;
 
