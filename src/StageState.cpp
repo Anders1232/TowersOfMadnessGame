@@ -1,8 +1,4 @@
 #include "StageState.h"
-#include "AIArt.h"
-#include "AIEngineer.h"
-#include "AIMedic.h"
-#include "AIQuimic.h"
 #include "Camera.h"
 #include "Collision.h"
 #include "EndStateData.h"

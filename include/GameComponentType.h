@@ -12,6 +12,8 @@ using namespace RattletrapEngine;
 
 enum GameComponentType{
     DRAG_AND_DROP=RattletrapEngine::ComponentType::COMPONENT_TYPE_SIZE,
+    BOMB,
+    ANIMATION,
     HIT_POINTS,
     AI_GO_DOWN,
     AI_GO_TO,
@@ -29,8 +31,6 @@ enum GameComponentType{
     ENEMY,
     TOWER,
     BULLET,
-    BOMB,
-    ANIMATION,
     GAME_COMPONENT_TYPE_SIZE
 };
 

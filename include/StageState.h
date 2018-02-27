@@ -6,8 +6,6 @@
 #include <map>
 
 #include "ActionManager.h"
-#include "AIGoDown.h"
-#include "AIPrintPath.h"
 #include "DragAndDrop.h"
 #include "GameObject.h"
 #include "InputManager.h"
