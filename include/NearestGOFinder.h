@@ -8,7 +8,7 @@ using namespace RattletrapEngine;
 class NearestGOFinder : public Finder<GameObject*>
 {
 	public:
-        NearestGOFinder(Vec2 origin);
+        NearestGOFinder(std::string targetType,Vec2 origin);
         NearestGOFinder();
         void setOrigin(Vec2 origin);
         float operator()(GameObject*);

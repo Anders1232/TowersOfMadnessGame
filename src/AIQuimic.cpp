@@ -33,7 +33,7 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	actualState = AIState::WALKING;
 	
 	tileMap.ObserveMapChanges(this);
-    shooter = new Shooter(associated,(NearestFinder<GameObject*>&)Game::GetInstance().GetCurrentState(),finder, "Tower",500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
+    shooter = new Shooter(associated,(NearestFinder<GameObject*>&)Game::GetInstance().GetCurrentState(),finder,GameComponentType::TOWER,500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
     associated.AddComponent(shooter);
 
 }

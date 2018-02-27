@@ -1,5 +1,5 @@
-#ifndef BOMB
-#define BOMB
+#ifndef BOMB_H
+#define BOMB_H
 
 #include <string>
 
@@ -30,5 +30,5 @@ class Bomb: public Component
         GameObject* animation;
 };
 
-#endif // BOMB
+#endif // BOMB_H
 

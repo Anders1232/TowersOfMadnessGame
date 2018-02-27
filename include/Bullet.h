@@ -27,7 +27,7 @@ class Bullet: public Component
         bool Is(int type) const;
         int getTargetType();
     private:
-        Sprite sp;
+        Sprite *sp;
         Vec2 speed;
         float distanceLeft;
         int targetType;

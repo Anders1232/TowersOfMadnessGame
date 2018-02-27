@@ -7,7 +7,8 @@
 #include "NearestFinder.h"
 #include "Timer.h"
 #include "Tile.h"
-#include "NearestGOFinder.h"
+#include "NearestComponentFinder.h"
+#include "Bomb.h"
 
 using namespace RattletrapEngine;
 
@@ -20,7 +21,7 @@ class Shooter : public Component{
         Shooter(GameObject &associated,
                 NearestFinder<GameObject*> &nearestFinder,
                 Finder<GameObject*> &finder,
-                std::string targetType,
+                int targetType,
                 float range,
                 float betweetShootsTime,
                 TargetPolicy policy,
@@ -30,6 +31,7 @@ class Shooter : public Component{
                 std::string bulletSprite,
                 int frameRate,
                 float bulletScale);
+        
 		void Update(float dt);
         bool Is(int type) const;
 		void SetActive(bool active);
@@ -38,7 +40,7 @@ class Shooter : public Component{
         NearestFinder<GameObject*> &nearestFinder;
         Finder<GameObject*> &finder;
 		bool active;
-		std::string targetType;
+        int targetType;
 		float range;
 		float betweetShootsTime;
 		Timer timerBetweetShoots;

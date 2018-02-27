@@ -4,21 +4,21 @@ Aura::Aura(GameObject &associated,
 			Enemy::Event auraType,
 			float auraRange,
 			float timeBetweetNotifications,
-			NearestGOFinder &finder,
-			std::string targetType)
+           NearestFinder<GameObject*> &nearestFinder,
+           Finder<GameObject*> &finder)
 	:Component(associated),
 		associated(associated),
 		auraType(auraType),
 		auraRange(auraRange),
-		sp (nullptr),
-		sp2 (nullptr),
+        sp (nullptr),
+        sp2 (nullptr),
 		timeBetweetNotifications(timeBetweetNotifications),
 		finder(finder),
-		targetType(targetType){
+        nearestFinder(nearestFinder){
 	if(Enemy::Event::SMOKE == auraType){
-		sp = new Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
+        sp = new Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp->colorMultiplier = Color(179, 150, 120);
-		sp2 = new Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
+        sp2 = new Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp2->colorMultiplier = Color(179, 150, 120);
 		sp2->SetFrame(3);
 	}
@@ -45,11 +45,9 @@ Aura::Aura(GameObject &associated,
 
 void Aura::Update(float dt){
 	notificationTimer.Update(dt);
-	sp->Update(dt);
-	sp2->Update(dt);
 	if(notificationTimer.Get() > timeBetweetNotifications){
 		notificationTimer.Restart();
-		vector<GameObject *> *enemiesInRange= finder.FindNearestGOs(associated.box.Center(), targetType, auraRange);
+        vector<GameObject *> *enemiesInRange = ((GameObject*)(nearestFinder.FindNearests(associated.box.Center(),finder, auraRange)));
 		for(uint i=0; i< enemiesInRange->size(); i++){
 			( (Enemy*)((*enemiesInRange)[i]) )->NotifyEvent(auraType);
 		}

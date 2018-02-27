@@ -1,5 +1,5 @@
-#ifndef NEARESTCOMPONENTFINDER
-#define NEARESTCOMPONENTFINDER
+#ifndef NEARESTCOMPONENTFINDER_H
+#define NEARESTCOMPONENTFINDER_H
 #include "GameObject.h"
 #include "NearestFinder.h"
 
@@ -17,5 +17,5 @@ class NearestComponentFinder : public Finder<GameObject*>
         Vec2 origin;
 };
 
-#endif // NEARESTCOMPONENTFINDER
+#endif // NEARESTCOMPONENTFINDER_H
 

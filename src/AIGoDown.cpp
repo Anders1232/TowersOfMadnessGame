@@ -17,5 +17,5 @@ void AIGoDown::Update(float dt){
 }
 
 bool AIGoDown::Is(int type) const{
-	return (type == ComponentType::AI_GO_DOWN);
+    return (type == GameComponentType::AI_GO_DOWN);
 }

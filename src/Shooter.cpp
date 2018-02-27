@@ -6,7 +6,7 @@
 Shooter::Shooter(GameObject &associated,
                  NearestFinder<GameObject*> &nearestFinder,
                  Finder<GameObject*> &finder,
-                 std::string targetType,
+                 int targetType,
                  float range,
                  float betweetShootsTime,
                  TargetPolicy policy,
@@ -43,16 +43,16 @@ void Shooter::Update(float dt){
 		if(timerBetweetShoots.Get() > betweetShootsTime){
 			timerBetweetShoots.Restart();
             if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
-                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
+                ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			else if(target->IsDead()){
-                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
+                ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
 			}
 			//supoe-se aqui que já existe um algo e a políica de tipo é SHOOT_UNTIL_OUT_OF_RANGE
 			else if( (target->box.Center()-associated.box.Center() ).Magnitude() > range){
-                ((NearestGOFinder&)finder).setOrigin(associated.box.Center());
+                ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
                 target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
             }
 			if(nullptr!= target){
@@ -61,11 +61,11 @@ void Shooter::Update(float dt){
 				float angle= (target->box.Center()-origin).Inclination();
 				startDistanceFromOrigin= startDistanceFromOrigin.Rotate(angle);
 				origin = origin + startDistanceFromOrigin;
-				if("Tower" == targetType){
-					Game::GetInstance().GetCurrentState().AddObject(new Bullet(origin.x, origin.y, angle, bulletSpeed, bulletMaxDistance, bulletSprite, targetType,bulletScale,0.2,bulletFrameRate, true));
+                if(GameComponentType::TOWER == targetType){
+                    associated.AddComponent(new Bomb(associated,origin.x, origin.y, angle, bulletSpeed, bulletMaxDistance, bulletSprite, targetType,bulletScale,0.2,bulletFrameRate));
 				}
 				else{
-					Game::GetInstance().GetCurrentState().AddObject(new Bullet(origin.x, origin.y, angle, bulletSpeed, bulletMaxDistance, bulletSprite, targetType,bulletScale,0.2,bulletFrameRate));
+                    associated.AddComponent(new Bullet(associated,origin.x, origin.y, angle, bulletSpeed, bulletMaxDistance, bulletSprite, targetType,bulletScale,0.2,bulletFrameRate));
 				}
 			}
 		}

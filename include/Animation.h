@@ -1,5 +1,5 @@
-#ifndef ANIMATION
-#define ANIMATION
+#ifndef ANIMATION_H
+#define ANIMATION_H
 #include "GameObject.h"
 #include "Component.h"
 #include "Sprite.h"
@@ -71,5 +71,5 @@ class Animation: public Component {
             Sprite *sp;/**< Sprite sheet da animação.*/
 };
 
-#endif // ANIMATION
+#endif // ANIMATION_H
 

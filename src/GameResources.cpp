@@ -248,7 +248,7 @@ std::shared_ptr<std::vector<int> > GameResources::GetPath(EnemyType type, AStarH
 		pathMap.erase(index);
 	}
     std::map<int, double> weightMap = GetWeightData(weightDataFile)->operator [](type);
-    TileWeightMapAStar calculator = TileWeightMapAStar(weightMap);
+    TileWeightMapAStar *calculator = new TileWeightMapAStar(weightMap);
     std::list<int>*pathList= tileMap->AStar(origin, dest, heuristic, calculator);
 	std::vector<int> *pathVector= new std::vector<int>(pathList->begin(), pathList->end());
 	std::shared_ptr<std::vector<int>> newPath(pathVector);

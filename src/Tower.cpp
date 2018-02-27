@@ -23,8 +23,8 @@ Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp,GameObject& associa
 			type == TowerType::ANTIBOMB ? 9:
 			type == TowerType::STUN ? 1:
             type == TowerType::SHOCK ? 8: 1);
-    sp->ScaleX(tileSize.x/sp.GetWidth());
-    sp->ScaleY(tileSize.y/sp.GetHeight());
+    sp->ScaleX(tileSize.x/sp->GetWidth());
+    sp->ScaleY(tileSize.y/sp->GetHeight());
     associated.AddComponent(sp);
     associated.box.x = pos.x;
     associated.box.y = pos.y;
@@ -34,24 +34,25 @@ Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp,GameObject& associa
 
 	switch(type){
 		case TowerType::SMOKE:
-            associated.AddComponent(new Aura(*this, Enemy::Event::SMOKE, 400, 7.0, (NearestFinder<GameObject*>&)stageState, "Enemy"));
+            finder = NearestComponentFinder(GameComponentType::ENEMY,associated.box.Center());
+            associated.AddComponent(new Aura(associated, Enemy::Event::SMOKE, 400, 7.0, (NearestFinder<GameObject*>&)stageState,finder));
 			break;
 		case TowerType::ANTIBOMB:
-            finder = NearestComponentFinder(GameComponentType::BULLET,box.Center());
-            associated.AddComponent(new Shooter(*this,(NearestFinder<GameObject*>&)stageState,finder, "BOMB", 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 5000, "img/SpriteSheets/anti-bomba_idle.png", 11, 1));
+            finder = NearestComponentFinder(GameComponentType::BULLET,associated.box.Center());
+            associated.AddComponent(new Shooter(associated,(NearestFinder<GameObject*>&)stageState,finder,GameComponentType::BOMB, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 5000, "img/SpriteSheets/anti-bomba_idle.png", 11, 1));
             break;
 		case TowerType::STUN:
-            associated.AddComponent(new Aura(*this, Enemy::Event::STUN, 400, 7.0, (NearestGOFinder&)stageState, "Enemy"));
+            associated.AddComponent(new Aura(associated, Enemy::Event::STUN, 400, 7.0, (NearestFinder<GameObject*>&)stageState,finder));
 			break;
 		case TowerType::SHOCK:
-            finder = NearestComponentFinder(GameComponentType::ENEMY,box.Center());
-            associated.AddComponent(new Shooter(*this, (NearestFinder<GameObject*>&)stageState,finder, "Enemy", 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 1500, 5000, "img/SpriteSheets/bullet_choquelvl1.png", 4, 1));
+            finder = NearestComponentFinder(GameComponentType::ENEMY,associated.box.Center());
+            associated.AddComponent(new Shooter(associated, (NearestFinder<GameObject*>&)stageState,finder, GameComponentType::ENEMY, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 1500, 5000, "img/SpriteSheets/bullet_choquelvl1.png", 4, 1));
 			break;
 		case TowerType::COMPUTATION:
 			break;
 	}
 
-	hitpoints = new HitPoints(hp,*this);
+    hitpoints = new HitPoints(hp,associated);
     associated.AddComponent(hitpoints);
 }
 
@@ -71,11 +72,11 @@ void Tower::Render(void) {
 }
 
 Rect Tower::GetWorldRenderedRect() const {
-	return Camera::WorldToScreen(box);
+    return Camera::WorldToScreen(associated.box);
 }
 
 bool Tower::Is(int componentType) const{
-    return GameComponentType::TOWER == type;
+    return GameComponentType::TOWER == componentType;
 }
 
 void Tower::NotifyCollision(Component &object){
