@@ -93,6 +93,7 @@ TitleState::TitleState()
     nuvemAGO->AddComponent(overlaySP);
     AddObject(overlayGO);
 
+    
     RectTransform* titleRect = new RectTransform(*titleGO,canvasGO);
     titleRect->SetBehaviorType(RectTransform::BehaviorType::BehaviorType::FIT);
     Sprite* titleSP = new Sprite("img/UI/main-menu/spritesheettitle.png",titleGO,false,1./5., 5);
@@ -100,7 +101,12 @@ TitleState::TitleState()
     bgGO->AddComponent(titleSP);
     AddObject(titleGO);
   , playBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Jogar")
-
+    
+            Text* towerNameText = new Text(*towerNameGO);
+            towerNameText->SetText(TOWERNAME_DEFAULT_TEXT);
+            towerNameText->SetColor(TOWER_INFO_TXT_COLOR);
+            towerNameText->SetFont("font/SHPinscher-Regular.otf");
+            towerNameText->SetFontSize(95);
 
                    , editorBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Editor de Fases", UIbutton::State::DISABLED)
                    , configBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, std::string("Configura") + (char)0xE7 /*ç*/ + (char)0xF5 /*õ*/ + "es", UIbutton::State::DISABLED)

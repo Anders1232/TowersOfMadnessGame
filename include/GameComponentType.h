@@ -31,6 +31,7 @@ enum GameComponentType{
     ENEMY,
     TOWER,
     BULLET,
+    OBSTACLE,
     GAME_COMPONENT_TYPE_SIZE
 };
 

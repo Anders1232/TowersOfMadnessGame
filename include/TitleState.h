@@ -3,14 +3,10 @@
 
 #include "ActionManager.h"
 #include "Rect.h"
-#include "UIimage.h"
-#include "UIcanvas.h"
-#include "UItext.h"
-#include "UItextButton.h"
-#include "UIverticalGroup.h"
 #include "State.h"
 #include "Sound.h"
 #include "Music.h"
+#include "Button.h"
 
 using namespace RattletrapEngine;
 
@@ -39,20 +35,27 @@ class TitleState: public State {
 
 		Sound clickSound;
 
-		UIcanvas canvas;
-		UIimage bg;
-		UIimage lua;
-		UIimage nuvemA;
-		UIimage nuvemB;
-		UIimage icc;
-		UIimage overlay;
-		UIimage title;
-		UIverticalGroup optionsGroup;
-		UItextButton playBtn;
-		UItextButton editorBtn;
-		UItextButton configBtn;
-		UItextButton exitBtn;
-		Music titleMusic;
+        GameObject* canvasGO;
+        GameObject* bgGO;
+        GameObject* luaGO;
+        GameObject* nuvemAGO;
+        GameObject* nuvemBGO;
+        GameObject* iccGO;
+        GameObject* overlayGO;
+        GameObject* titleGO;
+        GameObject* optionsGroupGO;
+        GameObject* playBtnGO;
+        GameObject* editorBtnGO;
+        GameObject* configBtnGO;
+        GameObject* exitBtnGO;
+        Music titleMusic;
+
+        Button playBtn;
+        Button editorBtn;
+        Button configBtn;
+        Button exitBtn;
+
+        Grouper optionsGroup;
 };
 
 #endif // TITLESTATE_H

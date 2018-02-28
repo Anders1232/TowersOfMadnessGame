@@ -7,24 +7,21 @@
 #include "Rect.h"
 #include "Camera.h"
 #include "Vec2.h"
+#include "GameComponentType.h"
 
 #include <string>
 
 using namespace RattletrapEngine;
 
-class Obstacle : public GameObject{
+class Obstacle : public Component{
 	public:
-		Obstacle(std::string path, Vec2 position);
+        Obstacle(GameObject& associated,std::string path, Vec2 position);
 		~Obstacle(void);
 		void Update(float dt);
-		void Render(void);
-		void RequestDelete(void);
-		void NotifyCollision(GameObject &object);
-		Rect GetWorldRenderedRect(void) const;
-		bool Is(string type);
-		void SpriteScaleY(float scaleY);
+        void NotifyCollision(Component &other);
+        bool Is(int componentType) const;
 	private:
-		Sprite sp;
+        Sprite *sp;
 };
 
 #endif // OBSTACLE_H
