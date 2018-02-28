@@ -45,6 +45,17 @@ TitleState::TitleState()
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
 
+	introTimer.Restart();
+	finishedEclipse = false;
+	finishedFadeIn = false;
+	forceEnd = false;
+	
+	SetupUI();
+}
+
+void TitleState::SetupUI(void) {
+    Rect winSize = Game::GetInstance().GetWindowDimensions();
+
     RectTransform* canvasRect = new RectTransform(*canvasGO,nullptr);
     canvasGO->AddComponent(canvasRect);
     canvasRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
@@ -61,6 +72,9 @@ TitleState::TitleState()
     RectTransform* luaRect = new RectTransform(*luaGO,canvasGO);
     luaRect->SetBehaviorType(RectTransform::BehaviorType::BehaviorType::FIT);
     Sprite* luaSP = new Sprite("img/UI/main-menu/spritesheetlua.png",luaGO,false, ECLIPSE_DURATION/8., 8);
+    luaSP->SetScale(0.75);
+    luaRect.SetAnchors(Vec2((float)(0.5 - (luaSP->GetWidth()/2.+30.)/winSize.x),(float)(60./winSize.y)),
+                       Vec2((float)(0.5 + (luaSP->GetWidth()/2.-30.)/winSize.x), (float)(60. + luaSP->GetHeight())/winSize.y ));
     luaGO->AddComponent(luaRect);
     bgGO->AddComponent(luaSP);
     AddObject(luaGO);
@@ -68,6 +82,10 @@ TitleState::TitleState()
     RectTransform* nuvemARect = new RectTransform(*nuvemAGO,canvasGO);
     nuvemARect->SetBehaviorType(RectTransform::BehaviorType::FILL);
     Sprite* nuvemASP = new Sprite("img/UI/main-menu/nuvemA.png",nuvemAGO);
+    nuvemA.SetCenterPin(Vec2(0.5, 0.1));
+    nuvemA.GetSprite().SetScale(0.6);
+    nuvemARect.SetAnchors( Vec2(0., (float)20./winSize.y),
+                       Vec2((float)nuvemASP->GetWidth()/winSize.x, (float)(20.+nuvemASP->GetHeight())/winSize.y ) );
     nuvemAGO->AddComponent(nuvemARect);
     nuvemAGO->AddComponent(nuvemASP);
     AddObject(nuvemAGO);
@@ -75,88 +93,76 @@ TitleState::TitleState()
     RectTransform* nuvemBRect = new RectTransform(*nuvemBGO,canvasGO);
     nuvemBRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
     Sprite* nuvemBSP = new Sprite("img/UI/main-menu/nuvemB.png",nuvemBGO);
-    nuvemAGO->AddComponent(nuvemBRect);
-    nuvemAGO->AddComponent(nuvemBSP);
+    nuvemBSP->SetScale(0.75);
+    nuvemBRect->SetAnchors(Vec2((float)(1. - (nuvemBSP->GetWidth()+110.)/winSize.x), (float)(70./winSize.y)),
+                      Vec2((float)(1. - 110./winSize.x), (float)(70.+nuvemBSP->GetHeight())/winSize.y));
+    nuvemBGO->AddComponent(nuvemBRect);
+    nuvemBGO->AddComponent(nuvemBSP);
     AddObject(nuvemBGO);
 
     RectTransform* iccRect = new RectTransform(*iccGO,canvasGO);
     iccRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+    iccRect->SetAnchors(Vec2(0., (float)(80./winSize.y)),Vec2(1., 1.));
     Sprite* iccSP = new Sprite("img/UI/main-menu/icc.png",iccGO);
     iccGO->AddComponent(iccRect);
-    nuvemAGO->AddComponent(iccSP);
+    iccGO->AddComponent(iccSP);
     AddObject(iccGO);
 
     RectTransform* overlayRect = new RectTransform(*overlayGO,canvasGO);
     overlayRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
     Sprite* overlaySP = new Sprite("img/UI/main-menu/overlay.png",overlayGO);
+    overlaySP->colorMultiplier = {255,255,255,0};
     overlayGO->AddComponent(overlayRect);
     nuvemAGO->AddComponent(overlaySP);
     AddObject(overlayGO);
 
+
     RectTransform* titleRect = new RectTransform(*titleGO,canvasGO);
     titleRect->SetBehaviorType(RectTransform::BehaviorType::BehaviorType::FIT);
     Sprite* titleSP = new Sprite("img/UI/main-menu/spritesheettitle.png",titleGO,false,1./5., 5);
+    titleSP->SetScale(0.7);
+    title.SetAnchors(Vec2((float)(0.5 - (titleSP->GetWidth()/2.)/winSize.x), (float)(60./winSize.y)),
+                     Vec2((float)(0.5 + (titleSP->GetWidth()/2.)/winSize.x), (float)(60. + titleSP->GetHeight())/winSize.y ) );
     titleGO->AddComponent(titleRect);
     bgGO->AddComponent(titleSP);
     AddObject(titleGO);
-  , playBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Jogar")
 
+    Text* playBtnText = new Text(*playBtnGO);
+    playBtnText->SetText("Jogar");
+    playBtnText->SetColor({255,255,255,255});
+    playBtnText-->SetFont("font/SHPinscher-Regular.otf");
+    playBtnText->SetFontSize(95);
+    playBtnGO->AddComponent(playBtnText);
+    AddObject(playBtnGO);)
 
-                   , editorBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Editor de Fases", UIbutton::State::DISABLED)
-                   , configBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, std::string("Configura") + (char)0xE7 /*ç*/ + (char)0xF5 /*õ*/ + "es", UIbutton::State::DISABLED)
-                   , exitBtn("font/SHPinscher-Regular.otf", 95, UItext::TextStyle::BLENDED, {255,255,255,255}, "Sair")
+    Text* exitBtnText = new Text(*exitBtnGO);
+    exitBtnText->SetText("Sair");
+    exitBtnText->SetColor({255,255,255,255});
+    exitBtnText-->SetFont("font/SHPinscher-Regular.otf");
+    exitBtnText->SetFontSize(95);
+    exitBtnGO->AddComponent(exitBtnText);
+    AddObject(exitBtnGO);
+	
 
-	introTimer.Restart();
-	finishedEclipse = false;
-	finishedFadeIn = false;
-	forceEnd = false;
+    optionsGroupGO->AddComponent(optionsGroup);
+    RectTransform* optionsGroupRect = new RectTransform(*optionsGroupGO,canvasGO);
+    optionsGroupRect.SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
 	
-	SetupUI();
-}
-
-void TitleState::SetupUI(void) {
-	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
-
-	lua.GetSprite().SetScale(0.75);
-	lua.SetAnchors( {(float)(0.5 - (lua.GetSprite().GetWidth()/2.+30.)/winSize.x), (float)(60./winSize.y)},
-					{(float)(0.5 + (lua.GetSprite().GetWidth()/2.-30.)/winSize.x), (float)(60. + lua.GetSprite().GetHeight())/winSize.y } );
+    //playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
+    playBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
+                                                      TitleState* titleState = static_cast<TitleState*>(caller);
+                                                      titleState->Play();
+                                                                    }, this } );
 	
-	nuvemA.SetCenter({0.5, 0.1});
-	nuvemA.GetSprite().SetScale(0.6);
-	nuvemA.SetAnchors( {0., (float)20./winSize.y},
-					   {(float)nuvemA.GetSprite().GetWidth()/winSize.x, (float)(20.+nuvemA.GetSprite().GetHeight())/winSize.y } );
-
-	nuvemB.GetSprite().SetScale(0.7);
-	nuvemB.SetAnchors( {(float)(1. - (nuvemB.GetSprite().GetWidth()+110.)/winSize.x), (float)(70./winSize.y)},
-					   {(float)(1. - 110./winSize.x), (float)(70.+nuvemB.GetSprite().GetHeight())/winSize.y } );
+    //editorBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
 	
-	icc.SetAnchors( {0., (float)(80./winSize.y)},
-					{1., 1.});
+    //configBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
 	
-	overlay.GetSprite().colorMultiplier = {255,255,255,0};
-	
-	title.GetSprite().SetScale(0.7);
-	title.SetAnchors( {(float)(0.5 - (title.GetSprite().GetWidth()/2.)/winSize.x), (float)(60./winSize.y)},
-					  {(float)(0.5 + (title.GetSprite().GetWidth()/2.)/winSize.x), (float)(60. + title.GetSprite().GetHeight())/winSize.y } );
-	
-	optionsGroup.SetAnchors( {0.3, 0.45},
-							 {0.7, 0.9} );
-	
-	playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	playBtn.SetClickCallback( this, [] (void* caller) {
-									TitleState* titleState = static_cast<TitleState*>(caller);
-									titleState->Play();
-								} );
-	
-	editorBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	
-	configBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	
-	exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	exitBtn.SetClickCallback( this, [] (void* caller) {
-									TitleState* titleState = static_cast<TitleState*>(caller);
-									titleState->Exit();
-								} );
+    //exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
+    exitBtn..SetCallback(Button::State::ENABLED, { [] (void* caller) {
+                                                       TitleState* titleState = static_cast<TitleState*>(caller);
+                                                       titleState->Exit();
+                                                                     }, this } );
 
 	optionsGroup.groupedElements.push_back(&playBtn);
 	optionsGroup.groupedElements.push_back(&editorBtn);
@@ -177,15 +183,14 @@ void TitleState::Update(float dt) {
 	introTimer.Update(dt);
 	if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
 		finishedEclipse = true;
-		lua.GetSprite().SetFrameTime(FLT_MAX);
-		lua.GetSprite().SetFrame(7);
-		Color& c = overlay.GetSprite().colorMultiplier;
+        (Sprite&)(luaGO->GetComponent(ComponentType::SPRITE)).SetFrameTime(FLT_MAX);
+        Color& c = (Sprite&)(overlayGO->GetComponent(ComponentType::SPRITE)).colorMultiplier;
 		c.a = 180;
 		introTimer.Restart();
 	}
 	if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
 		finishedFadeIn = true;
-		Color& c = title.GetSprite().colorMultiplier;
+        Color& c = (Sprite&)(titleGO->GetComponent(ComponentType::SPRITE)).colorMultiplier;
 		c.a = 255;
 		introTimer.Restart();
 	}
@@ -207,49 +212,32 @@ void TitleState::UpdateUI(float dt) {
 		c.a = 255*introTimer.Get()/OVERLAY_FADEIN_DURATION;
 	}
 
-	canvas.Update(dt, winSize);
-	bg.Update(dt, canvas);
-	lua.Update(dt, canvas);
-	nuvemA.Update(dt, canvas);
-	nuvemB.Update(dt, canvas);
-	icc.Update(dt, canvas);
-	overlay.Update(dt, canvas);
-	title.Update(dt, canvas);
-	optionsGroup.Update(dt, canvas);
-	playBtn.Update(dt, optionsGroup);
-	editorBtn.Update(dt, optionsGroup);
-	configBtn.Update(dt, optionsGroup);
-	exitBtn.Update(dt, optionsGroup);
-
 	MoveClouds(dt);
 }
 
 void TitleState::MoveClouds(float dt) {
 	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
 
-	Rect box = nuvemA;
+    Rect box = nuvemAGO->box;
 	Rect offsets = nuvemA.GetOffsets();
 	if (box.x + box.w < 0) {
-		offsets.x += winSize.x + nuvemA.GetSprite().GetWidth();
-		offsets.w += winSize.x + nuvemA.GetSprite().GetWidth();
+        offsets.x += winSize.x + (Sprite&)(nuvemAGO->GetComponent(ComponentType::SPRITE)).GetWidth();
+        offsets.w += winSize.x + (Sprite&)(nuvemAGO->GetComponent(ComponentType::SPRITE)).GetWidth();
 		speedNuvemA = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
 	}
-	nuvemA.SetOffsets( {offsets.x-dt*speedNuvemA, offsets.y}, {offsets.w-dt*speedNuvemA, offsets.h});
+    (RectTransform&)(nuvemAGO->GetComponent(ComponentType::RectTransform)).SetOffsets(Vec2(offsets.x-dt*speedNuvemA, offsets.y),Vec2(offsets.w-dt*speedNuvemA, offsets.h));
 
-	box = nuvemB;
+    box = nuvemBGO->box;
 	offsets = nuvemB.GetOffsets();
 	if (box.x + box.w < 0) {
-		offsets.x += winSize.x + nuvemB.GetSprite().GetWidth();
-		offsets.w += winSize.x + nuvemB.GetSprite().GetWidth();
+        offsets.x += winSize.x + (Sprite&)(nuvemBGO->GetComponent(ComponentType::SPRITE)).GetWidth();
+        offsets.w += winSize.x + (Sprite&)(nuvemBGO->GetComponent(ComponentType::SPRITE)).GetWidth();
 		speedNuvemB = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
 	}
-	nuvemB.SetOffsets( {offsets.x-dt*speedNuvemB, offsets.y}, {offsets.w-dt*speedNuvemB, offsets.h});
+    (RectTransform&)(nuvemBGO->GetComponent(ComponentType::RectTransform)).SetOffsets(Vec2(offsets.x-dt*speedNuvemB, offsets.y),Vec2(offsets.w-dt*speedNuvemB, offsets.h));
 }
 
-void TitleState::Render(void) const {
-	RenderUI();
-}
-
+/* Não funciona mais.Avaliar como reimplementar isso
 void TitleState::RenderUI(void) const {
 	bg.Render();
 	lua.Render();
@@ -267,7 +255,7 @@ void TitleState::RenderUI(void) const {
 			exitBtn.Render();
 		}
 	}
-}
+}*/
 
 void TitleState::Pause(void) {
 }

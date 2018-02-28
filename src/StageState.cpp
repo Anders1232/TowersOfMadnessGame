@@ -171,10 +171,10 @@ void StageState::SetupUI(){
     AddObject(openMenuBtnGO);
     //towerInfoGroup
     //Faltamdo algo aqui?
-    RectTransform* towerInfoGrpupRect = new RectTransform(*towerInfoGroupGO,menuBgGO);
-    towerInfoGrpupRect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425));
-    towerInfoGrpupRect->SetOffsets(5., 5.,-5., -5.);
-    towerInfoGroupGO->AddComponent(towerInfoGrpupRect);
+    RectTransform* towerInfoGroupRect = new RectTransform(*towerInfoGroupGO,menuBgGO);
+    towerInfoGroupRect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425));
+    towerInfoGroupRect->SetOffsets(5., 5.,-5., -5.);
+    towerInfoGroupGO->AddComponent(towerInfoGroupRect);
     AddObject(towerInfoGroupGO);
     //towerName
     RectTransform* towerNameRect = new RectTransform(*towerNameGO,towerInfoGroupGO);
