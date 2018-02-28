@@ -839,7 +839,7 @@ void StageState::InitializeObstacles(void){
 	delete benchTiles;
 }
 
-GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject*> &finder, float range){
+GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject*> &finder, float range) const{
 
     GameObject* closerObj = nullptr;
     double closerObjDistance = std::numeric_limits<double>::max();
@@ -855,7 +855,7 @@ GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject*> &finder, fl
 }
 
 
-std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range){
+std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range) const{
     vector<GameObject*> *objectsInRange = new vector<GameObject*>();
 	for(unsigned int i = 0; i < objectArray.size(); i ++){
         float distance = finder(objectArray[i].get());

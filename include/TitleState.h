@@ -7,6 +7,9 @@
 #include "Sound.h"
 #include "Music.h"
 #include "Button.h"
+#include "Grouper.h"
+#include "Timer.h"
+#include "RectTransform.h"
 
 using namespace RattletrapEngine;
 
