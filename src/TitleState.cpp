@@ -287,3 +287,5 @@ void TitleState::LoadAssets(void) const{
 	Resources::GetMusic("audio/Interface/Click1.wav");
 	Resources::GetFont("font/SHPinscher-Regular.otf", 95);
 }
+
+void TitleState::Render() const{}

@@ -31,4 +31,6 @@ Animation::Animation(GameObject& associated,
     bool Animation::Is(int componentType) const  {
         return componentType == GameComponentType::ANIMATION;
     }
+	
+	void Animation::Render(){}
 

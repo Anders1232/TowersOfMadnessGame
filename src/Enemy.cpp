@@ -241,3 +241,5 @@ void Enemy::UpdateEnemyDirection(Vec2 lastPosition){
 	}
 }
 
+Enemy::~Enemy(){}
+
