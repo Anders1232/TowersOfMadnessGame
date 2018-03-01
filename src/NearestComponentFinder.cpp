@@ -9,13 +9,11 @@ NearestComponentFinder::NearestComponentFinder()
 
 }
 
-float NearestComponentFinder::operator()(GameObject* go){
-    if(nullptr != go){
+float NearestComponentFinder::operator()(GameObject go){
 
-        Component& component = go->GetComponent(componentType);
-        return(origin.VecDistance(go->box.Center()).Magnitude());
+    Component& component = go.GetComponent(componentType);
+    return(origin.VecDistance(go.box.Center()).Magnitude());
 
-    }
 }
 
 void NearestComponentFinder::setOrigin(Vec2 origin){

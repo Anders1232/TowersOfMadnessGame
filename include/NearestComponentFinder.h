@@ -5,13 +5,13 @@
 
 using namespace RattletrapEngine;
 
-class NearestComponentFinder : public Finder<GameObject*>
+class NearestComponentFinder : public Finder<GameObject>
 {
     public:
         NearestComponentFinder(int componentType,Vec2 origin);
         NearestComponentFinder();
         void setOrigin(Vec2 origin);
-        float operator()(GameObject*);
+        float operator()(GameObject);
     private:
         int componentType;
         Vec2 origin;

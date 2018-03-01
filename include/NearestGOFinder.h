@@ -5,13 +5,13 @@
 
 using namespace RattletrapEngine;
 
-class NearestGOFinder : public Finder<GameObject*>
+class NearestGOFinder : public Finder<GameObject>
 {
 	public:
         NearestGOFinder(std::string targetType,Vec2 origin);
         NearestGOFinder();
         void setOrigin(Vec2 origin);
-        float operator()(GameObject*);
+        float operator()(GameObject);
     private:
         Vec2 origin;
 };

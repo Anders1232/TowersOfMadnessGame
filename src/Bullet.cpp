@@ -60,6 +60,6 @@ bool Bullet::Is(int type) const{
 
 }
 
-int Bomb::getTargetType(){
+int Bullet::getTargetType(){
     return targetType;
 }

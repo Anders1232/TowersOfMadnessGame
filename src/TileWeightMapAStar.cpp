@@ -6,13 +6,14 @@ TileWeightMapAStar::TileWeightMapAStar(std::map<int, double> weightMap) : weight
 {
 }
 
-float CalculateCost(Tile& tile){
-    return weightMap[tile.GetTileSetIndex()]
+float TileWeightMapAStar::CalculateCost(Tile& tile){
+    return weightMap[tile.GetTileSetIndex()];
 }
-virtual bool IsTraversable(Tile& tile){
-    return(tile.GetGO() == nullptr && tile.GetTileSetIndex() != && tile.GetTileSetIndex() != );
+bool TileWeightMapAStar::IsTraversable(Tile& tile){
+    return(tile.GetGO() == nullptr && tile.GetTileSetIndex() != END_POINT && tile.GetTileSetIndex() != SPAWN_POINT &&tile.GetTileSetIndex() != TILE_VAZIO);
 }
-virtual ~TileWeightMapAStar(void){
+
+TileWeightMapAStar::~TileWeightMapAStar(void){
 
 }
 

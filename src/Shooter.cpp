@@ -4,8 +4,8 @@
 #include "Error.h"
 
 Shooter::Shooter(GameObject &associated,
-                 NearestFinder<GameObject*> &nearestFinder,
-                 Finder<GameObject*> &finder,
+                 NearestFinder<GameObject> &nearestFinder,
+                 Finder<GameObject> &finder,
                  int targetType,
                  float range,
                  float betweetShootsTime,

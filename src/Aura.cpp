@@ -4,8 +4,8 @@ Aura::Aura(GameObject &associated,
 			Enemy::Event auraType,
 			float auraRange,
 			float timeBetweetNotifications,
-           NearestFinder<GameObject*> &nearestFinder,
-           Finder<GameObject*> &finder)
+           NearestFinder<GameObject> &nearestFinder,
+           Finder<GameObject> &finder)
 	:Component(associated),
 		associated(associated),
 		auraType(auraType),
@@ -47,7 +47,7 @@ void Aura::Update(float dt){
 	notificationTimer.Update(dt);
 	if(notificationTimer.Get() > timeBetweetNotifications){
 		notificationTimer.Restart();
-        vector<GameObject *> *enemiesInRange = ((GameObject*)(nearestFinder.FindNearests(associated.box.Center(),finder, auraRange)));
+        vector<GameObject *> *enemiesInRange = ((vector<GameObject *>*)(nearestFinder.FindNearests(associated.box.Center(),finder, auraRange)));
 		for(uint i=0; i< enemiesInRange->size(); i++){
 			( (Enemy*)((*enemiesInRange)[i]) )->NotifyEvent(auraType);
 		}
@@ -68,13 +68,13 @@ void Aura::Render(void){
 
 bool Aura::Is(int type) const{
 	if(Enemy::Event::SMOKE == auraType){
-		return ComponentType::SLOW_AURA== type;
+        return GameComponentType::SLOW_AURA== type;
 	}
 	else if(Enemy::Event::STUN == auraType){
-		return ComponentType::STUN_AURA == type;
+        return GameComponentType::STUN_AURA == type;
 	}
 	else if(Enemy::Event::HEALER == auraType){
-		return ComponentType::HEAL_AURA == type;
+        return GameComponentType::HEAL_AURA == type;
 	}
 	else{
 		Error("\t Should not get here!");

@@ -34,7 +34,7 @@
 using std::vector;
 using namespace RattletrapEngine;
 
-class StageState: public State, public TileMapObserver, public NearestFinder<GameObject*> {
+class StageState: public State, public TileMapObserver, public NearestFinder<GameObject> {
 	public:
 		StageState(void);
 		~StageState(void);
@@ -48,8 +48,8 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 		void SetUIWaveProgress(float waveProgressPercent);
 		void SetUIMoney(int coins);
 		void NotifyTileMapChanged(int tilePosition);
-        GameObject* FindNearest(Vec2 origin, Finder<GameObject*> &finder, float range = std::numeric_limits<float>::max()) const;
-        std::vector<GameObject*>* FindNearests(Vec2 origin,Finder<GameObject*> &finder,float range) const;
+        GameObject* FindNearest(Vec2 origin, Finder<GameObject> &finder, float range = std::numeric_limits<float>::max()) const;
+        std::vector<GameObject*>* FindNearests(Vec2 origin,Finder<GameObject> &finder,float range) const;
         void AddCollider(Component& collider,GameObject& associated);
         void RemoveCollider(Component& collider);
 	private:

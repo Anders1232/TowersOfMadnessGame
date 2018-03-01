@@ -8,10 +8,9 @@ NearestGOFinder::NearestGOFinder()
 
 }
 
-float NearestGOFinder::operator()(GameObject* go){
-    if(nullptr != go){
-        return(origin.VecDistance(go->box.Center()).Magnitude());
-    }
+float NearestGOFinder::operator()(GameObject go){
+
+        return(origin.VecDistance(go.box.Center()).Magnitude());
 }
 
 void NearestGOFinder::setOrigin(Vec2 origin){
