@@ -4,7 +4,7 @@
 
 COMPILER = g++
 #comando para remover pastas
-RMDIR = rm -rf
+RMDIR = rm -rdf
 #comando para remover arquivos
 RM = rm -f
 
@@ -13,9 +13,9 @@ DEP_FLAGS = -MT $@ -MMD -MP -MF $(DEP_PATH)/$.d
 LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
 
 #Se o gcc não reconhecer a flag -fdiagnostics-color basta retirar ela
-# FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=5 -Wno-unused-parameter -fdiagnostics-color -static-libgcc -static-libstdc++ -Werror=init-self
+#FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=5 -Wno-unused-parameter -fdiagnostics-color -static-libgcc -static-libstdc++ -Werror=init-self
 #FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=5 -Wno-unused-parameter -fdiagnostics-color -Werror=init-self
-FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=100 -Wno-unused-parameter -Werror=init-self
+FLAGS= -std=c++11 -Wall -pedantic -Wextra -fmax-errors=5 -Wno-unused-parameter -Werror=init-self
 DFLAGS = -ggdb -O0
 
 INC_PATH = -Iinclude -I../RattletrapEngine/include
@@ -24,7 +24,7 @@ BIN_PATH = bin
 DEP_PATH = dep
 
 #Uma lista de arquivos por extensão:
-CPP_FILES= $(wildcard $(SRC_PATH)/*.cpp)
+CPP_FILES = $(wildcard $(SRC_PATH)/*.cpp)
 OBJ_FILES= $(addprefix $(BIN_PATH)/,$(notdir $(CPP_FILES:.cpp=.o)))
 DEP_FILES = $(wildcard $(DEP_PATH)/*.d)
 
@@ -64,10 +64,7 @@ LIBS = -lm -framework SDL2 -framework SDL2_image -framework SDL2_mixer -framewor
 endif
 endif
 
-all: $(EXEC)
-
-$(EXEC): $(OBJ_FILES)
-	$(COMPILER) -o $@ $^ $(LIBS)
+all: $(OBJ_FILES)
 
 $(BIN_PATH)/%.o: $(SRC_PATH)/%.cpp
 
@@ -84,7 +81,6 @@ endif
 
 clean:
 	$(RMDIR) $(BIN_PATH) $(DEP_PATH)
-	$(RM) $(EXEC)
 
 .PHONY: debug clean release again
 #regra pra debug
