@@ -25,8 +25,8 @@ class Bomb: public Component
     private:
         Sprite *sp;
         Vec2 speed;
-        float distanceLeft;
         int targetType;
+        float distanceLeft;
         GameObject* animation;
 };
 

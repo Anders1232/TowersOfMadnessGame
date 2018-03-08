@@ -51,12 +51,12 @@ StageState::StageState(void)
 		, nightSound("audio/Ambiente/Barulho_noite.wav")
 		, thunderSound("audio/Ambiente/Trovao.wav")
 		, towerMenuSounds("audio/Acoes/Dinheiro1.wav")
-		, frameRateCounter(0)
         , menuMove("audio/Interface/Click1.wav")
         , waveManagerGO(new GameObject())
         , tileSet("map/tileSetDescriptor.txt",*waveManagerGO)
         , tileMap(*waveManagerGO,"map/tileMap.txt",&tileSet)
         , waveManager(new WaveManager(tileMap,"assets/wave&enemyData.txt",*waveManagerGO))
+        , frameRateCounter(0)
         , healthGO(new GameObject())
         , healthIconGO(new GameObject())
         , healthbarBgGO(new GameObject())
@@ -69,23 +69,23 @@ StageState::StageState(void)
         , moneyIconGO(new GameObject())
         , moneyTextGO(new GameObject())
         , menuBgGO(new GameObject())
+        , openMenuBtnGO(new GameObject())
         , HUDcanvasGO(new GameObject())
         , towerBtn1GO(new GameObject())
         , towerBtn2GO(new GameObject())
         , towerBtn3GO(new GameObject())
         , towerBtn4GO(new GameObject())
-        , openMenuBtnGO(new GameObject())
-        , openMenuBtn(*openMenuBtnGO)
         , towerBtn1(*towerBtn1GO)
         , towerBtn2(*towerBtn2GO)
         , towerBtn3(*towerBtn3GO)
         , towerBtn4(*towerBtn4GO)
-        , towerInfoGroupGO(new GameObject())
-        , towersBtnGroupGO(new GameObject())
+        , openMenuBtn(*openMenuBtnGO)
         , towerNameGO(new GameObject())
         , towerCostGO(new GameObject())
         , towerDamageGO(new GameObject())
         , towerDamageTypeGO(new GameObject())
+        , towerInfoGroupGO(new GameObject())
+        , towersBtnGroupGO(new GameObject())
         , towersInfoGroup(*towerInfoGroupGO)
         , towersBtnGroup(*towersBtnGroupGO)
      {
@@ -565,24 +565,13 @@ void StageState::Update(float dt){
 
 void StageState::Render(void) const {
 	REPORT_I_WAS_HERE;
-	bool highlighted = true;
-	for(unsigned int cont=0; cont < objectArray.size(); cont++) {
-		if(INPUT_MANAGER.GetMousePos().IsInRect(objectArray.at(cont)->GetWorldRenderedRect())){
-			highlighted = false;
-			break;
-		}
-	}
-    //Como registro para chamadas a serem feitas em outras funções de tilemap
-    //tileMap.Render(Vec2(0,0), false, highlighted ? Camera::ScreenToWorld(INPUT_MANAGER.GetMousePos()) : Vec2(-1, -1));
-	REPORT_I_WAS_HERE;
     State::Render();
 	if(isLightning){
 		SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), lightningColor.r, lightningColor.g, lightningColor.b, lightningColor.a);
 		SDL_SetRenderDrawBlendMode(Game::GetInstance().GetRenderer(), SDL_BLENDMODE_BLEND);
 		SDL_RenderFillRect(Game::GetInstance().GetRenderer(), NULL);
 	}
-
-    //RenderUI();
+    REPORT_I_WAS_HERE;
 }
 //Comentado para futuro esclaricimento sobre compatibilidade retroativa
 /*void StageState::RenderUI(void) const {
@@ -663,26 +652,26 @@ void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
-    RectTransform& rect = (RectTransform&)menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM);
-    Rect menuBgOffsets = rect.GetOffsets();
-    Sprite& sp = (Sprite&)menuBgGO->GetComponent(ComponentType::SPRITE);
-    Vec2 menuBgDim = Vec2((float)sp.GetWidth(), (float)sp.GetHeight());
+    RectTransform* rect = (RectTransform*)menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM);
+    Rect menuBgOffsets = rect->GetOffsets();
+    Sprite* sp = (Sprite*)menuBgGO->GetComponent(ComponentType::SPRITE);
+    Vec2 menuBgDim = Vec2((float)sp->GetWidth(), (float)sp->GetHeight());
     if(menuIsShowing){
-        rect.SetOffsets(menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w-menuBgDim.x, menuBgOffsets.h);
+        rect->SetOffsets(menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w-menuBgDim.x, menuBgOffsets.h);
 	} else {
-        rect.SetOffsets(menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h);
+        rect->SetOffsets(menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h);
 	}
 }
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
-    Text& textName = (Text&)towerNameGO->GetComponent(ComponentType::TEXT);
-    textName.SetText(name);
-    Text& textCost = (Text&)towerCostGO->GetComponent(ComponentType::TEXT);
-    textCost.SetText(cost);
-    Text& textDamage = (Text&)towerDamageGO->GetComponent(ComponentType::TEXT);
-    textDamage.SetText(damage);
-    Text& textDamageType = (Text&)towerDamageTypeGO->GetComponent(ComponentType::TEXT);
-    textDamageType.SetText(damageType);
+    Text* textName = (Text*)towerNameGO->GetComponent(ComponentType::TEXT);
+    textName->SetText(name);
+    Text* textCost = (Text*)towerCostGO->GetComponent(ComponentType::TEXT);
+    textCost->SetText(cost);
+    Text* textDamage = (Text*)towerDamageGO->GetComponent(ComponentType::TEXT);
+    textDamage->SetText(damage);
+    Text* textDamageType = (Text*)towerDamageTypeGO->GetComponent(ComponentType::TEXT);
+    textDamageType->SetText(damageType);
 }
 
 void StageState::CreateTower(Tower::TowerType towerType) {
@@ -703,21 +692,21 @@ void StageState::CreateTower(Tower::TowerType towerType) {
 
 void StageState::SetUILife(float lifePercent) {
 	lifePercent = (lifePercent < 0) ? 0 : ((lifePercent > 1) ? 1 : lifePercent);
-    RectTransform& healthBarRect = (RectTransform&)healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM);
-    Rect oldAnchor = healthBarRect.GetAnchors();
-    healthBarRect.SetAnchors(Vec2(oldAnchor.x, oldAnchor.y),Vec2(lifePercent, oldAnchor.h));
+    RectTransform* healthBarRect = (RectTransform*)healthbarBarGO->GetComponent(ComponentType::RECT_TRANSFORM);
+    Rect oldAnchor = healthBarRect->GetAnchors();
+    healthBarRect->SetAnchors(Vec2(oldAnchor.x, oldAnchor.y),Vec2(lifePercent, oldAnchor.h));
 }
 
 void StageState::SetUIWaveProgress(float waveProgressPercent) {
 	waveProgressPercent = (waveProgressPercent < 0) ? 0 : ((waveProgressPercent > 1) ? 1 : waveProgressPercent);
-    RectTransform& waveBarRect = (RectTransform&)wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM);
-    Rect oldAnchor = waveBarRect.GetAnchors();
-    waveBarRect.SetAnchors(Vec2(oldAnchor.x, oldAnchor.y),Vec2(waveProgressPercent, oldAnchor.h));
+    RectTransform* waveBarRect = (RectTransform*)wavebarBarGO->GetComponent(ComponentType::RECT_TRANSFORM);
+    Rect oldAnchor = waveBarRect->GetAnchors();
+    waveBarRect->SetAnchors(Vec2(oldAnchor.x, oldAnchor.y),Vec2(waveProgressPercent, oldAnchor.h));
 }
 
 void StageState::SetUIMoney(int coins) {
-    Text& textName = (Text&)moneyTextGO->GetComponent(ComponentType::TEXT);
-    textName.SetText(std::to_string(coins));
+    Text* textName = (Text*)moneyTextGO->GetComponent(ComponentType::TEXT);
+    textName->SetText(std::to_string(coins));
 }
 
 void StageState::InitializeObstacles(void){
@@ -727,9 +716,9 @@ void StageState::InitializeObstacles(void){
     //76 banco
 
 	int index;
-    TileMap<Tile>& tileMap = (TileMap<Tile>&)waveManagerGO->GetComponent(ComponentType::TILEMAP);
-    int mapWidth= tileMap.GetWidth();
-    Vec2 tileSize= tileMap.GetTileSize();
+    TileMap<Tile>* tileMap = (TileMap<Tile>*)waveManagerGO->GetComponent(ComponentType::TILEMAP);
+    int mapWidth= tileMap->GetWidth();
+    Vec2 tileSize= tileMap->GetTileSize();
 	int tileWidth= tileSize.x;
 	int tileHeight= tileSize.y;
 	std::array<vector<vector<int>>*, 3> treeTiles;
@@ -752,7 +741,7 @@ void StageState::InitializeObstacles(void){
                     tree = new Obstacle(*ObstGO,"./img/obstacle/arvore1.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
 				}
 				else{
-                    auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap.GetWidth());
+                    auto baixo= std::find(treeTilesVector.begin(), treeTilesVector.end(),treeTilesVector[j]+tileMap->GetWidth());
 					if(baixo != treeTilesVector.end()){
 						//tem um tile em baixo
 						if(treeTilesVector[j+1] == (index+1) ){
@@ -791,9 +780,9 @@ void StageState::InitializeObstacles(void){
 					}
 				}
 				if(nullptr != tree){
-                    int tilePos= tileMap.GetCoordTilePos(ObstGO->box.Center(), false, 0);
+                    int tilePos= tileMap->GetCoordTilePos(ObstGO->box.Center(), false, 0);
                     REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
-                    Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+                    Tile& tile = tileMap->AtLayer(tilePos,COLLISION_LAYER);
                     tile.SetGO(ObstGO);
                     ObstGO->AddComponent(tree);
                     AddObject(ObstGO);
@@ -813,9 +802,9 @@ void StageState::InitializeObstacles(void){
 			index = poleTiles->at(i)[j];
             GameObject* ObstGOPole = new GameObject();
             Obstacle* pole = new Obstacle(*ObstGOPole,"./img/obstacle/poste_aceso.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-            int tilePos= tileMap.GetCoordTilePos(ObstGOPole->box.Center(), false, 0);
+            int tilePos= tileMap->GetCoordTilePos(ObstGOPole->box.Center(), false, 0);
             REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
-            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            Tile& tile = tileMap->AtLayer(tilePos,COLLISION_LAYER);
             tile.SetGO(ObstGOPole);
             ObstGOPole->AddComponent(pole);
             AddObject(ObstGOPole);
@@ -828,9 +817,9 @@ void StageState::InitializeObstacles(void){
 			index = benchTiles->at(i)[j];
             GameObject* ObstGOBench = new GameObject();
             Obstacle* bench = new Obstacle(*ObstGOBench,"./img/obstacle/banco_h.png", Vec2(index%mapWidth*tileWidth, index/mapWidth*tileHeight));
-            int tilePos= tileMap.GetCoordTilePos(ObstGOBench->box.Center(), false, 0);
+            int tilePos= tileMap->GetCoordTilePos(ObstGOBench->box.Center(), false, 0);
             REPORT_DEBUG("\tInserting the gameObject at position " << tilePos);
-            Tile& tile = tileMap.AtLayer(tilePos,COLLISION_LAYER);
+            Tile& tile = tileMap->AtLayer(tilePos,COLLISION_LAYER);
             tile.SetGO(ObstGOBench);
             ObstGOBench->AddComponent(bench);
             AddObject(ObstGOBench);

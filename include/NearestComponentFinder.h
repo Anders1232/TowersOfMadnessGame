@@ -2,6 +2,7 @@
 #define NEARESTCOMPONENTFINDER_H
 #include "GameObject.h"
 #include "NearestFinder.h"
+#include <cmath>
 
 using namespace RattletrapEngine;
 

@@ -12,7 +12,7 @@
 #include "Component.h"
 
 Enemy::Enemy(int enemyIndex, EnemyData enemyData, uint baseHP, uint endPoint, TileMap<Tile>&  tileMap, WaveManager &wManager,GameObject &associated)
-    : sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager),Component(associated){
+    : Component(associated),sp(EnemyDirections::ENEMY_DIRECTIONS_SIZE), dead(false), direction(EnemyDirections::DOWN), lastEvent(Enemy::Event::NONE), walkingSound("audio/Ambiente/andando2.wav"), wManager(wManager){
 	this->enemyIndex = enemyIndex; 
 	this->baseHP = baseHP; 
 	this->endPoint = endPoint;

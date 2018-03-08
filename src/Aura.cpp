@@ -13,8 +13,8 @@ Aura::Aura(GameObject &associated,
         sp (nullptr),
         sp2 (nullptr),
 		timeBetweetNotifications(timeBetweetNotifications),
-		finder(finder),
-        nearestFinder(nearestFinder){
+        nearestFinder(nearestFinder),
+        finder(finder){
 	if(Enemy::Event::SMOKE == auraType){
         sp = new Sprite(std::string("img/SpriteSheets/aura_spritesheet.png"), associated, false, 0.3f, 7);
 		sp->colorMultiplier = Color(179, 150, 120);

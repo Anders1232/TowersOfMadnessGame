@@ -141,8 +141,9 @@ class Enemy : public Component
 		EnemyDirections direction; /**< Direçao para aonde a sprite do inimigo esta voltada. Norte, Sul, Leste ou Oeste */
 		Event lastEvent;
 		Sound walkingSound;
+        WaveManager &wManager;
 		Timer eventTimer;
-		WaveManager &wManager;
+
 };
 
 #endif // ENEMY_H

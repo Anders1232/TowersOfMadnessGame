@@ -16,13 +16,13 @@
 int WaveManager::waveCount = 0;
 
 WaveManager::WaveManager(TileMap<Tile> &tileMap, string waveFile,GameObject& associated)
-		: tileMap(tileMap)
+        : Component(associated)
+        , tileMap(tileMap)
 		, waveStartSound("audio/Acoes/Inicio de Wave.wav")
 		, levelUpSound("audio/Acoes/Level Up.wav")
 		, lostEnemySound("audio/Acoes/perdeu1.wav")
 		, betweenWavesTimer()
-        , waitingForTheNextWave(false)
-        , Component(associated){
+        , waitingForTheNextWave(false){
 	endWave=true;
 	enemiesLeft = 1;
 	playerLifes = 30;
@@ -129,7 +129,7 @@ bool WaveManager::EndWave(void) const{
  
 void WaveManager::Update(float dt){
     //Retira Enemies mortos da lista de enemies
-    for(int i = 0;i < enemies.size();i ++){
+    for(unsigned int i = 0;i < enemies.size();i ++){
         if(enemies[i]->IsDead()){
             enemies.erase(enemies.begin() + i);
         }

@@ -21,6 +21,7 @@ TitleState::TitleState()
 		, speedNuvemA(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
 		, speedNuvemB(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
 		, introTimer()
+        , titleMusic("audio/trilha_sonora/main_title_.ogg")
 		, clickSound("audio/Interface/Click1.wav")
         , canvasGO(new GameObject())
         , bgGO(new GameObject())
@@ -31,24 +32,21 @@ TitleState::TitleState()
         , overlayGO(new GameObject())
         , titleGO(new GameObject())
         , optionsGroupGO(new GameObject())
-        , optionsGroup(*optionsGroupGO)
         , playBtnGO(new GameObject())
         , editorBtnGO(new GameObject())
         , configBtnGO(new GameObject())
         , exitBtnGO(new GameObject())
+        , optionsGroup(*optionsGroupGO)
         , playBtn(*playBtnGO)
         , editorBtn(*editorBtnGO)
         , configBtn(*configBtnGO)
         , exitBtn(*exitBtnGO)
-		, titleMusic("audio/trilha_sonora/main_title_.ogg") {
+        , finishedEclipse(false)
+        , finishedFadeIn(false)
+        , forceEnd(false){
 
 	Resources::ChangeMusicVolume(0);
 	Resources::ChangeSoundVolume(0);
-
-	introTimer.Restart();
-	finishedEclipse = false;
-	finishedFadeIn = false;
-	forceEnd = false;
 	
 	SetupUI();
 }
@@ -183,15 +181,15 @@ void TitleState::Update(float dt) {
 	introTimer.Update(dt);
 	if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
 		finishedEclipse = true;
-        ((Sprite&)(luaGO->GetComponent(ComponentType::SPRITE))).SetFrameTime(FLT_MAX);
-        Color& c = ((Sprite&)(overlayGO->GetComponent(ComponentType::SPRITE))).colorMultiplier;
-		c.a = 180;
+        ((Sprite*)(luaGO->GetComponent(ComponentType::SPRITE)))->SetFrameTime(FLT_MAX);
+        Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
+        c.a = 180;
 		introTimer.Restart();
 	}
 	if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
 		finishedFadeIn = true;
-        Color& c = ((Sprite&)(titleGO->GetComponent(ComponentType::SPRITE))).colorMultiplier;
-		c.a = 255;
+        Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
+        c.a = 255;
 		introTimer.Restart();
 	}
 	forceEnd = false;
@@ -203,12 +201,12 @@ void TitleState::UpdateUI(float dt) {
 	Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
 
 	if(!finishedEclipse) {
-        Color& c = ((Sprite&)(overlayGO->GetComponent(ComponentType::SPRITE))).colorMultiplier;
+        Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
 		c.a = (unsigned char)(180*introTimer.Get()/ECLIPSE_DURATION);
 	}
 
 	if(finishedEclipse && !finishedFadeIn) {
-        Color& c = ((Sprite&)(titleGO->GetComponent(ComponentType::SPRITE))).colorMultiplier;
+        Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
 		c.a = 255*introTimer.Get()/OVERLAY_FADEIN_DURATION;
 	}
 
@@ -219,22 +217,22 @@ void TitleState::MoveClouds(float dt) {
 	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
 
     Rect box = nuvemAGO->box;
-    Rect offsets = ((RectTransform&)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM))).GetOffsets();
+    Rect offsets = ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
 	if (box.x + box.w < 0) {
-        offsets.x += winSize.x + ((Sprite&)(nuvemAGO->GetComponent(ComponentType::SPRITE))).GetWidth();
-        offsets.w += winSize.x + ((Sprite&)(nuvemAGO->GetComponent(ComponentType::SPRITE))).GetWidth();
+        offsets.x += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
+        offsets.w += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
 		speedNuvemA = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
 	}
-    ((RectTransform&)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM))).SetOffsets(offsets.x-dt*speedNuvemA, offsets.y,offsets.w-dt*speedNuvemA, offsets.h);
+    ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemA, offsets.y,offsets.w-dt*speedNuvemA, offsets.h);
 
     box = nuvemBGO->box;
-    offsets = ((RectTransform&)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM))).GetOffsets();
+    offsets = ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
 	if (box.x + box.w < 0) {
-        offsets.x += winSize.x + ((Sprite&)(nuvemBGO->GetComponent(ComponentType::SPRITE))).GetWidth();
-        offsets.w += winSize.x + ((Sprite&)(nuvemBGO->GetComponent(ComponentType::SPRITE))).GetWidth();
+        offsets.x += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
+        offsets.w += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
 		speedNuvemB = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
 	}
-    ((RectTransform&)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM))).SetOffsets(offsets.x-dt*speedNuvemB, offsets.y,offsets.w-dt*speedNuvemB, offsets.h);
+    ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemB, offsets.y,offsets.w-dt*speedNuvemB, offsets.h);
 }
 
 /* Não funciona mais.Avaliar como reimplementar isso

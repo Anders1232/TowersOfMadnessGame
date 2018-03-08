@@ -32,11 +32,8 @@ class TitleState: public State {
 		float speedNuvemB;
 
 		Timer introTimer;
-		bool finishedEclipse;
-		bool finishedFadeIn;
-		bool forceEnd;
-
-		Sound clickSound;
+        Music titleMusic;
+        Sound clickSound;
 
         GameObject* canvasGO;
         GameObject* bgGO;
@@ -51,14 +48,18 @@ class TitleState: public State {
         GameObject* editorBtnGO;
         GameObject* configBtnGO;
         GameObject* exitBtnGO;
-        Music titleMusic;
+
+        Grouper optionsGroup;
 
         Button playBtn;
         Button editorBtn;
         Button configBtn;
         Button exitBtn;
 
-        Grouper optionsGroup;
+        bool finishedEclipse;
+        bool finishedFadeIn;
+        bool forceEnd;
+
 };
 
 #endif // TITLESTATE_H

@@ -1,9 +1,9 @@
 #include "HitPoints.h"
 
 HitPoints::HitPoints(uint hp,GameObject &associated, float scaleX)
-        : healthBar(new Sprite("img/effect/health_bar.png",associated))
-        , healthColor(new Sprite("img/effect/health_color.png",associated))
-        , Component(associated){
+        : Component(associated)
+        ,  healthBar(new Sprite("img/effect/health_bar.png",associated))
+        , healthColor(new Sprite("img/effect/health_color.png",associated)){
 			
 	this->hp = (int)hp;
 	maxHp = (int)hp;

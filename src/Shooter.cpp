@@ -16,6 +16,7 @@ Shooter::Shooter(GameObject &associated,
                  std::string bulletSprite,
                  int frameRate,
                  float bulletScale):
+    Component(associated),
 	associated(associated),
     nearestFinder(nearestFinder),
 	finder(finder),
@@ -29,8 +30,7 @@ Shooter::Shooter(GameObject &associated,
 	bulletScale(bulletScale),
 	bulletSpeed(bulletSpeed),
 	bulletMaxDistance(bulletMaxDistance),
-    bulletSprite(bulletSprite),
-    Component(associated){
+    bulletSprite(bulletSprite){
 }
 
 bool Shooter::Is(int type) const{

@@ -9,8 +9,8 @@
 Bullet::Bullet(GameObject& associated,float x, float y, float angle, float speed, float maxDistance, std::string sprite, int targetType, float scale, float frameTime, int frameCount)
     :Component(associated),
      sp(new Sprite(sprite,associated,false,frameTime, frameCount)),
-     targetType(targetType),
      speed(Vec2::FromPolarCoord(speed, angle)),
+     targetType(targetType),
      distanceLeft(maxDistance),
      animation(new GameObject()){
 
