@@ -170,6 +170,9 @@ void TitleState::SetupUI(void) {
     optionsGroup.groupedElements.push_back(editorBtnGO);
     optionsGroup.groupedElements.push_back(configBtnGO);
     optionsGroup.groupedElements.push_back(exitBtnGO);
+	
+	AddObject(editorBtnGO);
+	AddObject(configBtnGO);
 
 	titleMusic.Play(0);
 }
@@ -199,6 +202,7 @@ void TitleState::Update(float dt) {
 	forceEnd = false;
 
 	UpdateUI(dt);
+	State::Update(dt);
 }
 
 void TitleState::UpdateUI(float dt) {
