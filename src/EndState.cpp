@@ -110,13 +110,15 @@ void EndState::Update(float dt) {
 	if(INPUT_MANAGER.QuitRequested()) {
 		quitRequested = true;
 	}
+
+    State::Update();
 }
 
 void EndState::Render(){
 
 }
 
-void EndState::Pause() {}
+void EndState::Pause(){}
 
 void EndState::Resume() {
 	Camera::ForceLogZoom(0.0);

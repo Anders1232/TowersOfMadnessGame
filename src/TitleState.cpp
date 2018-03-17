@@ -62,6 +62,7 @@ void TitleState::SetupUI(void) {
 
     RectTransform* bgRect = new RectTransform(*bgGO,canvasGO);
     bgRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+
     Sprite* bgSP = new Sprite("img/UI/main-menu/bg.png",*bgGO);
     bgGO->AddComponent(bgRect);
     bgGO->AddComponent(bgSP);
@@ -199,6 +200,7 @@ void TitleState::Update(float dt) {
 	forceEnd = false;
 
 	UpdateUI(dt);
+    State::Update(dt);
 }
 
 void TitleState::UpdateUI(float dt) {

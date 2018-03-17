@@ -561,6 +561,8 @@ void StageState::Update(float dt){
 		frameRateCounter=0;
 		frameRateTimer.Restart();
 	}
+
+    State::Update()
 }
 
 void StageState::Render(void) const {
