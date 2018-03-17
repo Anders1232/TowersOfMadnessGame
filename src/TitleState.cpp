@@ -200,6 +200,7 @@ void TitleState::SetupUI(void) {
 	AddObject(go);
 	gp->groupedElements.push_back(go);
 	
+<<<<<<< HEAD
 	// ConfigBtn
 	go = new GameObject();
 	txt = new Text(*go);
@@ -238,6 +239,22 @@ void TitleState::SetupUI(void) {
 	go->AddComponent(rt);
 	AddObject(go);
 	gp->groupedElements.push_back(go);
+=======
+    //exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
+    exitBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
+                                                       TitleState* titleState = static_cast<TitleState*>(caller);
+                                                       titleState->Exit();
+                                                                     }, this } );
+
+    optionsGroup.groupedElements.push_back(playBtnGO);
+    optionsGroup.groupedElements.push_back(editorBtnGO);
+    optionsGroup.groupedElements.push_back(configBtnGO);
+    optionsGroup.groupedElements.push_back(exitBtnGO);
+	
+	AddObject(editorBtnGO);
+	AddObject(configBtnGO);
+	AddObject(optionsGroupGO);
+>>>>>>> Colocada correções feitas ontem
 
 	titleMusic.Play(0);
 }
