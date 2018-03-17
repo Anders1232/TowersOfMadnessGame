@@ -149,6 +149,7 @@ void TitleState::SetupUI(void) {
     optionsGroupGO->AddComponent(&optionsGroup);
     RectTransform* optionsGroupRect = new RectTransform(*optionsGroupGO,canvasGO);
     optionsGroupRect->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
+	optionsGroupGO->AddComponent(optionsGroupRect);
 	
     //playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
     playBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
@@ -173,6 +174,7 @@ void TitleState::SetupUI(void) {
 	
 	AddObject(editorBtnGO);
 	AddObject(configBtnGO);
+//	AddObject(optionsGroupGO);
 
 	titleMusic.Play(0);
 }
