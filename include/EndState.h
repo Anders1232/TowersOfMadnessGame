@@ -22,7 +22,7 @@ class EndState: public State {
 	public:
 		EndState(EndStateData stateData);
 		void Update(float dt);
-		void Render() const;
+        void Render();
 		void Pause();
 		void Resume();
 		void StartLoop(void);

@@ -112,7 +112,7 @@ void EndState::Update(float dt) {
 	}
 }
 
-void EndState::Render() const {
+void EndState::Render(){
 
 }
 

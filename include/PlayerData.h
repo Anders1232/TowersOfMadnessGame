@@ -20,7 +20,7 @@ class PlayerData {
 	public:
 		static PlayerData& GetInstance(void);
         ~PlayerData();
-		void Render() const;
+        void Render();
 		void Update(float dt);
 		bool Is(int type) const;
 		static void Reset(void);

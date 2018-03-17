@@ -17,7 +17,6 @@ class TitleState: public State {
 	public:
 		TitleState(void);
 		void Update(float dt);
-		void Render(void) const;
 		void Pause(void);
 		void Resume(void);
 		void Play(void);
