@@ -31,33 +31,18 @@ class TitleState: public State {
 		float speedNuvemB;
 
 		Timer introTimer;
-        Music titleMusic;
-        Sound clickSound;
+		Music titleMusic;
+		Sound clickSound;
 
-        GameObject* canvasGO;
-        GameObject* bgGO;
-        GameObject* luaGO;
-        GameObject* nuvemAGO;
-        GameObject* nuvemBGO;
-        GameObject* iccGO;
-        GameObject* overlayGO;
-        GameObject* titleGO;
-        GameObject* optionsGroupGO;
-        GameObject* playBtnGO;
-        GameObject* editorBtnGO;
-        GameObject* configBtnGO;
-        GameObject* exitBtnGO;
+		GameObject* luaGO;
+		GameObject* overlayGO;
+		GameObject* titleGO;
+		GameObject* nuvemAGO;
+		GameObject* nuvemBGO;
 
-        Grouper optionsGroup;
-
-        Button playBtn;
-        Button editorBtn;
-        Button configBtn;
-        Button exitBtn;
-
-        bool finishedEclipse;
-        bool finishedFadeIn;
-        bool forceEnd;
+		bool finishedEclipse;
+		bool finishedFadeIn;
+		bool forceEnd;
 
 };
 
