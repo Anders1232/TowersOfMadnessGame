@@ -111,7 +111,7 @@ void EndState::Update(float dt) {
 		quitRequested = true;
 	}
 
-    State::Update();
+    State::Update(dt);
 }
 
 void EndState::Render(){

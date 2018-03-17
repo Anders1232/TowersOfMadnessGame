@@ -562,7 +562,7 @@ void StageState::Update(float dt){
 		frameRateTimer.Restart();
 	}
 
-    State::Update()
+    State::Update(dt);
 }
 
 void StageState::Render(void) const {

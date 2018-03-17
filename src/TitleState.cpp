@@ -17,12 +17,12 @@
 #define PRESSED_COLOR		{227,196,230,255} // Purple-ish white
 
 TitleState::TitleState()
-		: State()
-		, speedNuvemA(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
-		, speedNuvemB(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
-		, introTimer()
+        : State()
+        , speedNuvemA(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
+        , speedNuvemB(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
+        , introTimer()
         , titleMusic("audio/trilha_sonora/main_title_.ogg")
-		, clickSound("audio/Interface/Click1.wav")
+        , clickSound("audio/Interface/Click1.wav")
         , canvasGO(new GameObject())
         , bgGO(new GameObject())
         , luaGO(new GameObject())
@@ -45,10 +45,10 @@ TitleState::TitleState()
         , finishedFadeIn(false)
         , forceEnd(false){
 
-	Resources::ChangeMusicVolume(0);
-	Resources::ChangeSoundVolume(0);
-	
-	SetupUI();
+    Resources::ChangeMusicVolume(0);
+    Resources::ChangeSoundVolume(0);
+
+    SetupUI();
 }
 
 void TitleState::SetupUI(void) {
@@ -145,22 +145,22 @@ void TitleState::SetupUI(void) {
     exitBtnText->SetFontSize(95);
     exitBtnGO->AddComponent(exitBtnText);
     AddObject(exitBtnGO);
-	
+
 
     optionsGroupGO->AddComponent(&optionsGroup);
     RectTransform* optionsGroupRect = new RectTransform(*optionsGroupGO,canvasGO);
     optionsGroupRect->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
-	
+
     //playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
     playBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
                                                       TitleState* titleState = static_cast<TitleState*>(caller);
                                                       titleState->Play();
                                                                     }, this } );
-	
+
     //editorBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-	
+
     //configBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-	
+
     //exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
     exitBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
                                                        TitleState* titleState = static_cast<TitleState*>(caller);
@@ -172,122 +172,122 @@ void TitleState::SetupUI(void) {
     optionsGroup.groupedElements.push_back(configBtnGO);
     optionsGroup.groupedElements.push_back(exitBtnGO);
 
-	titleMusic.Play(0);
+    titleMusic.Play(0);
 }
 
 void TitleState::Update(float dt) {
-	if(INPUT_MANAGER.QuitRequested()) {
-		quitRequested = true;
-	}
-	if(INPUT_MANAGER.KeyRelease(ESCAPE_KEY)) {
-		forceEnd = true;
-	}
+    if(INPUT_MANAGER.QuitRequested()) {
+        quitRequested = true;
+    }
+    if(INPUT_MANAGER.KeyRelease(ESCAPE_KEY)) {
+        forceEnd = true;
+    }
 
-	introTimer.Update(dt);
-	if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
-		finishedEclipse = true;
+    introTimer.Update(dt);
+    if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
+        finishedEclipse = true;
         ((Sprite*)(luaGO->GetComponent(ComponentType::SPRITE)))->SetFrameTime(FLT_MAX);
         Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
         c.a = 180;
-		introTimer.Restart();
-	}
-	if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
-		finishedFadeIn = true;
+        introTimer.Restart();
+    }
+    if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
+        finishedFadeIn = true;
         Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
         c.a = 255;
-		introTimer.Restart();
-	}
-	forceEnd = false;
+        introTimer.Restart();
+    }
+    forceEnd = false;
 
-	UpdateUI(dt);
+    UpdateUI(dt);
     State::Update(dt);
 }
 
 void TitleState::UpdateUI(float dt) {
-	Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
+    Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
 
-	if(!finishedEclipse) {
+    if(!finishedEclipse) {
         Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-		c.a = (unsigned char)(180*introTimer.Get()/ECLIPSE_DURATION);
-	}
+        c.a = (unsigned char)(180*introTimer.Get()/ECLIPSE_DURATION);
+    }
 
-	if(finishedEclipse && !finishedFadeIn) {
+    if(finishedEclipse && !finishedFadeIn) {
         Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-		c.a = 255*introTimer.Get()/OVERLAY_FADEIN_DURATION;
-	}
+        c.a = 255*introTimer.Get()/OVERLAY_FADEIN_DURATION;
+    }
 
-	MoveClouds(dt);
+    MoveClouds(dt);
 }
 
 void TitleState::MoveClouds(float dt) {
-	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
+    Vec2 winSize = Game::GetInstance().GetWindowDimensions();
 
     Rect box = nuvemAGO->box;
     Rect offsets = ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
-	if (box.x + box.w < 0) {
+    if (box.x + box.w < 0) {
         offsets.x += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
         offsets.w += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-		speedNuvemA = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
-	}
+        speedNuvemA = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
+    }
     ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemA, offsets.y,offsets.w-dt*speedNuvemA, offsets.h);
 
     box = nuvemBGO->box;
     offsets = ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
-	if (box.x + box.w < 0) {
+    if (box.x + box.w < 0) {
         offsets.x += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
         offsets.w += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-		speedNuvemB = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
-	}
+        speedNuvemB = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
+    }
     ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemB, offsets.y,offsets.w-dt*speedNuvemB, offsets.h);
 }
 
 /* Não funciona mais.Avaliar como reimplementar isso
 void TitleState::RenderUI(void) const {
-	bg.Render();
-	lua.Render();
-	nuvemA.Render();
-	nuvemB.Render();
-	icc.Render();
-	overlay.Render();
-	if(finishedEclipse) {
-		title.Render();
-		if(finishedFadeIn) {
-			// optionsGroup.Render(true);
-			playBtn.Render();
-			editorBtn.Render();
-			configBtn.Render();
-			exitBtn.Render();
-		}
-	}
+    bg.Render();
+    lua.Render();
+    nuvemA.Render();
+    nuvemB.Render();
+    icc.Render();
+    overlay.Render();
+    if(finishedEclipse) {
+        title.Render();
+        if(finishedFadeIn) {
+            // optionsGroup.Render(true);
+            playBtn.Render();
+            editorBtn.Render();
+            configBtn.Render();
+            exitBtn.Render();
+        }
+    }
 }*/
 
 void TitleState::Pause(void) {
 }
 
 void TitleState::Resume(void) {
-	Camera::ForceLogZoom(0.0);
-	Camera::pos = Vec2(0, 0);
+    Camera::ForceLogZoom(0.0);
+    Camera::pos = Vec2(0, 0);
 }
 
 void TitleState::Play(void) {
-	clickSound.Play(1);
-	Game::GetInstance().Push(new StageState());
+    clickSound.Play(1);
+    Game::GetInstance().Push(new StageState());
 }
 
 void TitleState::Exit() {
-	clickSound.Play(1);
-	popRequested = true;
+    clickSound.Play(1);
+    popRequested = true;
 }
 
 void TitleState::LoadAssets(void) const{
-	Resources::GetImage("img/UI/main-menu/bg.png");
-	Resources::GetImage("img/UI/main-menu/lua.png");
-	Resources::GetImage("img/UI/main-menu/nuvemA.png");
-	Resources::GetImage("img/UI/main-menu/nuvemB.png");
-	Resources::GetImage("img/UI/main-menu/icc.png");
-	Resources::GetImage("img/UI/main-menu/overlay.png");
-	Resources::GetImage("img/UI/main-menu/spritesheettitle.png");
-	Resources::GetMusic("audio/trilha_sonora/main_title_.ogg");
-	Resources::GetMusic("audio/Interface/Click1.wav");
-	Resources::GetFont("font/SHPinscher-Regular.otf", 95);
+    Resources::GetImage("img/UI/main-menu/bg.png");
+    Resources::GetImage("img/UI/main-menu/lua.png");
+    Resources::GetImage("img/UI/main-menu/nuvemA.png");
+    Resources::GetImage("img/UI/main-menu/nuvemB.png");
+    Resources::GetImage("img/UI/main-menu/icc.png");
+    Resources::GetImage("img/UI/main-menu/overlay.png");
+    Resources::GetImage("img/UI/main-menu/spritesheettitle.png");
+    Resources::GetMusic("audio/trilha_sonora/main_title_.ogg");
+    Resources::GetMusic("audio/Interface/Click1.wav");
+    Resources::GetFont("font/SHPinscher-Regular.otf", 95);
 }

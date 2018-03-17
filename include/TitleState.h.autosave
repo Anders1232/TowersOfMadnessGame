@@ -14,23 +14,23 @@
 using namespace RattletrapEngine;
 
 class TitleState: public State {
-    public:
-        TitleState(void);
-        void Update(float dt);
-        void Pause(void);
-        void Resume(void);
-        void Play(void);
-        void Exit(void);
-        void LoadAssets(void) const;
-    private:
-        void SetupUI(void);
-        void UpdateUI(float dt);
-        void RenderUI() const;
-        void MoveClouds(float dt);
-        float speedNuvemA;
-        float speedNuvemB;
+	public:
+		TitleState(void);
+		void Update(float dt);
+		void Pause(void);
+		void Resume(void);
+		void Play(void);
+		void Exit(void);
+		void LoadAssets(void) const;
+	private:
+		void SetupUI(void);
+		void UpdateUI(float dt);
+		void RenderUI() const;
+		void MoveClouds(float dt);
+		float speedNuvemA;
+		float speedNuvemB;
 
-        Timer introTimer;
+		Timer introTimer;
         Music titleMusic;
         Sound clickSound;
 
