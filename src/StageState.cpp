@@ -238,7 +238,7 @@ void StageState::SetupUI(){
     towerBtn1GO->AddComponent(&towerBtn1);
     AddObject(towerBtn1GO);
 
-    towerBtn1.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
+    towerBtn1.SetCallback(Button::State::PRESSED,{ [] (void* ptr) {
                                                                     btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
                                                                     stct->ST->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
                                                                     stct->GO->RemoveComponent(ComponentType::SPRITE);

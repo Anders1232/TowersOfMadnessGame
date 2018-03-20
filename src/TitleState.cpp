@@ -53,129 +53,206 @@ TitleState::TitleState()
 
 void TitleState::SetupUI(void) {
 
-    Rect winSize = Game::GetInstance().GetWindowDimensions();
+	Rect winSize = Game::GetInstance().GetWindowDimensions();
 
-    RectTransform* canvasRect = new RectTransform(*canvasGO,nullptr);
-    canvasGO->AddComponent(canvasRect);
-    canvasRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
-    canvasRect->SetKernelSize(Vec2(1024,600));
-    AddObject(canvasGO);
+	GameObject* go;
+	RectTransform* rt;
+	Sprite* sp;
+	Text* txt;
+	Grouper* gp;
+	Button* btn;
 
-    RectTransform* bgRect = new RectTransform(*bgGO,canvasGO);
-    bgRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+	GameObject* canvasGO;
+	GameObject* grouperGO;
 
-    Sprite* bgSP = new Sprite("img/UI/main-menu/bg.png",*bgGO);
-    bgGO->AddComponent(bgRect);
-    bgGO->AddComponent(bgSP);
-    AddObject(bgGO);
+	// Canvas
+	go = new GameObject();
+	rt = new RectTransform(*go, nullptr);
+	rt->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+	rt->SetAnchors({0.0, 0.0}, {1.0, 1.0});
+	rt->SetKernelSize(Vec2(1024,600));
+	go->AddComponent(rt);
+	AddObject(go);
+	canvasGO = go;
 
-    RectTransform* luaRect = new RectTransform(*luaGO,canvasGO);
-    luaRect->SetBehaviorType(RectTransform::FIT);
-    Sprite* luaSP = new Sprite("img/UI/main-menu/spritesheetlua.png",*luaGO,false, ECLIPSE_DURATION/8., 8);
-    luaSP->SetScale(0.75);
-    luaRect->SetAnchors(Vec2((float)(0.5 - (luaSP->GetWidth()/2.+30.)/winSize.x),(float)(60./winSize.y)),
-                       Vec2((float)(0.5 + (luaSP->GetWidth()/2.-30.)/winSize.x), (float)(60. + luaSP->GetHeight())/winSize.y ));
-    luaGO->AddComponent(luaRect);
-    luaGO->AddComponent(luaSP);
-    AddObject(luaGO);
+	// BG
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/bg.png", *go);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+	rt->SetAnchors({0.0, 0.0}, {1.0, 1.0});
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
 
-    RectTransform* nuvemARect = new RectTransform(*nuvemAGO,canvasGO);
-    nuvemARect->SetBehaviorType(RectTransform::BehaviorType::FILL);
-    Sprite* nuvemASP = new Sprite("img/UI/main-menu/nuvemA.png",*nuvemAGO);
-    nuvemARect->SetCenterPin(Vec2(0.5, 0.1));
-    nuvemASP->SetScale(0.6);
-    nuvemARect->SetAnchors( Vec2(0., (float)20./winSize.y),
-                       Vec2((float)nuvemASP->GetWidth()/winSize.x, (float)(20.+nuvemASP->GetHeight())/winSize.y ) );
-    nuvemAGO->AddComponent(nuvemARect);
-    nuvemAGO->AddComponent(nuvemASP);
-    AddObject(nuvemAGO);
+	// Lua
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/spritesheetlua.png", *go, false, ECLIPSE_DURATION/8., 8);
+	sp->SetScale(0.75);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::FIT);
+	rt->SetAnchors(Vec2((float)(0.5 - (sp->GetWidth()/2.+30.)/winSize.x),(float)(60./winSize.y)),
+					   Vec2((float)(0.5 + (sp->GetWidth()/2.-30.)/winSize.x), (float)(60. + sp->GetHeight())/winSize.y ));
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
+	luaGO = go;
 
-    RectTransform* nuvemBRect = new RectTransform(*nuvemBGO,canvasGO);
-    nuvemBRect->SetBehaviorType(RectTransform::BehaviorType::FILL);
-    Sprite* nuvemBSP = new Sprite("img/UI/main-menu/nuvemB.png",*nuvemBGO);
-    nuvemBSP->SetScale(0.75);
-    nuvemBRect->SetAnchors(Vec2((float)(1. - (nuvemBSP->GetWidth()+110.)/winSize.x), (float)(70./winSize.y)),
-                      Vec2((float)(1. - 110./winSize.x), (float)(70.+nuvemBSP->GetHeight())/winSize.y));
-    nuvemBGO->AddComponent(nuvemBRect);
-    nuvemBGO->AddComponent(nuvemBSP);
-    AddObject(nuvemBGO);
+	// Nuvem A
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/nuvemA.png", *go);
+	sp->SetScale(0.6);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::BehaviorType::FILL);
+	rt->SetCenterPin(Vec2(0.5, 0.1));
+	rt->SetAnchors( Vec2(0., (float)20./winSize.y),
+					   Vec2((float)sp->GetWidth()/winSize.x, (float)(20.+sp->GetHeight())/winSize.y ) );
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
+	nuvemAGO = go;
 
-    RectTransform* iccRect = new RectTransform(*iccGO,canvasGO);
-    iccRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
-    iccRect->SetAnchors(Vec2(0., (float)(80./winSize.y)),Vec2(1., 1.));
-    Sprite* iccSP = new Sprite("img/UI/main-menu/icc.png",*iccGO);
-    iccGO->AddComponent(iccRect);
-    iccGO->AddComponent(iccSP);
-    AddObject(iccGO);
+	// Nuvem B
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/nuvemB.png", *go);
+	sp->SetScale(0.75);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::BehaviorType::FILL);
+	rt->SetAnchors(Vec2((float)(1. - (sp->GetWidth()+110.)/winSize.x), (float)(70./winSize.y)),
+					  Vec2((float)(1. - 110./winSize.x), (float)(70.+sp->GetHeight())/winSize.y));
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
+	nuvemBGO = go;
 
-    RectTransform* overlayRect = new RectTransform(*overlayGO,canvasGO);
-    overlayRect->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
-    Sprite* overlaySP = new Sprite("img/UI/main-menu/overlay.png",*overlayGO);
-    overlaySP->colorMultiplier = {255,255,255,0};
-    overlayGO->AddComponent(overlayRect);
-    overlayGO->AddComponent(overlaySP);
-    AddObject(overlayGO);
+	// ICC
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/icc.png", *go);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+	rt->SetAnchors(Vec2(0., (float)(80./winSize.y)),Vec2(1., 1.));
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
 
+	// Overlay
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/overlay.png", *go);
+	sp->colorMultiplier = {255,255,255,0};
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
+	overlayGO = go;
 
-    RectTransform* titleRect = new RectTransform(*titleGO,canvasGO);
-    titleRect->SetBehaviorType(RectTransform::BehaviorType::FIT);
-    Sprite* titleSP = new Sprite("img/UI/main-menu/spritesheettitle.png",*titleGO,false,1./5., 5);
-    titleSP->SetScale(0.7);
-    titleRect->SetAnchors(Vec2((float)(0.5 - (titleSP->GetWidth()/2.)/winSize.x), (float)(60./winSize.y)),
-                     Vec2((float)(0.5 + (titleSP->GetWidth()/2.)/winSize.x), (float)(60. + titleSP->GetHeight())/winSize.y ) );
-    titleGO->AddComponent(titleRect);
-    titleGO->AddComponent(titleSP);
-    AddObject(titleGO);
+	// Title
+	go = new GameObject();
+	sp = new Sprite("img/UI/main-menu/spritesheettitle.png", *go, false, 1./5., 5);
+	sp->SetScale(0.7);
+	go->AddComponent(sp);
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetAnchors(Vec2((float)(0.5 - (sp->GetWidth()/2.)/winSize.x), (float)(60./winSize.y)),
+					 Vec2((float)(0.5 + (sp->GetWidth()/2.)/winSize.x), (float)(60. + sp->GetHeight())/winSize.y ) );
+	rt->SetBehaviorType(RectTransform::BehaviorType::FIT);
+	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+	go->AddComponent(rt);
+	AddObject(go);
+	titleGO = go;
 
-    RectTransform* playBtnRect = new RectTransform(*playBtnGO,canvasGO);
-    playBtnGO->AddComponent(playBtnRect);
-    Text* playBtnText = new Text(*playBtnGO);
-    playBtnGO->AddComponent(playBtnText);
-    playBtnText->SetText("Jogar");
-    playBtnText->SetColor({255,255,255,255});
-    playBtnText->SetFont("font/SHPinscher-Regular.otf");
-    playBtnText->SetFontSize(95);
-    AddObject(playBtnGO);
-
-    RectTransform* exitBtnRect = new RectTransform(*exitBtnGO,canvasGO);
-    exitBtnGO->AddComponent(exitBtnRect);
-    Text* exitBtnText = new Text(*exitBtnGO);
-    exitBtnText->SetText("Sair");
-    exitBtnText->SetColor({255,255,255,255});
-    exitBtnText->SetFont("font/SHPinscher-Regular.otf");
-    exitBtnText->SetFontSize(95);
-    exitBtnGO->AddComponent(exitBtnText);
-    AddObject(exitBtnGO);
-
-
-    optionsGroupGO->AddComponent(&optionsGroup);
-    RectTransform* optionsGroupRect = new RectTransform(*optionsGroupGO,canvasGO);
-    optionsGroupRect->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
-
-    //playBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-    playBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
-                                                      TitleState* titleState = static_cast<TitleState*>(caller);
-                                                      titleState->Play();
-                                                                    }, this } );
-
-    //editorBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-
-    //configBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-
-    //exitBtn.ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);//O que fazer aqui?
-    exitBtn.SetCallback(Button::State::ENABLED, { [] (void* caller) {
-                                                       TitleState* titleState = static_cast<TitleState*>(caller);
-                                                       titleState->Exit();
-                                                                     }, this } );
-
-    optionsGroup.groupedElements.push_back(playBtnGO);
-    optionsGroup.groupedElements.push_back(editorBtnGO);
-    optionsGroup.groupedElements.push_back(configBtnGO);
-    optionsGroup.groupedElements.push_back(exitBtnGO);
+	// OptionsGroup
+	go = new GameObject();
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
+	go->AddComponent(rt);
+	gp = new Grouper(*go);
+	go->AddComponent(gp);
+	AddObject(go);
+	grouperGO = go;
 	
-	AddObject(editorBtnGO);
-	AddObject(configBtnGO);
-	AddObject(optionsGroupGO);
+	// PlayBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Jogar");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
+    btn->SetCallback(Button::State::PRESSED, { [] (void* caller) {
+													TitleState* titleState = static_cast<TitleState*>(caller);
+													titleState->Play();
+												}, this
+											} );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+	
+	// EditorBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Editor de Fases");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+	
+	// ConfigBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Configuracoes");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+
+	// ExitBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Sair");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
+    btn->SetCallback(Button::State::PRESSED, { [] (void* caller) {
+													TitleState* titleState = static_cast<TitleState*>(caller);
+													titleState->Exit();
+												}, this
+											} );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
 
 	titleMusic.Play(0);
 }
