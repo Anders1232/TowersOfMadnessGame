@@ -52,6 +52,7 @@ TitleState::TitleState()
 }
 
 void TitleState::SetupUI(void) {
+
     Rect winSize = Game::GetInstance().GetWindowDimensions();
 
     RectTransform* canvasRect = new RectTransform(*canvasGO,nullptr);
@@ -171,8 +172,12 @@ void TitleState::SetupUI(void) {
     optionsGroup.groupedElements.push_back(editorBtnGO);
     optionsGroup.groupedElements.push_back(configBtnGO);
     optionsGroup.groupedElements.push_back(exitBtnGO);
+	
+	AddObject(editorBtnGO);
+	AddObject(configBtnGO);
+	AddObject(optionsGroupGO);
 
-    titleMusic.Play(0);
+	titleMusic.Play(0);
 }
 
 void TitleState::Update(float dt) {
