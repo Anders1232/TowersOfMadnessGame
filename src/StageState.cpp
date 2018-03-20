@@ -150,24 +150,24 @@ void StageState::SetupUI(){
     openMenuBtnRect->SetAnchors(Vec2(0., 0.),Vec2(0., 0.));
     //rect->SetOffsets((float)-(openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetWidth()), (float)10.,0., openMenuBtn.GetStateSprite(UIbutton::State::ENABLED).GetHeight()+(float)10. );
     openMenuBtn.SetReleaseCallback({ [] (void* ptr) {
-                                                btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
-                                                stct->GO->RemoveComponent(ComponentType::SPRITE);
-                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",*stct->GO);
-                                                stct->GO->AddComponent(sp);
-                                                stct->ST->ToggleMenu();
-                                            },this} );
+                                                GameObject* go = static_cast<GameObject*>(ptr);
+                                                go->RemoveComponent(ComponentType::SPRITE);
+                                                Sprite* sp = new Sprite("img/UI/HUD/openmenu-clicked.png",*go);
+                                                go->AddComponent(sp);
+                                                ((StageState&)Game::GetInstance().GetCurrentState()).ToggleMenu();
+                                            },openMenuBtnGO} );
     openMenuBtn.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
                                                                     GameObject* it = static_cast<GameObject*>(ptr);
                                                                     it->RemoveComponent(ComponentType::SPRITE);
                                                                     Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",*it);
                                                                     it->AddComponent(sp);
-                                                                },this} );
+                                                                },openMenuBtnGO} );
     openMenuBtn.SetCallback(Button::State::ENABLED, { [] (void* ptr) {
                                                                         GameObject* it = static_cast<GameObject*>(ptr);
                                                                         it->RemoveComponent(ComponentType::SPRITE);
                                                                         Sprite* sp = new Sprite("img/UI/HUD/openmenu.png",*it);
                                                                         it->AddComponent(sp);
-                                                                    }, this } );
+                                                                    },openMenuBtnGO } );
     AddObject(openMenuBtnGO);
     //towerInfoGroup
     //Faltamdo algo aqui?
@@ -238,13 +238,13 @@ void StageState::SetupUI(){
     towerBtn1GO->AddComponent(&towerBtn1);
     AddObject(towerBtn1GO);
 
-    towerBtn1.SetCallback(Button::State::PRESSED,{ [] (void* ptr) {
-                                                                    btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
-                                                                    stct->ST->SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
-                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",*stct->GO);
-                                                                    stct->GO->AddComponent(sp);
-                                                                },this} );
+    towerBtn1.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
+                                                                    GameObject* go = static_cast<GameObject*>(ptr);
+                                                                    ((StageState&)Game::GetInstance().GetCurrentState()).SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
+                                                                    go->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",*go);
+                                                                    go->AddComponent(sp);
+                                                                },towerBtn1GO} );
     towerBtn1.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();
@@ -262,12 +262,12 @@ void StageState::SetupUI(){
     AddObject(towerBtn2GO);
 
     towerBtn2.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
-                                                                    btnCallbackArgAux* stct = static_cast<btnCallbackArgAux*>(ptr);
-                                                                    stct->ST->SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
-                                                                    stct->GO->RemoveComponent(ComponentType::SPRITE);
-                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",*stct->GO);
-                                                                    stct->GO->AddComponent(sp);
-                                                                },this} );
+                                                                    GameObject* go = static_cast<GameObject*>(ptr);
+                                                                    ((StageState&)Game::GetInstance().GetCurrentState()).SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
+                                                                    go->RemoveComponent(ComponentType::SPRITE);
+                                                                    Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",*go);
+                                                                    go->AddComponent(sp);
+                                                                },towerBtn2GO} );
     towerBtn2.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
 																	StageState* it = static_cast<StageState*>(ptr);
 																	it->SetTowerInfoData();

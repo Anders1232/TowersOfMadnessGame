@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 
+#include "Game.h"
 #include "ActionManager.h"
 #include "DragAndDrop.h"
 #include "GameObject.h"
@@ -137,11 +138,6 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 
 
 
-};
-
-struct btnCallbackArgAux{
-    StageState* ST;
-    GameObject* GO;
 };
 
 #include "EndState.h"
