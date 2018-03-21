@@ -194,175 +194,195 @@ void StageState::SetupUI(){
 	AddObject( go );
 
 	// TowerInfo
-	// - Group
-	go = new GameObject();
-	gp = new Grouper( *go );
-	gp->MakeVerticalGroup();
-	go->AddComponent( gp );
-	rt = new RectTransform( *go, menuBGGO );
-	rt->debugRender = true;
-	rt->SetAnchors( Vec2(0.165, 0.05), Vec2(0.86, 0.425) );
-	go->AddComponent( rt );
-	AddObject( go );
+		// - Grouper
+		go = new GameObject();
+		gp = new Grouper( *go );
+		gp->MakeVerticalGroup();
+		go->AddComponent( gp );
+		rt = new RectTransform( *go, menuBGGO );
+		rt->SetAnchors( Vec2(0.165, 0.05), Vec2(0.86, 0.425) );
+		rt->SetOffsets( 5.0, -5.0, -5.0, 5.0 );
+		go->AddComponent( rt );
+		AddObject( go );
+		grouperGO = go;
 
+		// - TowerName
+		go = new GameObject();
+		txt = new Text( *go );
+		txt->SetFont( "font/SHPinscher-Regular.otf" );
+		txt->SetText( "Test" );
+		txt->SetColor( TOWER_INFO_TXT_COLOR );
+		txt->SetFontSize( 95 );
+		go->AddComponent( txt );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( txt->GetSize() );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
+		
+		// - TowerCost
+		go = new GameObject();
+		txt = new Text( *go );
+		txt->SetFont( "font/SHPinscher-Regular.otf" );
+		txt->SetText( "$100" );
+		txt->SetColor( TOWER_INFO_TXT_COLOR );
+		txt->SetFontSize( 95 );
+		go->AddComponent( txt );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( txt->GetSize() );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
-	// - TowerName
-	// go = new GameObject();
-	// txt = new Text( *go );
-	// txt->SetFont( "font/SHPinscher-Regular.otf" );
+		// - TowerDamage
+		go = new GameObject();
+		txt = new Text( *go );
+		txt->SetFont( "font/SHPinscher-Regular.otf" );
+		txt->SetText( "50" );
+		txt->SetColor( TOWER_INFO_TXT_COLOR );
+		txt->SetFontSize( 95 );
+		go->AddComponent( txt );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( txt->GetSize() );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
+		// - TowerDamageType
+		go = new GameObject();
+		txt = new Text( *go );
+		txt->SetFont( "font/SHPinscher-Regular.otf" );
+		txt->SetText( "Stun" );
+		txt->SetColor( TOWER_INFO_TXT_COLOR );
+		txt->SetFontSize( 95 );
+		go->AddComponent( txt );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( txt->GetSize() );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
-	//towerInfoGroup
-	//Faltamdo algo aqui?
-	RectTransform* towerInfoGroupRect = new RectTransform(*towerInfoGroupGO,menuBgGO);
-	towerInfoGroupRect->SetAnchors( Vec2(0.165, 0.05),Vec2(0.86, 0.425));
-	towerInfoGroupRect->SetOffsets(5., 5.,-5., -5.);
-	towerInfoGroupGO->AddComponent(towerInfoGroupRect);
-	AddObject(towerInfoGroupGO);
-	//towerName
-	RectTransform* towerNameRect = new RectTransform(*towerNameGO,towerInfoGroupGO);
-	Text* towerNameText = new Text(*towerNameGO);
-	towerNameText->SetText(TOWERNAME_DEFAULT_TEXT);
-	towerNameText->SetColor(TOWER_INFO_TXT_COLOR);
-	towerNameText->SetFont("font/SHPinscher-Regular.otf");
-	towerNameText->SetFontSize(95);
-	towerNameGO->AddComponent(towerNameRect);
-	towerNameGO->AddComponent(towerNameText);
-	AddObject(towerNameGO);
-	//towerCost
-	RectTransform* TowerCostRect = new RectTransform(*towerCostGO,towerInfoGroupGO);
-	Text* towerCostText = new Text(*towerCostGO);
-	towerCostText->SetText(TOWERCOST_DEFAULT_TEXT);
-	towerCostText->SetColor(TOWER_INFO_TXT_COLOR);
-	towerCostText->SetFont("font/SHPinscher-Regular.otf");
-	towerCostText->SetFontSize(95);
-	towerCostGO->AddComponent(TowerCostRect);
-	towerCostGO->AddComponent(towerCostText);
-	AddObject(towerCostGO);
-	//towerDamage
-	RectTransform* towerDamageRect = new RectTransform(*towerDamageGO,towerInfoGroupGO);
-	Text* towerDamageText = new Text(*towerDamageGO);
-	towerDamageText->SetText(TOWERDAMAGE_DEFAULT_TEXT);
-	towerDamageText->SetColor(TOWER_INFO_TXT_COLOR);
-	towerDamageText->SetFont("font/SHPinscher-Regular.otf");
-	towerDamageText->SetFontSize(95);
-	towerDamageGO->AddComponent(towerDamageRect);
-	towerDamageGO->AddComponent(towerDamageText);
-	AddObject(towerDamageGO);
-	//towerDamageType
-	RectTransform* towerDamageTypeRect = new RectTransform(*towerDamageTypeGO,towerInfoGroupGO);
-	Text* towerDamageTypeText = new Text(*towerDamageTypeGO);
-	towerDamageTypeText->SetText(TOWERDAMGETYPE_DEFAULT_TEXT);
-	towerDamageTypeText->SetColor(TOWER_INFO_TXT_COLOR);
-	towerDamageTypeText->SetFont("font/SHPinscher-Regular.otf");
-	towerDamageTypeText->SetFontSize(95);
-	towerDamageTypeGO->AddComponent(towerDamageTypeRect);
-	towerDamageTypeGO->AddComponent(towerDamageTypeText);
-	AddObject(towerDamageTypeGO);
+	// TowerButtons
+		// - Grouper
+		go = new GameObject();
+		gp = new Grouper( *go );
+		gp->MakeGridGroup( Grouper::ConstraintType::FIXED_N_COLS, 2, Grouper::BehaviorOnLess::CENTER );
+		gp->padding = Vec2( 10.0, 10.0 );
+		go->AddComponent( gp );
+		rt = new RectTransform( *go, menuBGGO );
+		rt->SetAnchors( Vec2(0., 0.485), Vec2(1., 1.) );
+		rt->SetOffsets( 0., -27.0, -30.0, 32.0 );
+		go->AddComponent( rt );
+		AddObject( go );
+		grouperGO = go;
 
-	towersInfoGroup.groupedElements.push_back(towerNameGO);
-	towersInfoGroup.groupedElements.push_back(towerCostGO);
-	towersInfoGroup.groupedElements.push_back(towerDamageGO);
-	towersInfoGroup.groupedElements.push_back(towerDamageTypeGO);
+		// - SmokeTower
+		go = new GameObject();
+		sp = new Sprite( "img/UI/HUD/botaotorre.png", *go );
+		go->AddComponent( sp );
+		btn = new Button( *go );
+		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Fumaca", "$30", "Slow", "Area" );
+														sp->SetImage( "img/UI/HUD/botaotorre-clicked.png" );
+													}, sp } );
+		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData();
+														sp->SetImage( "img/UI/HUD/botaotorre.png" );
+													}, sp } );
+		btn->SetReleaseCallback( { [] (void* ptr) {
+			( (StageState&)Game::GetInstance().GetCurrentState() ).CreateTower( Tower::TowerType::SMOKE );
+		}, nullptr } );
+		go->AddComponent( btn );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
-	RectTransform* towersBtnGroupRect = new RectTransform(*towersBtnGroupGO,nullptr);
-	towersBtnGroupRect->SetAnchors(Vec2(0., 0.485),Vec2(1., 1.));
-	towersBtnGroupRect->SetOffsets(32., 0.,-27., -30.);
-	//towersBtnGroup.padding = Vec2(10., 10.);
-	towersBtnGroupGO->AddComponent(towersBtnGroupRect);
-	towersBtnGroupGO->AddComponent(&towersBtnGroup);
-	towersBtnGroup.MakeGridGroup(Grouper::ConstraintType::FIXED_N_COLS, 2, Grouper::BehaviorOnLess::CENTER);
-	AddObject(towersBtnGroupGO);
+		// - TentaclesTower
+		go = new GameObject();
+		sp = new Sprite( "img/UI/HUD/botaoantibomba.png", *go );
+		go->AddComponent( sp );
+		btn = new Button( *go );
+		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba" );
+														sp->SetImage( "img/UI/HUD/botaoantibomba-clicked.png" );
+													}, sp } );
+		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData();
+														sp->SetImage( "img/UI/HUD/botaoantibomba.png" );
+													}, sp } );
+		btn->SetReleaseCallback( { [] (void* ptr) {
+			( (StageState&)Game::GetInstance().GetCurrentState() ).CreateTower( Tower::TowerType::ANTIBOMB );
+		}, nullptr } );
+		go->AddComponent( btn );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
-	//towerBtn1
-	RectTransform* towerBtn1Rect = new RectTransform(*towerBtn1GO,towersBtnGroupGO);
-	towerBtn1Rect->SetCenterPin(Vec2(0.5, 0.));
-	towerBtn1GO->AddComponent(towerBtn1Rect);
-	towerBtn1GO->AddComponent(&towerBtn1);
-	AddObject(towerBtn1GO);
+		// - CoilTower
+		go = new GameObject();
+		sp = new Sprite( "img/UI/HUD/botaochoque.png", *go );
+		go->AddComponent( sp );
+		btn = new Button( *go );
+		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Bobina", "$30", "1 tiro/2s", "Dano" );
+														sp->SetImage( "img/UI/HUD/botaochoque-clicked.png" );
+													}, sp } );
+		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData();
+														sp->SetImage( "img/UI/HUD/botaochoque.png" );
+													}, sp } );
+		btn->SetReleaseCallback( { [] (void* ptr) {
+			( (StageState&)Game::GetInstance().GetCurrentState() ).CreateTower( Tower::TowerType::SMOKE );
+		}, nullptr } );
+		go->AddComponent( btn );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
-	towerBtn1.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
-																	GameObject* go = static_cast<GameObject*>(ptr);
-																	((StageState&)Game::GetInstance().GetCurrentState()).SetTowerInfoData("Fumaca", "$30", "Slow", "Area");
-																	go->RemoveComponent(ComponentType::SPRITE);
-																	Sprite* sp = new Sprite("img/UI/HUD/botaotorre.png",*go);
-																	go->AddComponent(sp);
-																},towerBtn1GO} );
-	towerBtn1.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																},this} );
-	towerBtn1.SetReleaseCallback( { [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::SMOKE);
-										},this} );
-
-	//towerBtn2
-	RectTransform* towerBtn2Rect = new RectTransform(*towerBtn2GO,towersBtnGroupGO);
-	towerBtn2Rect->SetCenterPin(Vec2(0.5, 0.));
-	towerBtn2GO->AddComponent(towerBtn2Rect);
-	towerBtn2GO->AddComponent(&towerBtn2);
-	AddObject(towerBtn2GO);
-
-	towerBtn2.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
-																	GameObject* go = static_cast<GameObject*>(ptr);
-																	((StageState&)Game::GetInstance().GetCurrentState()).SetTowerInfoData("Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba");
-																	go->RemoveComponent(ComponentType::SPRITE);
-																	Sprite* sp = new Sprite("img/UI/HUD/botaoantibomba.png",*go);
-																	go->AddComponent(sp);
-																},towerBtn2GO} );
-	towerBtn2.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																},this} );
-	towerBtn2.SetReleaseCallback({ [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::ANTIBOMB);
-										},this} );
-	//towerBtn3
-	RectTransform* towerBtn3Rect = new RectTransform(*towerBtn3GO,towersBtnGroupGO);
-	towerBtn3Rect->SetCenterPin(Vec2(0.5, 0.));
-	towerBtn3GO->AddComponent(towerBtn3Rect);
-	towerBtn3GO->AddComponent(&towerBtn3);
-	AddObject(towerBtn3GO);
-
-	towerBtn3.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Bobina", "$30", "1 tiro/2s", "Dano");
-																},this} );
-	towerBtn3.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																},this} );
-	towerBtn3.SetReleaseCallback({ [] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::SHOCK);
-										},this} );
-	//towerBtn4
-	RectTransform* towerBtn4Rect = new RectTransform(*towerBtn4GO,nullptr);
-	towerBtn4GO->AddComponent(towerBtn4Rect);
-	towerBtn4Rect->SetCenterPin(Vec2(0.5, 0.));
-	towerBtn4GO->AddComponent(towerBtn4Rect);
-	towerBtn4GO->AddComponent(&towerBtn4);
-	AddObject(towerBtn4GO);
-	
-	towerBtn4.SetCallback(Button::State::HIGHLIGHTED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData("Monolito", "$30", "Stun", "Area");
-																},this} );
-	towerBtn4.SetCallback(Button::State::ENABLED,{ [] (void* ptr) {
-																	StageState* it = static_cast<StageState*>(ptr);
-																	it->SetTowerInfoData();
-																},this} );
-	towerBtn4.SetReleaseCallback({[] (void* ptr) {
-											StageState* it = static_cast<StageState*>(ptr);
-											it->CreateTower(Tower::TowerType::STUN);
-										},this} );
-
-	towersBtnGroup.groupedElements.push_back(towerBtn1GO);
-	towersBtnGroup.groupedElements.push_back(towerBtn2GO);
-	towersBtnGroup.groupedElements.push_back(towerBtn3GO);
-	towersBtnGroup.groupedElements.push_back(towerBtn4GO);
+		// - MonolithTower
+		go = new GameObject();
+		sp = new Sprite( "img/UI/HUD/botaostun.png", *go );
+		go->AddComponent( sp );
+		btn = new Button( *go );
+		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Monolito", "$30", "Stun", "Area" );
+														sp->SetImage( "img/UI/HUD/botaostun-clicked.png" );
+													}, sp } );
+		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
+														// ( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData();
+														sp->SetImage( "img/UI/HUD/botaostun.png" );
+													}, sp } );
+		btn->SetReleaseCallback( { [] (void* ptr) {
+			( (StageState&)Game::GetInstance().GetCurrentState() ).CreateTower( Tower::TowerType::ANTIBOMB );
+		}, nullptr } );
+		go->AddComponent( btn );
+		rt = new RectTransform( *go, grouperGO );
+		rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
+		rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+		go->AddComponent( rt );
+		AddObject( go );
+		gp->groupedElements.push_back( go );
 
 	//health
 	RectTransform* healthRect = new RectTransform(*healthGO,canvasGO);
