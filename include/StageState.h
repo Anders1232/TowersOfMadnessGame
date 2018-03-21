@@ -49,10 +49,10 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 		void SetUIWaveProgress(float waveProgressPercent);
 		void SetUIMoney(int coins);
 		void NotifyTileMapChanged(int tilePosition);
-        GameObject* FindNearest(Vec2 origin, Finder<GameObject> &finder, float range = std::numeric_limits<float>::max()) const;
-        std::vector<GameObject*>* FindNearests(Vec2 origin,Finder<GameObject> &finder,float range) const;
-        void AddCollider(Component& collider,GameObject& associated);
-        void RemoveCollider(Component& collider);
+		GameObject* FindNearest(Vec2 origin, Finder<GameObject> &finder, float range = std::numeric_limits<float>::max()) const;
+		std::vector<GameObject*>* FindNearests(Vec2 origin,Finder<GameObject> &finder,float range) const;
+		void AddCollider(Component& collider,GameObject& associated);
+		void RemoveCollider(Component& collider);
 	private:
 		void SetupUI(void);
 		void UpdateUI(float dt);
@@ -64,22 +64,22 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 							  string damageType = TOWERDAMGETYPE_DEFAULT_TEXT
 		);
 		void CreateTower(Tower::TowerType towerType);
-        InputManager &inputManager;
-        Music music;
-        bool isLightning;
-        bool isThundering;
-        Timer lightningTimer;
-        Color lightningColor;
-        Sound nightSound;
-        Sound thunderSound;
-        Sound towerMenuSounds; /**< Som referente a compra, venda e construçao de torre. */
-        Sound menuMove;
-        GameObject *waveManagerGO;
-        TileSet tileSet;
-        TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
-        WaveManager *waveManager;/**< Referencia para a WaveManager, gerenciador de waves. Essa Referência existe aqui por motivos de perfornance, para não ter que procurá-lo todo Update.*/
-        int frameRateCounter;
-        std::map<Component*,GameObject*> collisionMap;
+		InputManager &inputManager;
+		Music music;
+		bool isLightning;
+		bool isThundering;
+		Timer lightningTimer;
+		Color lightningColor;
+		Sound nightSound;
+		Sound thunderSound;
+		Sound towerMenuSounds; /**< Som referente a compra, venda e construçao de torre. */
+		Sound menuMove;
+		GameObject *waveManagerGO;
+		TileSet tileSet;
+		TileMap<Tile> tileMap;/**< Mapa de tiles do jogo. */
+		WaveManager *waveManager;/**< Referencia para a WaveManager, gerenciador de waves. Essa Referência existe aqui por motivos de perfornance, para não ter que procurá-lo todo Update.*/
+		int frameRateCounter;
+		std::map<Component*,GameObject*> collisionMap;
 		
 		float lightningInterval;
 
@@ -92,48 +92,48 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 
 		bool menuIsShowing;
 
-        GameObject* healthGO;
-        GameObject* healthIconGO;
-        GameObject* healthbarBgGO;
-        GameObject* healthbarBarGO;
+		GameObject* healthGO;
+		GameObject* healthIconGO;
+		GameObject* healthbarBgGO;
+		GameObject* healthbarBarGO;
 
-        GameObject* waveGO;
-        GameObject* waveIconGO;
-        GameObject* wavebarBgGO;
-        GameObject* wavebarBarGO;
+		GameObject* waveGO;
+		GameObject* waveIconGO;
+		GameObject* wavebarBgGO;
+		GameObject* wavebarBarGO;
 
-        GameObject* moneyGO;
-        GameObject* moneyIconGO;
-        GameObject* moneyTextGO;
+		GameObject* moneyGO;
+		GameObject* moneyIconGO;
+		GameObject* moneyTextGO;
 
-        GameObject* menuBgGO;
+		GameObject* menuBgGO;
 
-        GameObject* openMenuBtnGO;
+		GameObject* openMenuBtnGO;
 
-        GameObject* HUDcanvasGO;
+		GameObject* HUDcanvasGO;
 
-        GameObject* towerBtn1GO;
-        GameObject* towerBtn2GO;
-        GameObject* towerBtn3GO;
-        GameObject* towerBtn4GO;
+		GameObject* towerBtn1GO;
+		GameObject* towerBtn2GO;
+		GameObject* towerBtn3GO;
+		GameObject* towerBtn4GO;
 
-        Button towerBtn1;
-        Button towerBtn2;
-        Button towerBtn3;
-        Button towerBtn4;
+		Button towerBtn1;
+		Button towerBtn2;
+		Button towerBtn3;
+		Button towerBtn4;
 
-        Button openMenuBtn;
+		Button openMenuBtn;
 
-        GameObject* towerNameGO;
-        GameObject* towerCostGO;
-        GameObject* towerDamageGO;
-        GameObject* towerDamageTypeGO;
+		GameObject* towerNameGO;
+		GameObject* towerCostGO;
+		GameObject* towerDamageGO;
+		GameObject* towerDamageTypeGO;
 
-        GameObject* towerInfoGroupGO;
-        GameObject* towersBtnGroupGO;
+		GameObject* towerInfoGroupGO;
+		GameObject* towersBtnGroupGO;
 
-        Grouper towersInfoGroup;
-        Grouper towersBtnGroup;
+		Grouper towersInfoGroup;
+		Grouper towersBtnGroup;
 
 
 
