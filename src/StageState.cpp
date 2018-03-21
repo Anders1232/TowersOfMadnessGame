@@ -93,13 +93,12 @@ StageState::StageState(void)
 	}
 	SetUIMoney(PLAYER_DATA_INSTANCE.GetGold());
 
+	ToggleMenu();
 }
 
 void StageState::SetupUI(){
 	// Side Menu
 	menuIsShowing = true;
-
-	Rect windowBox = Game::GetInstance().GetWindowDimensions();
 
 	GameObject* go;
 	RectTransform* rt;
@@ -161,9 +160,10 @@ void StageState::SetupUI(){
 	rt->SetAnchors( {0.0, 0.0}, {0.0, 0.0} );
 	rt->SetCenterPin( Vec2(1.0, 0.0) );
 	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
-	rt->SetOffsets( +10, 0.0, sp->GetHeight()+10, 0.0 );
+	rt->SetOffsets( +10, -10.0, sp->GetHeight()+10, -10.0 );
 	rt->SetBehaviorType( RectTransform::BehaviorType::FILL );
 	go->AddComponent( rt );
+	// go->rotation = 180;
 	AddObject( go );
 
 	// TowerInfo
@@ -183,7 +183,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "Test" );
+		txt->SetText( TOWERNAME_DEFAULT_TEXT );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -199,7 +199,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "$999+" );
+		txt->SetText( TOWERCOST_DEFAULT_TEXT );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -215,7 +215,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "1/0" );
+		txt->SetText( TOWERDAMAGE_DEFAULT_TEXT );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -231,7 +231,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "Desintegrator" );
+		txt->SetText( TOWERDAMGETYPE_DEFAULT_TEXT );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -387,11 +387,10 @@ void StageState::SetupUI(){
 			// -- HealthBarBG
 			go = new GameObject();
 			sp = new Sprite( "img/UI/HUD/hudvida.png", *go );
-			// sp->colorMultiplier = {0, 0, 0, 255};
+			sp->colorMultiplier = {0, 0, 0, 255};
 			go->AddComponent( sp );
 			rt = new RectTransform( *go, statGroupGO );
 			rt->SetAnchors( Vec2(0.0, 0.15), Vec2(1.0, 0.85) );
-			rt->SetOffsets( 5., -5., -5., 5.);
 			go->AddComponent( rt );
 			AddObject( go );
 
@@ -429,11 +428,10 @@ void StageState::SetupUI(){
 			// -- WaveBarBG
 			go = new GameObject();
 			sp = new Sprite( "img/UI/HUD/hudwave.png", *go );
-			// sp->colorMultiplier = {0, 0, 0, 255};
+			sp->colorMultiplier = {0, 0, 0, 255};
 			go->AddComponent( sp );
 			rt = new RectTransform( *go, statGroupGO );
 			rt->SetAnchors( Vec2(0.0, 0.15), Vec2(0.75, 0.85) );
-			rt->SetOffsets( 5., -5., -5., 5.);
 			go->AddComponent( rt );
 			AddObject( go );
 
@@ -649,43 +647,6 @@ void StageState::Render(void) const {
 	}
 	REPORT_I_WAS_HERE;
 }
-//Comentado para futuro esclaricimento sobre compatibilidade retroativa
-/*void StageState::RenderUI(void) const {
-	// Se tivesse como ser estatico para a funcao mas uma para cada instancia, melhor ainda...
-	// Mas como StageState nao teram instancias multiplas simultaneas, serve...
-	static bool menuIsShowing = this->menuIsShowing;
-
-	if(menuIsShowing) {
-		menuBg.Render();
-		// towerInfoGroup.Render(true);
-		towerName.Render();
-		towerCost.Render();
-		towerDamage.Render();
-		towerDamageType.Render();
-		// towersBtnGroup.Render(true);
-		towerBtn1.Render();
-		towerBtn2.Render();
-		towerBtn3.Render();
-		towerBtn4.Render();
-	}
-	openMenuBtn.Render();
-
-	// health.Render(true);
-	healthbarBg.Render();
-	healthbarBar.Render();
-	healthIcon.Render();
-
-	// wave.Render(true);
-	wavebarBg.Render();
-	wavebarBar.Render();
-	waveIcon.Render();
-
-	// money.Render(true);
-	moneyIcon.Render();
-	moneyText.Render();
-
-	menuIsShowing = this->menuIsShowing;
-}*/
 
 void StageState::Pause(void) {
 	nightSound.Stop();
@@ -728,15 +689,8 @@ void StageState::ToggleMenu(void){
 	menuIsShowing = !menuIsShowing;
 	menuMove.Play(1);
 
-	// RectTransform* rect = (RectTransform*)menuBgGO->GetComponent(ComponentType::RECT_TRANSFORM);
-	// Rect menuBgOffsets = rect->GetOffsets();
-	// Sprite* sp = (Sprite*)menuBgGO->GetComponent(ComponentType::SPRITE);
-	// Vec2 menuBgDim = Vec2((float)sp->GetWidth(), (float)sp->GetHeight());
-	// if(menuIsShowing){
-	// 	rect->SetOffsets(menuBgOffsets.x-menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w-menuBgDim.x, menuBgOffsets.h);
-	// } else {
-	// 	rect->SetOffsets(menuBgOffsets.x+menuBgDim.x, menuBgOffsets.y,menuBgOffsets.w+menuBgDim.x, menuBgOffsets.h);
-	// }
+	Rect offs = menuBGRT->GetOffsets();
+	menuBGRT->SetOffsets( offs.y, -offs.x, offs.h, -offs.w );
 }
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
