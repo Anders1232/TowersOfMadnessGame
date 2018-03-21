@@ -17,38 +17,20 @@
 #define PRESSED_COLOR		{227,196,230,255} // Purple-ish white
 
 TitleState::TitleState()
-        : State()
-        , speedNuvemA(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
-        , speedNuvemB(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
-        , introTimer()
-        , titleMusic("audio/trilha_sonora/main_title_.ogg")
-        , clickSound("audio/Interface/Click1.wav")
-        , canvasGO(new GameObject())
-        , bgGO(new GameObject())
-        , luaGO(new GameObject())
-        , nuvemAGO(new GameObject())
-        , nuvemBGO(new GameObject())
-        , iccGO(new GameObject())
-        , overlayGO(new GameObject())
-        , titleGO(new GameObject())
-        , optionsGroupGO(new GameObject())
-        , playBtnGO(new GameObject())
-        , editorBtnGO(new GameObject())
-        , configBtnGO(new GameObject())
-        , exitBtnGO(new GameObject())
-        , optionsGroup(*optionsGroupGO)
-        , playBtn(*playBtnGO)
-        , editorBtn(*editorBtnGO)
-        , configBtn(*configBtnGO)
-        , exitBtn(*exitBtnGO)
-        , finishedEclipse(false)
-        , finishedFadeIn(false)
-        , forceEnd(false){
+		: State()
+		, speedNuvemA(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
+		, speedNuvemB(std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
+		, introTimer()
+		, titleMusic("audio/trilha_sonora/main_title_.ogg")
+		, clickSound("audio/Interface/Click1.wav")
+		, finishedEclipse(false)
+		, finishedFadeIn(false)
+		, forceEnd(false){
 
-    Resources::ChangeMusicVolume(0);
-    Resources::ChangeSoundVolume(0);
+	Resources::ChangeMusicVolume(0);
+	Resources::ChangeSoundVolume(0);
 
-    SetupUI();
+	SetupUI();
 }
 
 void TitleState::SetupUI(void) {
@@ -143,11 +125,11 @@ void TitleState::SetupUI(void) {
 	// Overlay
 	go = new GameObject();
 	sp = new Sprite("img/UI/main-menu/overlay.png", *go);
-	sp->colorMultiplier = {255,255,255,0};
+	sp->colorMultiplier.a = 0;
 	go->AddComponent(sp);
 	rt = new RectTransform(*go, canvasGO);
+	rt->SetAnchors(Vec2(0., 0.), Vec2(1., 1.));
 	rt->SetBehaviorType(RectTransform::BehaviorType::STRETCH);
-	rt->SetKernelSize( Vec2(sp->GetWidth(), sp->GetHeight()) );
 	go->AddComponent(rt);
 	AddObject(go);
 	overlayGO = go;
@@ -156,6 +138,7 @@ void TitleState::SetupUI(void) {
 	go = new GameObject();
 	sp = new Sprite("img/UI/main-menu/spritesheettitle.png", *go, false, 1./5., 5);
 	sp->SetScale(0.7);
+	sp->colorMultiplier.a = 0;
 	go->AddComponent(sp);
 	rt = new RectTransform(*go, canvasGO);
 	rt->SetAnchors(Vec2((float)(0.5 - (sp->GetWidth()/2.)/winSize.x), (float)(60./winSize.y)),
@@ -172,6 +155,7 @@ void TitleState::SetupUI(void) {
 	rt->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
 	go->AddComponent(rt);
 	gp = new Grouper(*go);
+	gp->MakeVerticalGroup();
 	go->AddComponent(gp);
 	AddObject(go);
 	grouperGO = go;
@@ -186,14 +170,15 @@ void TitleState::SetupUI(void) {
 	go->AddComponent(txt);
 	btn = new Button(*go);
 	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-    btn->SetCallback(Button::State::PRESSED, { [] (void* caller) {
-													TitleState* titleState = static_cast<TitleState*>(caller);
-													titleState->Play();
-												}, this
-											} );
+	btn->SetReleaseCallback( { [] (void* caller) {
+									TitleState* titleState = static_cast<TitleState*>(caller);
+									titleState->Play();
+								}, this
+							} );
 	go->AddComponent(btn);
 	rt = new RectTransform(*go, grouperGO);
 	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
 	go->AddComponent(rt);
 	AddObject(go);
 	gp->groupedElements.push_back(go);
@@ -211,6 +196,7 @@ void TitleState::SetupUI(void) {
 	go->AddComponent(btn);
 	rt = new RectTransform(*go, grouperGO);
 	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
 	go->AddComponent(rt);
 	AddObject(go);
 	gp->groupedElements.push_back(go);
@@ -228,6 +214,7 @@ void TitleState::SetupUI(void) {
 	go->AddComponent(btn);
 	rt = new RectTransform(*go, grouperGO);
 	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
 	go->AddComponent(rt);
 	AddObject(go);
 	gp->groupedElements.push_back(go);
@@ -242,14 +229,15 @@ void TitleState::SetupUI(void) {
 	go->AddComponent(txt);
 	btn = new Button(*go);
 	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-    btn->SetCallback(Button::State::PRESSED, { [] (void* caller) {
-													TitleState* titleState = static_cast<TitleState*>(caller);
-													titleState->Exit();
-												}, this
-											} );
+	btn->SetReleaseCallback( { [] (void* caller) {
+									TitleState* titleState = static_cast<TitleState*>(caller);
+									titleState->Exit();
+								}, this
+							} );
 	go->AddComponent(btn);
 	rt = new RectTransform(*go, grouperGO);
 	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
 	go->AddComponent(rt);
 	AddObject(go);
 	gp->groupedElements.push_back(go);
@@ -258,118 +246,102 @@ void TitleState::SetupUI(void) {
 }
 
 void TitleState::Update(float dt) {
-    if(INPUT_MANAGER.QuitRequested()) {
-        quitRequested = true;
-    }
-    if(INPUT_MANAGER.KeyRelease(ESCAPE_KEY)) {
-        forceEnd = true;
-    }
+	if(INPUT_MANAGER.QuitRequested()) {
+		quitRequested = true;
+	}
+	if(INPUT_MANAGER.KeyRelease(ESCAPE_KEY)) {
+		forceEnd = true;
+	}
 
-    introTimer.Update(dt);
-    if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
-        finishedEclipse = true;
-        ((Sprite*)(luaGO->GetComponent(ComponentType::SPRITE)))->SetFrameTime(FLT_MAX);
-        Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-        c.a = 180;
-        introTimer.Restart();
-    }
-    if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
-        finishedFadeIn = true;
-        Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-        c.a = 255;
-        introTimer.Restart();
-    }
-    forceEnd = false;
+	introTimer.Update(dt);
+	if(forceEnd || (!finishedEclipse && introTimer.Get() >= ECLIPSE_DURATION)) {
+		finishedEclipse = true;
+		((Sprite*)(luaGO->GetComponent(ComponentType::SPRITE)))->SetFrameTime(FLT_MAX);
+		Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
+		c.a = 180;
+		introTimer.Restart();
+	}
+	if(forceEnd || (finishedEclipse && ! finishedFadeIn && introTimer.Get() >= OVERLAY_FADEIN_DURATION)) {
+		finishedFadeIn = true;
+		Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
+		c.a = 255;
+		introTimer.Restart();
+	}
+	forceEnd = false;
 
-    UpdateUI(dt);
-    State::Update(dt);
+	UpdateUI(dt);
+	State::Update(dt);
 }
 
 void TitleState::UpdateUI(float dt) {
-    Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
+	Rect winSize(0., 0., Game::GetInstance().GetWindowDimensions().x, Game::GetInstance().GetWindowDimensions().y);
 
-    if(!finishedEclipse) {
-        Color& c = ((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-        c.a = (unsigned char)(180*introTimer.Get()/ECLIPSE_DURATION);
-    }
+	if(!finishedEclipse) {
+		((Sprite*)(overlayGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier.a
+					= (unsigned char)180.0*introTimer.Get()/ECLIPSE_DURATION;
+	}
 
-    if(finishedEclipse && !finishedFadeIn) {
-        Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
-        c.a = 255*introTimer.Get()/OVERLAY_FADEIN_DURATION;
-    }
+	if(finishedEclipse && !finishedFadeIn) {
+		((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier.a
+					= (unsigned char)255.0*introTimer.Get()/OVERLAY_FADEIN_DURATION;
+	}
 
-    MoveClouds(dt);
+	MoveClouds(dt);
 }
 
 void TitleState::MoveClouds(float dt) {
-    Vec2 winSize = Game::GetInstance().GetWindowDimensions();
+	Vec2 winSize = Game::GetInstance().GetWindowDimensions();
 
-    Rect box = nuvemAGO->box;
-    Rect offsets = ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
-    if (box.x + box.w < 0) {
-        offsets.x += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-        offsets.w += winSize.x + ((Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-        speedNuvemA = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
-    }
-    ((RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemA, offsets.y,offsets.w-dt*speedNuvemA, offsets.h);
+	Rect box = nuvemAGO->box;
+	RectTransform* rt = (RectTransform*)(nuvemAGO->GetComponent(ComponentType::RECT_TRANSFORM));
+	Sprite* sp = (Sprite*)(nuvemAGO->GetComponent(ComponentType::SPRITE));
+	Rect offsets = rt->GetOffsets();
+	if (box.x + box.w < 0) {
+		offsets.x += winSize.x + sp->GetWidth();
+		offsets.w += winSize.x + sp->GetWidth();
+		speedNuvemA = (std::rand() % (MAX_SPEED - MIN_SPEED)) + MIN_SPEED;
+	}
+	rt->SetOffsets(offsets.y, offsets.w-dt*speedNuvemA, offsets.h, offsets.x-dt*speedNuvemA);
 
-    box = nuvemBGO->box;
-    offsets = ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->GetOffsets();
-    if (box.x + box.w < 0) {
-        offsets.x += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-        offsets.w += winSize.x + ((Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE)))->GetWidth();
-        speedNuvemB = std::rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
-    }
-    ((RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM)))->SetOffsets(offsets.x-dt*speedNuvemB, offsets.y,offsets.w-dt*speedNuvemB, offsets.h);
+	box = nuvemBGO->box;
+	rt = (RectTransform*)(nuvemBGO->GetComponent(ComponentType::RECT_TRANSFORM));
+	sp = (Sprite*)(nuvemBGO->GetComponent(ComponentType::SPRITE));
+	offsets = rt->GetOffsets();
+	if (box.x + box.w < 0) {
+		offsets.x += winSize.x + sp->GetWidth();
+		offsets.w += winSize.x + sp->GetWidth();
+		speedNuvemB = (std::rand() % (MAX_SPEED - MIN_SPEED)) + MIN_SPEED;
+	}
+	rt->SetOffsets(offsets.y, offsets.w-dt*speedNuvemB, offsets.h, offsets.x-dt*speedNuvemB);
 }
-
-/* Não funciona mais.Avaliar como reimplementar isso
-void TitleState::RenderUI(void) const {
-    bg.Render();
-    lua.Render();
-    nuvemA.Render();
-    nuvemB.Render();
-    icc.Render();
-    overlay.Render();
-    if(finishedEclipse) {
-        title.Render();
-        if(finishedFadeIn) {
-            // optionsGroup.Render(true);
-            playBtn.Render();
-            editorBtn.Render();
-            configBtn.Render();
-            exitBtn.Render();
-        }
-    }
-}*/
 
 void TitleState::Pause(void) {
 }
 
 void TitleState::Resume(void) {
-    Camera::ForceLogZoom(0.0);
-    Camera::pos = Vec2(0, 0);
+	Camera::ForceLogZoom(0.0);
+	Camera::pos = Vec2(0, 0);
 }
 
 void TitleState::Play(void) {
-    clickSound.Play(1);
-    Game::GetInstance().Push(new StageState());
+	clickSound.Play(1);
+	Game::GetInstance().Push(new StageState());
 }
 
 void TitleState::Exit() {
-    clickSound.Play(1);
-    popRequested = true;
+	clickSound.Play(1);
+	popRequested = true;
 }
 
 void TitleState::LoadAssets(void) const{
-    Resources::GetImage("img/UI/main-menu/bg.png");
-    Resources::GetImage("img/UI/main-menu/lua.png");
-    Resources::GetImage("img/UI/main-menu/nuvemA.png");
-    Resources::GetImage("img/UI/main-menu/nuvemB.png");
-    Resources::GetImage("img/UI/main-menu/icc.png");
-    Resources::GetImage("img/UI/main-menu/overlay.png");
-    Resources::GetImage("img/UI/main-menu/spritesheettitle.png");
-    Resources::GetMusic("audio/trilha_sonora/main_title_.ogg");
-    Resources::GetMusic("audio/Interface/Click1.wav");
-    Resources::GetFont("font/SHPinscher-Regular.otf", 95);
+	Resources::GetImage("img/UI/main-menu/bg.png");
+	Resources::GetImage("img/UI/main-menu/lua.png");
+	Resources::GetImage("img/UI/main-menu/nuvemA.png");
+	Resources::GetImage("img/UI/main-menu/nuvemB.png");
+	Resources::GetImage("img/UI/main-menu/icc.png");
+	Resources::GetImage("img/UI/main-menu/overlay.png");
+	Resources::GetImage("img/UI/main-menu/spritesheettitle.png");
+	Resources::GetMusic("audio/trilha_sonora/main_title_.ogg");
+	Resources::GetMusic("audio/Interface/Click1.wav");
+	Resources::GetFont("font/SHPinscher-Regular.otf", 95);
 }
