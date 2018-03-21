@@ -92,6 +92,7 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 
 		bool menuIsShowing;
 
+		GameObject* menuBtnGO;
 		RectTransform* menuBGRT;
 
 		Text* towerNameTXT;

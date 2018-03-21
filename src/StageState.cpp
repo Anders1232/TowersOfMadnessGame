@@ -142,11 +142,8 @@ void StageState::SetupUI(){
 	go->AddComponent( sp );
 	btn = new Button( *go );
 	btn->SetReleaseCallback( { [] ( void* ptr ) {
-									GameObject* go = static_cast<GameObject*>( ptr );
-									go->rotation = 180 - go->rotation;
 									( (StageState&) Game::GetInstance().GetCurrentState() ).ToggleMenu();
-								}, go
-							} );
+								}, nullptr } );
 	btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
 													Sprite* sp = static_cast<Sprite*>( ptr );
 													sp->SetImage( "img/UI/HUD/openmenu-clicked.png" );
@@ -163,8 +160,9 @@ void StageState::SetupUI(){
 	rt->SetOffsets( +10, -10.0, sp->GetHeight()+10, -10.0 );
 	rt->SetBehaviorType( RectTransform::BehaviorType::FILL );
 	go->AddComponent( rt );
-	// go->rotation = 180;
+	go->rotation = 180;
 	AddObject( go );
+	menuBtnGO = go;
 
 	// TowerInfo
 		// - Grouper
@@ -263,8 +261,10 @@ void StageState::SetupUI(){
 		go->AddComponent( sp );
 		btn = new Button( *go );
 		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
-														Sprite* sp = static_cast<Sprite*>(ptr);
 														( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Fumaca", "$30", "Slow", "Area" );
+													}, nullptr } );
+		btn->SetCallback( Button::State::PRESSED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
 														sp->SetImage( "img/UI/HUD/botaotorre-clicked.png" );
 													}, sp } );
 		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
@@ -289,8 +289,10 @@ void StageState::SetupUI(){
 		go->AddComponent( sp );
 		btn = new Button( *go );
 		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
-														Sprite* sp = static_cast<Sprite*>(ptr);
 														( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Tentaculos", "$30", "1 tiro/2s", "Anti-Bomba" );
+													}, nullptr } );
+		btn->SetCallback( Button::State::PRESSED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
 														sp->SetImage( "img/UI/HUD/botaoantibomba-clicked.png" );
 													}, sp } );
 		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
@@ -315,8 +317,10 @@ void StageState::SetupUI(){
 		go->AddComponent( sp );
 		btn = new Button( *go );
 		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
-														Sprite* sp = static_cast<Sprite*>(ptr);
 														( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Bobina", "$30", "1 tiro/2s", "Dano" );
+													}, nullptr } );
+		btn->SetCallback( Button::State::PRESSED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
 														sp->SetImage( "img/UI/HUD/botaochoque-clicked.png" );
 													}, sp } );
 		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
@@ -341,8 +345,10 @@ void StageState::SetupUI(){
 		go->AddComponent( sp );
 		btn = new Button( *go );
 		btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* ptr) {
-														Sprite* sp = static_cast<Sprite*>(ptr);
 														( (StageState&)Game::GetInstance().GetCurrentState() ).SetTowerInfoData( "Monolito", "$30", "Stun", "Area" );
+													}, nullptr } );
+		btn->SetCallback( Button::State::PRESSED, { [] (void* ptr) {
+														Sprite* sp = static_cast<Sprite*>(ptr);
 														sp->SetImage( "img/UI/HUD/botaostun-clicked.png" );
 													}, sp } );
 		btn->SetCallback( Button::State::ENABLED, { [] (void* ptr) {
@@ -691,6 +697,7 @@ void StageState::ToggleMenu(void){
 
 	Rect offs = menuBGRT->GetOffsets();
 	menuBGRT->SetOffsets( offs.y, -offs.x, offs.h, -offs.w );
+	menuBtnGO->rotation = 180 - menuBtnGO->rotation;
 }
 
 void StageState::SetTowerInfoData(string name, string cost, string damage, string damageType) {
