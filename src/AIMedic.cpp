@@ -1,11 +1,11 @@
 #include <algorithm>
 #include "AIMedic.h"
 
-AIMedic::AIMedic(float speed,int dest,TileMap<Tile>& tilemap,GameObject &associated,WaveManager &wManager):Component(associated),speed(speed),destTile(dest), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
+AIMedic::AIMedic(float speed,int dest,TileMap<Tile>& tilemap,GameObject &associated,WaveManager &wManager):Component(associated),speed(speed),destTile(dest), path(new std::vector<int>()), pathIndex(0),tileMap(tilemap),associated(associated),waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
-	Vec2 originCoord= associated.box.Center();
-    path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tilemap.GetCoordTilePos(originCoord, false, 0), dest, "map/WeightData.txt");
+    //Vec2 originCoord= associated.box.Center();
+    //path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tilemap.GetCoordTilePos(originCoord, false, 0), dest, "map/WeightData.txt");
     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
 	vecSpeed = Vec2(0.0,0.0);
 	lastDistance = std::numeric_limits<float>::max();
@@ -29,7 +29,7 @@ AIMedic::AIMedic(float speed,int dest,TileMap<Tile>& tilemap,GameObject &associa
 	dfa[AIState::WALKING_SLOWLY][AIEvent::STUN] = AIState::STUNNED;
 	dfa[AIState::WALKING_SLOWLY][AIEvent::NONE] = AIState::WALKING_SLOWLY;
 
-	actualState = AIState::WALKING;
+    actualState = AIState::WAITING;
 	
 	tileMap.ObserveMapChanges(this);
 }
@@ -41,7 +41,7 @@ AIMedic::~AIMedic(void){
 
 AIMedic::AIEvent AIMedic::ComputeEvents(){
 	if(actualState == AIState::WALKING){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){
 			return AIEvent::STUN;
 		}
 		else if(pathIndex == path->size()){
@@ -53,10 +53,10 @@ AIMedic::AIEvent AIMedic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::WALKING_SLOWLY){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
 			return AIEvent::STUN;
 		}
-		else if(((Enemy&)associated).GetLastEvent() != Enemy::Event::SMOKE){// Aqui verifica-se o fim da colisão com o elemento de fumaça
+        else if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() != Enemy::Event::SMOKE){// Aqui verifica-se o fim da colisão com o elemento de fumaça
 			return AIEvent::NOT_SMOKE;
 		}
 		else if(pathIndex == path->size()){
@@ -65,7 +65,7 @@ AIMedic::AIEvent AIMedic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::WAITING){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
 			return AIEvent::STUN;
 		}
 		else if(!path->empty()){
@@ -75,7 +75,7 @@ AIMedic::AIEvent AIMedic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::STUNNED){
-		if(((Enemy&)associated).GetLastEvent() != Enemy::Event::STUN){// Aqui verifica-se o fim da colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() != Enemy::Event::STUN){// Aqui verifica-se o fim da colisão com o elemento estonteante
 			return AIEvent::NOT_STUN;
 		}
 		else if(pathIndex == path->size()){
@@ -94,6 +94,7 @@ void AIMedic::Update(float dt){
 
 	AIEvent actualTransition = ComputeEvents();
 	actualState = dfa[actualState][actualTransition];
+
 	if(actualState == AIState::WALKING){
 		if(pathIndex != path->size() && path->size() > 0){
 			tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));

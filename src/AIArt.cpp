@@ -3,11 +3,11 @@
 //enum AIState{WALKING,WAITING,STUNNED,STATE_NUM};
 //enum AIEvent{NONE,PATH_BLOCKED,PATH_FREE,STUN,NOT_STUN,EVENT_NUM}; 
 
-AIArt::AIArt(float speed, int dest, TileMap<Tile> &tileMap, GameObject &associated, WaveManager &wManager): Component(associated),speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated), waveManager(wManager){
+AIArt::AIArt(float speed, int dest, TileMap<Tile> &tileMap, GameObject &associated, WaveManager &wManager): Component(associated),speed(speed),destTile(dest), path(new std::vector<int>()), pathIndex(0),tileMap(tileMap),associated(associated), waveManager(wManager){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
-	Vec2 originCoord= associated.box.Center();
-    path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
+    //Vec2 originCoord= associated.box.Center();
+    //path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
 	vecSpeed = Vec2(0.0,0.0);
 	lastDistance = std::numeric_limits<float>::max();
@@ -25,7 +25,7 @@ AIArt::AIArt(float speed, int dest, TileMap<Tile> &tileMap, GameObject &associat
 	dfa[AIState::STUNNED][AIEvent::PATH_BLOCKED] = AIState::WAITING;
 	dfa[AIState::STUNNED][AIEvent::NONE] = AIState::STUNNED;
 
-	actualState = AIState::WALKING;
+    actualState = AIState::WAITING;
 	
 	tileMap.ObserveMapChanges(this);
 }

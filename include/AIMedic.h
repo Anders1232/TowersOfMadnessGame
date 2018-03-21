@@ -47,7 +47,7 @@ class AIMedic : public Component, public TileMapObserver
 		void NotifyTileMapChanged(int tilePosition);
 	private:
 
-		enum AIState{WALKING,WALKING_SLOWLY,WAITING,STUNNED,STATE_NUM};
+        enum AIState{WALKING,WALKING_SLOWLY,WAITING,STUNNED,STATE_NUM};
 		enum AIEvent{NONE,PATH_BLOCKED,PATH_FREE,SMOKE,NOT_SMOKE,STUN,NOT_STUN,EVENT_NUM}; 
 
 		AIEvent ComputeEvents();

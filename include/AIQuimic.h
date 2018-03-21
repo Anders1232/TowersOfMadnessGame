@@ -52,7 +52,7 @@ class AIQuimic : public Component, public TileMapObserver
 		void NotifyTileMapChanged(int tilePosition);
 
 	private:
-		enum AIState{WALKING,WALKING_SLOWLY,SENDING_BOMB,STUNNED,STATE_NUM};
+        enum AIState{WAITING,WALKING,WALKING_SLOWLY,SENDING_BOMB,STUNNED,STATE_NUM};
 		enum AIEvent{NONE,PATH_BLOCKED,PATH_FREE,SMOKE,NOT_SMOKE,STUN,NOT_STUN,EVENT_NUM}; 
 		AIEvent ComputeEvents();
 		float speed;/**< Velocidade de movimento do GameObject com esse componente.*/

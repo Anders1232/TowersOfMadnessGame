@@ -2,15 +2,19 @@
 #include "AIQuimic.h"
 #include "Shooter.h"
 
-AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):Component(associated),speed(speed),destTile(dest), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager),finder(NearestComponentFinder(GameComponentType::TOWER,associated.box.Center())){
+AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):Component(associated),speed(speed),destTile(dest), path(new std::vector<int>()), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager),finder(NearestComponentFinder(GameComponentType::TOWER,associated.box.Center())){
 	heuristic = new ManhattanDistance();
 	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
-	Vec2 originCoord= associated.box.Center();
-    path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
-    actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
+    //Vec2 originCoord= associated.box.Center();
+    //path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
+    //actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
 	vecSpeed = Vec2(0.0,0.0);
 	lastDistance = std::numeric_limits<float>::max();
 	randomMaxTimer = 0;
+
+
+    dfa[AIState::WAITING][AIEvent::PATH_FREE] = AIState::WALKING;
+    dfa[AIState::WAITING][AIEvent::NONE] = AIState::WAITING;
 
 	dfa[AIState::WALKING][AIEvent::STUN] = AIState::STUNNED;
 	dfa[AIState::WALKING][AIEvent::PATH_BLOCKED] = AIState::SENDING_BOMB;
@@ -30,7 +34,7 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	dfa[AIState::WALKING_SLOWLY][AIEvent::STUN] = AIState::STUNNED;
 	dfa[AIState::WALKING_SLOWLY][AIEvent::NONE] = AIState::WALKING_SLOWLY;
 
-	actualState = AIState::WALKING;
+    actualState = AIState::WAITING;
 	
 	tileMap.ObserveMapChanges(this);
     shooter = new Shooter(associated,(NearestFinder<GameObject>&)Game::GetInstance().GetCurrentState(),finder,GameComponentType::TOWER,500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
@@ -44,8 +48,16 @@ AIQuimic::~AIQuimic(void){
 }
 
 AIQuimic::AIEvent AIQuimic::ComputeEvents(){
-	if(actualState == AIState::WALKING){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
+    if(actualState == AIState::WAITING){
+        if(path->empty()){
+            return AIEvent::NONE;
+        }
+        else{
+            return AIEvent::PATH_FREE;
+        }
+    }
+    else if(actualState == AIState::WALKING){
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
 			return AIEvent::STUN;
 		}
 		else if(pathIndex == path->size()){
@@ -57,10 +69,10 @@ AIQuimic::AIEvent AIQuimic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::WALKING_SLOWLY){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
 			return AIEvent::STUN;
 		}
-		else if(((Enemy&)associated).GetLastEvent() != Enemy::Event::SMOKE){// Aqui verifica-se o fim da colisão com o elemento de fumaça
+        else if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() != Enemy::Event::SMOKE){// Aqui verifica-se o fim da colisão com o elemento de fumaça
 			return AIEvent::NOT_SMOKE;
 		}
 		else if(pathIndex == path->size()){
@@ -70,7 +82,7 @@ AIQuimic::AIEvent AIQuimic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::SENDING_BOMB){
-		if(((Enemy&)associated).GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() == Enemy::Event::STUN){// Aqui verifica-se a colisão com o elemento estonteante
 			return AIEvent::STUN;
 		}
 		else if(!path->empty()){
@@ -79,7 +91,7 @@ AIQuimic::AIEvent AIQuimic::ComputeEvents(){
 		else{return NONE;}
 	}
 	else if(actualState == AIState::STUNNED){
-		if(((Enemy&)associated).GetLastEvent() != Enemy::Event::STUN){// Aqui verifica-se o fim da colisão com o elemento estonteante
+        if(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetLastEvent() != Enemy::Event::STUN){// Aqui verifica-se o fim da colisão com o elemento estonteante
 			return AIEvent::NOT_STUN;
 		}
 		else if(pathIndex == path->size()){
@@ -93,6 +105,12 @@ AIQuimic::AIEvent AIQuimic::ComputeEvents(){
 void AIQuimic::Update(float dt){
 	AIEvent actualTransition = ComputeEvents();
 	actualState = dfa[actualState][actualTransition];
+    if(actualState == AIState::WAITING){
+        Vec2 originCoord= associated.box.Center();
+        path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
+        actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
+        pathIndex = 0;
+    }
 	if(actualState == AIState::WALKING){
 		if(pathIndex != path->size() && path->size() > 0){
 			tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
