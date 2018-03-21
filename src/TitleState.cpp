@@ -40,12 +40,6 @@ void TitleState::SetupUI(void) {
 	GameObject* go;
 	RectTransform* rt;
 	Sprite* sp;
-	Text* txt;
-	Grouper* gp;
-	Button* btn;
-
-	GameObject* canvasGO;
-	GameObject* grouperGO;
 
 	// Canvas
 	go = new GameObject();
@@ -149,103 +143,10 @@ void TitleState::SetupUI(void) {
 	AddObject(go);
 	titleGO = go;
 
-	// OptionsGroup
-	go = new GameObject();
-	rt = new RectTransform(*go, canvasGO);
-	rt->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
-	go->AddComponent(rt);
-	gp = new Grouper(*go);
-	gp->MakeVerticalGroup();
-	go->AddComponent(gp);
-	AddObject(go);
-	grouperGO = go;
-	
-	// PlayBtn
-	go = new GameObject();
-	txt = new Text(*go);
-	txt->SetFont("font/SHPinscher-Regular.otf");
-	txt->SetText("Jogar");
-	txt->SetColor({255,255,255,255});
-	txt->SetFontSize(95);
-	go->AddComponent(txt);
-	btn = new Button(*go);
-	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	btn->SetReleaseCallback( { [] (void* caller) {
-									TitleState* titleState = static_cast<TitleState*>(caller);
-									titleState->Play();
-								}, this
-							} );
-	go->AddComponent(btn);
-	rt = new RectTransform(*go, grouperGO);
-	rt->SetKernelSize( txt->GetSize() );
-	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
-	go->AddComponent(rt);
-	AddObject(go);
-	gp->groupedElements.push_back(go);
-	
-	// EditorBtn
-	go = new GameObject();
-	txt = new Text(*go);
-	txt->SetFont("font/SHPinscher-Regular.otf");
-	txt->SetText("Editor de Fases");
-	txt->SetColor({255,255,255,255});
-	txt->SetFontSize(95);
-	go->AddComponent(txt);
-	btn = new Button(*go);
-	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	go->AddComponent(btn);
-	rt = new RectTransform(*go, grouperGO);
-	rt->SetKernelSize( txt->GetSize() );
-	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
-	go->AddComponent(rt);
-	AddObject(go);
-	gp->groupedElements.push_back(go);
-	
-	// ConfigBtn
-	go = new GameObject();
-	txt = new Text(*go);
-	txt->SetFont("font/SHPinscher-Regular.otf");
-	txt->SetText("Configuracoes");
-	txt->SetColor({255,255,255,255});
-	txt->SetFontSize(95);
-	go->AddComponent(txt);
-	btn = new Button(*go);
-	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	go->AddComponent(btn);
-	rt = new RectTransform(*go, grouperGO);
-	rt->SetKernelSize( txt->GetSize() );
-	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
-	go->AddComponent(rt);
-	AddObject(go);
-	gp->groupedElements.push_back(go);
-
-	// ExitBtn
-	go = new GameObject();
-	txt = new Text(*go);
-	txt->SetFont("font/SHPinscher-Regular.otf");
-	txt->SetText("Sair");
-	txt->SetColor({255,255,255,255});
-	txt->SetFontSize(95);
-	go->AddComponent(txt);
-	btn = new Button(*go);
-	// btn->ConfigColors(DISABLED_COLOR, ENABLED_COLOR, HIGHLIGHTED_COLOR, PRESSED_COLOR);
-	btn->SetReleaseCallback( { [] (void* caller) {
-									TitleState* titleState = static_cast<TitleState*>(caller);
-									titleState->Exit();
-								}, this
-							} );
-	go->AddComponent(btn);
-	rt = new RectTransform(*go, grouperGO);
-	rt->SetKernelSize( txt->GetSize() );
-	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
-	go->AddComponent(rt);
-	AddObject(go);
-	gp->groupedElements.push_back(go);
-
 	titleMusic.Play(0);
 }
 
-void TitleState::Update(float dt) {
+void TitleState::EarlyUpdate(float dt) {
 	if(INPUT_MANAGER.QuitRequested()) {
 		quitRequested = true;
 	}
@@ -266,9 +167,14 @@ void TitleState::Update(float dt) {
 		Color& c = ((Sprite*)(titleGO->GetComponent(ComponentType::SPRITE)))->colorMultiplier;
 		c.a = 255;
 		introTimer.Restart();
+		AddButtons();
 	}
 	forceEnd = false;
 
+	State::EarlyUpdate(dt);
+}
+
+void TitleState::Update(float dt) {
 	UpdateUI(dt);
 	State::Update(dt);
 }
@@ -313,6 +219,193 @@ void TitleState::MoveClouds(float dt) {
 		speedNuvemB = (std::rand() % (MAX_SPEED - MIN_SPEED)) + MIN_SPEED;
 	}
 	rt->SetOffsets(offsets.y, offsets.w-dt*speedNuvemB, offsets.h, offsets.x-dt*speedNuvemB);
+}
+
+void TitleState::AddButtons() {
+	static bool buttonsAdded = false;
+	if( buttonsAdded ) return;
+	GameObject* go;
+	RectTransform* rt;
+	Text* txt;
+	Grouper* gp;
+	Button* btn;
+
+	GameObject* grouperGO;
+	
+	// OptionsGroup
+	go = new GameObject();
+	rt = new RectTransform(*go, canvasGO);
+	rt->SetAnchors(Vec2(0.3, 0.45),Vec2(0.7, 0.9));
+	go->AddComponent(rt);
+	gp = new Grouper(*go);
+	gp->MakeVerticalGroup();
+	go->AddComponent(gp);
+	AddObject(go);
+	grouperGO = go;
+	
+	// PlayBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Jogar");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	btn->SetCallback( Button::State::DISABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( DISABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::ENABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( ENABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( HIGHLIGHTED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::PRESSED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( PRESSED_COLOR );
+													}, txt
+												});
+	btn->SetReleaseCallback( { [] (void* caller) {
+									TitleState* titleState = static_cast<TitleState*>(caller);
+									titleState->Play();
+								}, this
+							} );
+	btn->SetState( Button::State::ENABLED );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+	
+	// EditorBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Editor de Fases");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	btn->SetCallback( Button::State::DISABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( DISABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::ENABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( ENABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( HIGHLIGHTED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::PRESSED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( PRESSED_COLOR );
+													}, txt
+												});
+	btn->SetState( Button::State::DISABLED );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+	
+	// ConfigBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Configuracoes");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	btn->SetCallback( Button::State::DISABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( DISABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::ENABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( ENABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( HIGHLIGHTED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::PRESSED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( PRESSED_COLOR );
+													}, txt
+												});
+	btn->SetState( Button::State::DISABLED );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+
+	// ExitBtn
+	go = new GameObject();
+	txt = new Text(*go);
+	txt->SetFont("font/SHPinscher-Regular.otf");
+	txt->SetText("Sair");
+	txt->SetColor({255,255,255,255});
+	txt->SetFontSize(95);
+	go->AddComponent(txt);
+	btn = new Button(*go);
+	btn->SetCallback( Button::State::DISABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( DISABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::ENABLED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( ENABLED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::HIGHLIGHTED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( HIGHLIGHTED_COLOR );
+													}, txt
+												});
+	btn->SetCallback( Button::State::PRESSED, { [] (void* text) {
+														Text* txt = static_cast<Text*>(text);
+														txt->SetColor( PRESSED_COLOR );
+													}, txt
+												});
+	btn->SetState( Button::State::ENABLED );
+	btn->SetReleaseCallback( { [] (void* caller) {
+									TitleState* titleState = static_cast<TitleState*>(caller);
+									titleState->Exit();
+								}, this
+							} );
+	go->AddComponent(btn);
+	rt = new RectTransform(*go, grouperGO);
+	rt->SetKernelSize( txt->GetSize() );
+	rt->SetBehaviorType( RectTransform::BehaviorType::FIT );
+	go->AddComponent(rt);
+	AddObject(go);
+	gp->groupedElements.push_back(go);
+
+	buttonsAdded = true;
 }
 
 void TitleState::Pause(void) {

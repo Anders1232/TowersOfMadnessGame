@@ -16,6 +16,7 @@ using namespace RattletrapEngine;
 class TitleState: public State {
 	public:
 		TitleState(void);
+		void EarlyUpdate(float dt);
 		void Update(float dt);
 		void Pause(void);
 		void Resume(void);
@@ -27,6 +28,7 @@ class TitleState: public State {
 		void UpdateUI(float dt);
 		void RenderUI() const;
 		void MoveClouds(float dt);
+		void AddButtons();
 		float speedNuvemA;
 		float speedNuvemB;
 
@@ -34,6 +36,7 @@ class TitleState: public State {
 		Music titleMusic;
 		Sound clickSound;
 
+		GameObject* canvasGO;
 		GameObject* luaGO;
 		GameObject* nuvemAGO;
 		GameObject* nuvemBGO;
