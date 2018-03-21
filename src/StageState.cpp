@@ -140,8 +140,10 @@ void StageState::SetupUI(){
 	Grouper* gp;
 
 	GameObject* canvasGO;
-	GameObject* grouperGO;
 	GameObject* menuBGGO;
+	GameObject* grouperGO;
+	GameObject* statsGO;
+	GameObject* statGroupGO;
 
 	// Canvas
 	go = new GameObject();
@@ -225,7 +227,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "$100" );
+		txt->SetText( "$999+" );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -240,7 +242,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "50" );
+		txt->SetText( "1/0" );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -255,7 +257,7 @@ void StageState::SetupUI(){
 		go = new GameObject();
 		txt = new Text( *go );
 		txt->SetFont( "font/SHPinscher-Regular.otf" );
-		txt->SetText( "Stun" );
+		txt->SetText( "Desintegrator" );
 		txt->SetColor( TOWER_INFO_TXT_COLOR );
 		txt->SetFontSize( 95 );
 		go->AddComponent( txt );
@@ -383,6 +385,71 @@ void StageState::SetupUI(){
 		go->AddComponent( rt );
 		AddObject( go );
 		gp->groupedElements.push_back( go );
+
+
+	// Stats
+		// - Grouper
+		go = new GameObject();
+		gp = new Grouper( *go );
+		gp->MakeVerticalGroup();
+		go->AddComponent( gp );
+		rt = new RectTransform( *go, canvasGO );
+		rt->debugRender = true;
+		rt->SetAnchors( Vec2(0., 0.), Vec2(0.4, 0.25) );
+		rt->SetOffsets( 20., 0., 0., 20. );
+		go->AddComponent( rt );
+		AddObject( go );
+		statsGO = go;
+
+		// - HealthGroup
+		go = new GameObject();
+		rt = new RectTransform( *go, statsGO );
+		rt->debugRender = true;
+		go->AddComponent( rt );
+		AddObject( go );
+		statGroupGO = go;
+		gp->groupedElements.push_back(go);
+
+			// - HealthBarBG
+			go = new GameObject();
+			sp = new Sprite( "img/UI/HUD/hudvida.png", *go );
+			// sp->colorMultiplier = {0, 0, 0, 255};
+			go->AddComponent( sp );
+			rt = new RectTransform( *go, statGroupGO );
+			rt->SetAnchors( Vec2(0.0, 0.0), Vec2(1.0, 1.0) );
+			rt->SetOffsets( 5., -5., -5., 5.);
+			go->AddComponent( rt );
+			AddObject( go );
+
+			// - HealthBar
+			go = new GameObject();
+			sp = new Sprite( "img/UI/HUD/hudvida.png", *go );
+			sp->colorMultiplier = {180, 225, 149, 255};
+			go->AddComponent( sp );
+			rt = new RectTransform( *go, statGroupGO );
+			rt->SetAnchors( Vec2(0.0, 0.0), Vec2(1.0, 1.0) );
+			rt->SetOffsets( 5., -5., -5., 5.);
+			go->AddComponent( rt );
+			AddObject( go );
+
+		// - WaveGroup
+		go = new GameObject();
+		rt = new RectTransform( *go, statsGO );
+		rt->debugRender = true;
+		go->AddComponent( rt );
+		AddObject( go );
+		statGroupGO = go;
+		gp->groupedElements.push_back(go);
+
+		// - MoneyGroup
+		go = new GameObject();
+		rt = new RectTransform( *go, statsGO );
+		rt->debugRender = true;
+		go->AddComponent( rt );
+		AddObject( go );
+		statGroupGO = go;
+		gp->groupedElements.push_back(go);
+
 
 	//health
 	RectTransform* healthRect = new RectTransform(*healthGO,canvasGO);
