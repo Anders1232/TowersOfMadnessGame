@@ -92,51 +92,16 @@ class StageState: public State, public TileMapObserver, public NearestFinder<Gam
 
 		bool menuIsShowing;
 
-		GameObject* healthGO;
-		GameObject* healthIconGO;
-		GameObject* healthbarBgGO;
-		GameObject* healthbarBarGO;
+		RectTransform* menuBGRT;
 
-		GameObject* waveGO;
-		GameObject* waveIconGO;
-		GameObject* wavebarBgGO;
-		GameObject* wavebarBarGO;
+		Text* towerNameTXT;
+		Text* towerCostTXT;
+		Text* towerDamageTXT;
+		Text* towerDmgTypeTXT;
 
-		GameObject* moneyGO;
-		GameObject* moneyIconGO;
-		GameObject* moneyTextGO;
-
-		GameObject* menuBgGO;
-
-		GameObject* openMenuBtnGO;
-
-		GameObject* HUDcanvasGO;
-
-		GameObject* towerBtn1GO;
-		GameObject* towerBtn2GO;
-		GameObject* towerBtn3GO;
-		GameObject* towerBtn4GO;
-
-		Button towerBtn1;
-		Button towerBtn2;
-		Button towerBtn3;
-		Button towerBtn4;
-
-		Button openMenuBtn;
-
-		GameObject* towerNameGO;
-		GameObject* towerCostGO;
-		GameObject* towerDamageGO;
-		GameObject* towerDamageTypeGO;
-
-		GameObject* towerInfoGroupGO;
-		GameObject* towersBtnGroupGO;
-
-		Grouper towersInfoGroup;
-		Grouper towersBtnGroup;
-
-
-
+		RectTransform* lifeRT;
+		RectTransform* waveRT;
+		Text* moneyTXT;
 
 };
 
