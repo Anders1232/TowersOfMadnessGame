@@ -2,16 +2,25 @@
 #include "AIQuimic.h"
 #include "Shooter.h"
 
-AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager):Component(associated),speed(speed),destTile(dest), path(new std::vector<int>()), pathIndex(0),tileMap(tileMap),associated(associated),waveManager(wManager),finder(NearestComponentFinder(GameComponentType::TOWER,associated.box.Center())){
-	heuristic = new ManhattanDistance();
-	tileWeightMap = (*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()];
-    //Vec2 originCoord= associated.box.Center();
-    //path= GameResources::GetPath(((Enemy*)associated.GetComponent(GameComponentType::ENEMY))->GetType(), heuristic, tileMap.GetCoordTilePos(originCoord, false, 0), destTile, "map/WeightData.txt");
-    //actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
-	vecSpeed = Vec2(0.0,0.0);
-	lastDistance = std::numeric_limits<float>::max();
-	randomMaxTimer = 0;
+AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &associated,WaveManager& wManager)
+    :Component(associated),
+     speed(speed),
+     destTile(dest),
+     path(new std::vector<int>()),
+     pathIndex(0),
+     tileMap(tileMap),
+     associated(associated),
+     waveManager(wManager),
+     finder(NearestComponentFinder(GameComponentType::TOWER,associated.box.Center())),
+     heuristic(new ManhattanDistance()),
+     tileWeightMap((*GameResources::GetWeightData("map/WeightData.txt"))[((Enemy&)associated).GetType()]),
+     vecSpeed(Vec2(0.0,0.0)),
+     lastDistance(std::numeric_limits<float>::max()),
+     randomMaxTimer(0),
+     shooter(new Shooter(associated,(NearestFinder<GameObject>&)Game::GetInstance().GetCurrentState(),finder,GameComponentType::TOWER,500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0)){
 
+    tileMap.ObserveMapChanges(this);
+    associated.AddComponent(shooter);
 
     dfa[AIState::WAITING][AIEvent::PATH_FREE] = AIState::WALKING;
     dfa[AIState::WAITING][AIEvent::NONE] = AIState::WAITING;
@@ -35,10 +44,6 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	dfa[AIState::WALKING_SLOWLY][AIEvent::NONE] = AIState::WALKING_SLOWLY;
 
     actualState = AIState::WAITING;
-	
-	tileMap.ObserveMapChanges(this);
-    shooter = new Shooter(associated,(NearestFinder<GameObject>&)Game::GetInstance().GetCurrentState(),finder,GameComponentType::TOWER,500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0);
-    associated.AddComponent(shooter);
 
 }
 
@@ -119,6 +124,7 @@ void AIQuimic::Update(float dt){
 				Vec2 movement= tempDestination-Vec2(associated.box.w/2, associated.box.h/2);
 				associated.box.x = movement.x;
 				associated.box.y = movement.y;
+                REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
 				pathIndex++;
 				if(pathIndex != path->size()){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
@@ -134,6 +140,7 @@ void AIQuimic::Update(float dt){
 			else{
 				associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
 				associated.box.y = (associated.box.Center().y + (vecSpeed.MemberMult(dt)).y - associated.box.h/2);
+                REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
 				lastDistance = distance;
 			}
 			if((*path)[path->size() - 1] != destTile){
@@ -190,6 +197,7 @@ void AIQuimic::Update(float dt){
 			getPathTimer.Update(dt);
 		}
 		else{
+            associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
 			associated.RequestDelete();
 			waveManager.NotifyEnemyGotToHisDestiny();
 		}
@@ -198,6 +206,7 @@ void AIQuimic::Update(float dt){
 		shooter->SetActive(false);
 		//Aqui executa animações do efeito estonteante
 	}
+    REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
 	if(tileMap.GetCoordTilePos(associated.box, false, 0) == destTile){
 		waveManager.NotifyEnemyGotToHisDestiny();
 	}

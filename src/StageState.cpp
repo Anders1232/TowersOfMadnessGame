@@ -67,8 +67,6 @@ StageState::StageState(void)
 	Camera::pos = Vec2(CAM_START_X, CAM_START_Y);
 	Camera::ForceLogZoom(CAM_START_ZOOM);
 
-	waveManagerGO->AddComponent(&tileSet);
-
 	tileMap.ObserveMapChanges(this);
 	waveManagerGO->AddComponent(&tileMap);
 	GameResources::SetTileMap(&tileMap);
