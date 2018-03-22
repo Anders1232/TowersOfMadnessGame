@@ -906,6 +906,12 @@ void StageState::LoadAssets(void) const{
 	Resources::GetImage("./img/UI/HUD/openmenu-clicked.png");
 	Resources::GetImage("./img/UI/HUD/botaotorre.png");
 	Resources::GetImage("./img/UI/HUD/botaotorre-clicked.png");
+	Resources::GetImage("./img/UI/HUD/botaostun.png");
+	Resources::GetImage("./img/UI/HUD/botaostun-clicked.png");
+	Resources::GetImage("./img/UI/HUD/botaochoque.png");
+	Resources::GetImage("./img/UI/HUD/botaochoque-clicked.png");
+	Resources::GetImage("./img/UI/HUD/botaoantibomba.png");
+	Resources::GetImage("./img/UI/HUD/botaoantibomba-clicked.png");
 	Resources::GetImage("./img/obstacle/arvore1.png");
 	Resources::GetImage("./img/obstacle/arvore2.png");
 	Resources::GetImage("./img/obstacle/arvore3.png");
