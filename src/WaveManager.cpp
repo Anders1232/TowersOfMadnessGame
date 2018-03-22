@@ -32,10 +32,11 @@ WaveManager::WaveManager(TileMap<Tile> &tileMap, string waveFile,GameObject& ass
     endGroups= GetTileGroups(END_POINT);
 	wavesAndEnemysData = GameResources::GetWaveData("assets/wave&enemyData.txt");
 	enemyIndex = 0;
-	waveIndex=-1;
+    waveIndex= 0;
 	totalWaves = wavesAndEnemysData->first.size();
+    REPORT_DEBUG2(1,totalWaves);
 	victory = false;
-	// StartWave();
+    StartWave();
 }
 
 WaveManager::~WaveManager(){

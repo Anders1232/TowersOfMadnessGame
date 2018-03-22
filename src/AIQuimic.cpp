@@ -124,23 +124,27 @@ void AIQuimic::Update(float dt){
 				Vec2 movement= tempDestination-Vec2(associated.box.w/2, associated.box.h/2);
 				associated.box.x = movement.x;
 				associated.box.y = movement.y;
-                REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
-				pathIndex++;
+                pathIndex++;
 				if(pathIndex != path->size()){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
 					lastDistance = associated.box.Center().VecDistance(tempDestination).Magnitude();
                     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    }
+                    else{vecSpeed = Vec2(0,0);}
 				}
 			}
 			else if(vecSpeed.Magnitude() == 0.0){
                 actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
-                vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                    vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                }
+                else{vecSpeed = Vec2(0,0);}
 			}
 			else{
 				associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
 				associated.box.y = (associated.box.Center().y + (vecSpeed.MemberMult(dt)).y - associated.box.h/2);
-                REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
 				lastDistance = distance;
 			}
 			if((*path)[path->size() - 1] != destTile){
@@ -165,12 +169,18 @@ void AIQuimic::Update(float dt){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
 					lastDistance = associated.box.Center().VecDistance(tempDestination).Magnitude();
                     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex()) * 3;
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed /actualTileweight);
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed /actualTileweight);
+                    }
+                    else{vecSpeed = Vec2(0,0);}
 				}
 			}
 			else if(vecSpeed.Magnitude() == 0.0){
                 actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex()) * 3;
-				vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                    vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                }
+                else{vecSpeed = Vec2(0,0);}
 			}
 			else{
 				associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
@@ -190,7 +200,10 @@ void AIQuimic::Update(float dt){
 				pathIndex = 0;
 				if(path->size() > 0){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    }
+                    else{vecSpeed = Vec2(0,0);}
 					lastDistance = std::numeric_limits<float>::max();
 				}
 			}
@@ -206,8 +219,8 @@ void AIQuimic::Update(float dt){
 		shooter->SetActive(false);
 		//Aqui executa animações do efeito estonteante
 	}
-    REPORT_DEBUG2(true,"associated.box.x: " << associated.box.x << " associated.box.y: " << associated.box.y);
 	if(tileMap.GetCoordTilePos(associated.box, false, 0) == destTile){
+        associated.RequestDelete();
 		waveManager.NotifyEnemyGotToHisDestiny();
 	}
 }
@@ -219,7 +232,10 @@ void AIQuimic::NotifyTileMapChanged(int tilePosition){
 		pathIndex = 0;
 		if(path->size() > 0){
 			tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
-			vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+            if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+            }
+            else{vecSpeed = Vec2(0,0);}
 			lastDistance = std::numeric_limits<float>::max();
 		}
 	}
