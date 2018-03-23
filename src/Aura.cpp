@@ -47,7 +47,7 @@ void Aura::Update(float dt){
 	notificationTimer.Update(dt);
 	if(notificationTimer.Get() > timeBetweetNotifications){
 		notificationTimer.Restart();
-		vector<GameObject *> *enemiesInRange = ((vector<GameObject *>*)(nearestFinder->FindNearests(associated.box.Center(), *finder, auraRange)));
+		vector<GameObject *> *enemiesInRange = ((vector<GameObject *>*)(nearestFinder->FindNearests(associated.box.Center(), finder, auraRange)));
 		for(uint i=0; i< enemiesInRange->size(); i++){
 			( (Enemy*)((*enemiesInRange)[i]) )->NotifyEvent(auraType);
 		}

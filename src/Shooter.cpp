@@ -47,7 +47,8 @@ void Shooter::Update(float dt){
 				|| target->IsDead()
 				|| (target->box.Center()-associated.box.Center() ).Magnitude() > range )
 			{
-				target = ((GameObject*)(nearestFinder->FindNearest(associated.box.Center(), *finder, range)));
+				NearestFinder<GameObject>* nf = dynamic_cast<NearestFinder<GameObject>*>(nearestFinder);
+				target = ((GameObject*)(nf->FindNearest(associated.box.Center(), finder, range)));
 			}
 			if(nullptr!= target){
 				Vec2 origin= associated.box.Center();

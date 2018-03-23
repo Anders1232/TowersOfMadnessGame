@@ -12,7 +12,7 @@ class NearestComponentFinder : public Finder<GameObject>
         NearestComponentFinder(int componentType,Vec2 origin);
         NearestComponentFinder();
         void setOrigin(Vec2 origin);
-        float operator()(GameObject);
+        float operator()(GameObject* go);
     private:
         int componentType;
         Vec2 origin;

@@ -30,24 +30,24 @@ Tower::Tower(TowerType type, Vec2 pos, Vec2 tileSize, int hp,GameObject& associa
 	associated.box.y = pos.y;
 	associated.box.w = sp->GetWidth();
 	associated.box.h = sp->GetHeight();
-	StageState& stageState = (StageState&)Game::GetInstance().GetCurrentState();
+	NearestFinder<GameObject>* stageState = &dynamic_cast< NearestFinder<GameObject>& >(Game::GetInstance().GetCurrentState());
 
 	switch(type){
 		case TowerType::SMOKE:
 			finder = new NearestComponentFinder(GameComponentType::ENEMY, associated.box.Center());
-			associated.AddComponent(new Aura(associated, Enemy::Event::SMOKE, 400, 7.0, &stageState, finder));
+			associated.AddComponent(new Aura(associated, Enemy::Event::SMOKE, 400, 7.0, stageState, dynamic_cast< Finder<GameObject>* >(finder)));
 			break;
 		case TowerType::ANTIBOMB:
 			finder = new NearestComponentFinder(GameComponentType::BULLET, associated.box.Center());
-			associated.AddComponent(new Shooter(associated, &stageState, finder, GameComponentType::BOMB, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 5000, "img/SpriteSheets/anti-bomba_idle.png", 11, 1));
+			associated.AddComponent(new Shooter(associated, stageState, dynamic_cast< Finder<GameObject>* >(finder), GameComponentType::BOMB, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 5000, "img/SpriteSheets/anti-bomba_idle.png", 11, 1));
 			break;
 		case TowerType::STUN:
 			finder = new NearestComponentFinder(GameComponentType::ENEMY, associated.box.Center());
-			associated.AddComponent(new Aura(associated, Enemy::Event::STUN, 400, 7.0, &stageState, finder));
+			associated.AddComponent(new Aura(associated, Enemy::Event::STUN, 400, 7.0, stageState, dynamic_cast< Finder<GameObject>* >(finder)));
 			break;
 		case TowerType::SHOCK:
 			finder = new NearestComponentFinder(GameComponentType::ENEMY, associated.box.Center());
-			associated.AddComponent(new Shooter(associated, &stageState, finder, GameComponentType::ENEMY, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 1500, 5000, "img/SpriteSheets/bullet_choquelvl1.png", 4, 1));
+			associated.AddComponent(new Shooter(associated, stageState, dynamic_cast< Finder<GameObject>* >(finder), GameComponentType::ENEMY, 5000, 2.0, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 1500, 5000, "img/SpriteSheets/bullet_choquelvl1.png", 4, 1));
 			break;
 		case TowerType::COMPUTATION:
 			break;

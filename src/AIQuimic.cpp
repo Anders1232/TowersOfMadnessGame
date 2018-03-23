@@ -17,7 +17,10 @@ AIQuimic::AIQuimic(float speed, int dest, TileMap<Tile>& tileMap, GameObject &as
 	 waveManager(wManager),
 	 randomMaxTimer(0),
 	 finder(new NearestComponentFinder(GameComponentType::TOWER,associated.box.Center())),
-	 shooter(new Shooter(associated, &((NearestFinder<GameObject>&)Game::GetInstance().GetCurrentState()), (Finder<GameObject>*)finder, GameComponentType::TOWER, 500000, 2.5, Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0))
+	 shooter(new Shooter(associated, &dynamic_cast< NearestFinder<GameObject>& >(Game::GetInstance().GetCurrentState()),
+	 					 dynamic_cast< Finder<GameObject>* >(finder), GameComponentType::TOWER, 500000, 2.5,
+						 Shooter::TargetPolicy::ALWAYS_NEAREST, true, 500, 500000, "img/SpriteSheets/bomba_spritesheet.png",2,3.0)
+			)
 	 {
 
 	tileMap.ObserveMapChanges(this);
