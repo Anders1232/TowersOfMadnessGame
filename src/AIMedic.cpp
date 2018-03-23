@@ -108,12 +108,18 @@ void AIMedic::Update(float dt){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
 					lastDistance = associated.box.Center().VecDistance(tempDestination).Magnitude();
                     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    }
+                    else{vecSpeed = Vec2(0,0);}
 				}
 			}
 			else if(vecSpeed.Magnitude() == 0.0){
                 actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex());
-				vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                    vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                }
+                else{vecSpeed = Vec2(0,0);}
 			}
 			else{
 				associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
@@ -135,13 +141,21 @@ void AIMedic::Update(float dt){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
 					lastDistance = associated.box.Center().VecDistance(tempDestination).Magnitude();
                     actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex()) * 3;
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed /actualTileweight);
-				}
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed /actualTileweight);
+                    }
+                    else{
+                        vecSpeed = Vec2(0,0);
+                    }
+                }
 			}
 			else if(vecSpeed.Magnitude() == 0.0){
                 actualTileweight = tileWeightMap.at(tileMap.AtLayer((*path).at(pathIndex),WALKABLE_LAYER).GetTileSetIndex()) * 3;
-				vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
-			}
+                if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                    vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                }
+                else{vecSpeed = Vec2(0,0);}
+            }
 			else{
 				associated.box.x = (associated.box.Center().x + (vecSpeed.MemberMult(dt)).x - associated.box.w/2);
 				associated.box.y = (associated.box.Center().y + (vecSpeed.MemberMult(dt)).y - associated.box.h/2);
@@ -163,8 +177,10 @@ void AIMedic::Update(float dt){
 				pathIndex = 0;
 				if(path->size() > 0){
 					tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
-					vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
-					lastDistance = std::numeric_limits<float>::max();
+                    if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                        vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+                    }
+                    lastDistance = std::numeric_limits<float>::max();
 				}
 
 			}
@@ -183,8 +199,11 @@ void AIMedic::NotifyTileMapChanged(int tilePosition){
 		pathIndex = 0;
 		if(path->size() > 0){
 			tempDestination = Vec2(tileMap.GetTileSize().x * ((*path).at(pathIndex) % tileMap.GetWidth()),tileMap.GetTileSize().y*((*path).at(pathIndex) / tileMap.GetWidth()));
-			vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
-			lastDistance = std::numeric_limits<float>::max();
+            if(associated.box.Center().VecDistance(tempDestination).Magnitude() > 0){
+                vecSpeed = associated.box.Center().VecDistance(tempDestination).Normalize().MemberMult(speed / actualTileweight);
+            }
+            else{vecSpeed = Vec2(0,0);}
+            lastDistance = std::numeric_limits<float>::max();
 		}
 	}
 }

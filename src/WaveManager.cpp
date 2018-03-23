@@ -226,6 +226,7 @@ void WaveManager::SpawnEnemy(int tileMapPosition, int enemyId, uint baseHP, uint
 	REPORT_I_WAS_HERE;
 	spawnPosition.x = (tileMapPosition%tileMap.GetWidth() ) * tileSize.x;
 	REPORT_I_WAS_HERE;
+    REPORT_DEBUG2(true,tileMapPosition);
 	spawnPosition.y = (tileMapPosition/tileMap.GetWidth() ) * tileSize.y;
     GameObject* enemyGO = new GameObject();
     enemyGO->box = spawnPosition;

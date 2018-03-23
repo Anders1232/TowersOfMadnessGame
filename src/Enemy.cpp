@@ -181,9 +181,9 @@ void Enemy::Update(float dt) {
 }
 
 void Enemy::Render(void) {
-    REPORT_DEBUG("\t Box:: x("<<associated.box.x<<"), y(" <<associated.box.y<< "), w("<<associated.box.w<<"), h("<<associated.box.h<<")");
+    //REPORT_DEBUG2(true,"\t Box:: x("<<associated.box.x<<"), y(" <<associated.box.y<< "), w("<<associated.box.w<<"), h("<<associated.box.h<<")");
 	for(uint i=0; i< sp[direction].size(); i++){
-        sp[direction][i].Render();
+        sp[direction][i].DirectRender(associated.box);
 	}
 }
 
