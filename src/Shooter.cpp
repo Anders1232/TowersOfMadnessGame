@@ -47,7 +47,7 @@ void Shooter::Update(float dt){
 				|| target->IsDead()
 				|| (target->box.Center()-associated.box.Center() ).Magnitude() > range )
 			{
-				NearestFinder<GameObject>* nf = dynamic_cast<NearestFinder<GameObject>*>(nearestFinder);
+				NearestFinder<GameObject>* nf = nearestFinder;
 				target = ((GameObject*)(nf->FindNearest(associated.box.Center(), finder, range)));
 			}
 			if(nullptr!= target){
