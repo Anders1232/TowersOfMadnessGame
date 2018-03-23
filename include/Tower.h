@@ -32,19 +32,19 @@ class Tower : public Component{
 			COMPUTATION
 		} TowerType;
 		
-        Tower(TowerType type, Vec2 pos, Vec2 tileSize,int hp,GameObject& associated);
+		Tower(TowerType type, Vec2 pos, Vec2 tileSize,int hp,GameObject& associated);
 		void Damage(int damage);
 		void Update(float dt );
 		void Render(void);
-        void NotifyCollision(Component &other);
+		void NotifyCollision(Component &other);
 		Rect GetWorldRenderedRect(void) const;
-        bool Is(int componentType) const;
+		bool Is(int componentType) const;
 		~Tower();
 	private:
-        Sprite *sp;
+		Sprite *sp;
 		HitPoints *hitpoints;
 		bool isDraging;
-        NearestComponentFinder finder;
+		NearestComponentFinder* finder;
 };
 
 #endif // TOWER_H

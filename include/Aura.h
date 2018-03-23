@@ -14,8 +14,8 @@ using namespace RattletrapEngine;
 class Aura: public Component
 {
 	public:
-        Aura(GameObject& associated, Enemy::Event auraType, float auraRange, float timeBetweetNotifications, NearestFinder<GameObject> &nearestFinder,
-             Finder<GameObject> &finder);
+		Aura(GameObject& associated, Enemy::Event auraType, float auraRange, float timeBetweetNotifications, NearestFinder<GameObject>* nearestFinder,
+			 Finder<GameObject>* finder);
 		~Aura(void){};
 		void Update(float dt);
 		void Render(void);
@@ -28,8 +28,8 @@ class Aura: public Component
 		Sprite* sp2;
 		float timeBetweetNotifications;
 		Timer notificationTimer;
-        NearestFinder<GameObject> &nearestFinder;
-        Finder<GameObject> &finder;
+		NearestFinder<GameObject>* nearestFinder;
+		Finder<GameObject>* finder;
 };
 
 #endif // AURA_H
