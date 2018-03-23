@@ -862,7 +862,7 @@ GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject> &finder, flo
 	double closerObjDistance = std::numeric_limits<double>::max();
 
 	for(unsigned int i = 0; i < objectArray.size(); i ++){
-		float tempRes= finder(*objectArray[i].get());
+        float tempRes= finder(*(objectArray[i].get()));
 		if(tempRes < closerObjDistance){
 			closerObj = (objectArray[i].get());
 			closerObjDistance = tempRes;
@@ -875,7 +875,7 @@ GameObject* StageState::FindNearest(Vec2 origin, Finder<GameObject> &finder, flo
 std::vector<GameObject*>* StageState::FindNearests(Vec2 origin,Finder<GameObject> &finder,float range) const{
 	vector<GameObject*> *objectsInRange = new vector<GameObject*>();
 	for(unsigned int i = 0; i < objectArray.size(); i ++){
-		float distance = finder(*objectArray[i].get());
+        float distance = finder(*(objectArray[i].get()));
 		if(distance <= range){
 			objectsInRange->push_back(objectArray[i].get());
 		}

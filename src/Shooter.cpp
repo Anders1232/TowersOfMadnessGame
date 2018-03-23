@@ -4,7 +4,7 @@
 #include "Error.h"
 
 Shooter::Shooter(GameObject &associated,
-                 NearestFinder<GameObject> &nearestFinder,
+                 NearestFinder<GameObject> *nearestFinder,
                  Finder<GameObject> &finder,
                  int targetType,
                  float range,
@@ -43,19 +43,27 @@ void Shooter::Update(float dt){
 		if(timerBetweetShoots.Get() > betweetShootsTime){
 			timerBetweetShoots.Restart();
             if(nullptr == target || TargetPolicy::ALWAYS_NEAREST == policy){
-                ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
-                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
+
+                Vec2 origin = associated.box.Center();
+                NearestComponentFinder& cFinder= (NearestComponentFinder&)finder;
+                cFinder.setOrigin(origin);
+//                ((NearestComponentFinder&)finder).setOrigin(origin);
+                REPORT_DEBUG2(true,"");
+                target = nearestFinder->FindNearest(associated.box.Center(),finder, range);
 			}
 			else if(target->IsDead()){
+                REPORT_DEBUG2(true,"");
                 ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
-                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
+                target = nearestFinder->FindNearest(associated.box.Center(),finder, range);
 			}
 			//supoe-se aqui que já existe um algo e a políica de tipo é SHOOT_UNTIL_OUT_OF_RANGE
 			else if( (target->box.Center()-associated.box.Center() ).Magnitude() > range){
+                REPORT_DEBUG2(true,"");
                 ((NearestComponentFinder&)finder).setOrigin(associated.box.Center());
-                target = ((GameObject*)(nearestFinder.FindNearest(associated.box.Center(),finder, range)));
+                target = nearestFinder->FindNearest(associated.box.Center(),finder, range);
             }
-			if(nullptr!= target){
+            REPORT_DEBUG2(true,"");
+            if(nullptr!= target){
 				Vec2 origin= associated.box.Center();
 				Vec2 startDistanceFromOrigin(associated.box.w/2, 0);
 				float angle= (target->box.Center()-origin).Inclination();
@@ -68,6 +76,7 @@ void Shooter::Update(float dt){
                     associated.AddComponent(new Bullet(associated,origin.x, origin.y, angle, bulletSpeed, bulletMaxDistance, bulletSprite, targetType,bulletScale,0.2,bulletFrameRate));
 				}
 			}
+            REPORT_DEBUG2(true,"");
 		}
 	}
 }

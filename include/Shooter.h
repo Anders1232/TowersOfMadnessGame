@@ -19,7 +19,7 @@ class Shooter : public Component{
 			SHOOT_UNTIL_OUT_OF_RANGE
 		};
         Shooter(GameObject &associated,
-                NearestFinder<GameObject> &nearestFinder,
+                NearestFinder<GameObject> *nearestFinder,
                 Finder<GameObject> &finder,
                 int targetType,
                 float range,
@@ -37,7 +37,7 @@ class Shooter : public Component{
 		void SetActive(bool active);
 	private:
 		GameObject &associated;
-        NearestFinder<GameObject> &nearestFinder;
+        NearestFinder<GameObject> *nearestFinder;
         Finder<GameObject> &finder;
 		bool active;
         int targetType;

@@ -2,7 +2,7 @@
 #Assume-se uma distribuição Linux como sistema operacional padrão
 #-------------------------------------------------------------
 
-COMPILER = g++
+COMPILER = clang++
 #comando para remover pastas
 RMDIR = rm -rdf
 #comando para remover arquivos
